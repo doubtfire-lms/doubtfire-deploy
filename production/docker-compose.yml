@@ -1,0 +1,23 @@
+version: '3.9'
+services:
+  webserver:
+    container_name: webserver
+    restart: always
+    image: "doubtfire-web:${TAG}"
+    ports:
+      - "80:3000" # Map host port 80 to container port 3000
+    depends_on:
+      - database
+    env_file:
+      - .env.production
+    volumes:
+      - "${DF_STUDENT_WORK_DIR}:/student-work"
+  pdfgen:
+    container_name: pdfgen
+    image: "doubtfire-pdfgen:${TAG}"
+    depends_on:
+      - database
+    env_file:
+      - .env.production
+    volumes:
+      - "${DF_STUDENT_WORK_DIR}:/student-work"
