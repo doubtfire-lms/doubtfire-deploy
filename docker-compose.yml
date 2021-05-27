@@ -14,22 +14,21 @@ services:
     env_file:
       - doubtfire-base.env
     volumes:
-      - ./doubtfire-api:/doubtfire
       - ./student-work:/student-work
-  pdfgen:
-    container_name: pdfgen
-    build:
-      context: .
-      dockerfile: pdfgen.Dockerfile
-      args:
-        buildno: 1
-    depends_on:
-      - database
-    env_file:
-      - doubtfire-base.env
-    volumes:
-      - ./doubtfire-api:/doubtfire
-      - ./student-work:/student-work
+  # pdfgen:
+  #   container_name: pdfgen
+  #   build:
+  #     context: .
+  #     dockerfile: pdfgen.Dockerfile
+  #     args:
+  #       buildno: 1
+  #   depends_on:
+  #     - database
+  #   env_file:
+  #     - doubtfire-base.env
+  #   volumes:
+  #     - ./doubtfire-api:/doubtfire
+  #     - ./student-work:/student-work
   database:
       container_name: database
       image: mariadb
