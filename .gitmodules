@@ -1,0 +1,6 @@
+[submodule "doubtfire-web"]
+	path = doubtfire-web
+	url = https://github.com/doubtfire-lms/doubtfire-web.git
+[submodule "doubtfire-api"]
+	path = doubtfire-api
+	url = https://github.com/doubtfire-lms/doubtfire-api.git
