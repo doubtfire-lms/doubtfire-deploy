@@ -38,3 +38,5 @@ services:
         MYSQL_DATABASE: doubtfire
         MYSQL_USER: dfire
         MYSQL_PASSWORD: pwd
+      volumes:
+        - ./database:/var/lib/mysql
