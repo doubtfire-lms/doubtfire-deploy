@@ -11,3 +11,7 @@ Security:
 Fix:
 
   - List of fixes
+
+Migration:
+
+  - Steps needed to migrate, any additional migration complexities
