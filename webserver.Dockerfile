@@ -24,7 +24,7 @@ COPY "$API_HOME" /doubtfire/
 COPY "$WEB_HOME/dist" /doubtfire/public/
 
 # Install the Gems
-RUN bundle install --without staging test
+RUN bundle install --without passenger
 
 EXPOSE 3000
 ENV RAILS_ENV production

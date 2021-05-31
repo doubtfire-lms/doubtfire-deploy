@@ -27,7 +27,7 @@ RUN /doubtfire/.ci-setup/texlive-install.sh
 COPY $SOURCE_HOME/Gemfile $SOURCE_HOME/Gemfile.lock /doubtfire/
 
 # Install the Gems
-RUN bundle install --without staging test
+RUN bundle install --without staging test passenger webserver
 
 # Setup path
 ENV PATH /tmp/texlive/bin/x86_64-linux:$PATH
