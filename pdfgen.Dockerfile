@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 FROM ruby:2.6.7-buster
 
-ARG SOURCE_HOME=./doubtfire-api
+ARG API_HOME=./doubtfire-api
 
 # Setup dependencies
 ARG DEBIAN_FRONTEND=noninteractive
@@ -18,16 +18,14 @@ RUN apt-get update && apt-get install -y \
 # Setup the folder where we will deploy the code
 WORKDIR /doubtfire
 
-COPY $SOURCE_HOME/.ci-setup/* /doubtfire/.ci-setup/
+# Copy doubtfire-api source
+COPY "$API_HOME" /doubtfire/
 
 # Install LaTex
 RUN /doubtfire/.ci-setup/texlive-install.sh
 
-# Copy in the Gemfile details from the doubtfire-api source
-COPY $SOURCE_HOME/Gemfile $SOURCE_HOME/Gemfile.lock /doubtfire/
-
 # Install the Gems
-RUN bundle install --without staging test passenger webserver
+RUN bundle install --without passenger webserver
 
 # Setup path
 ENV PATH /tmp/texlive/bin/x86_64-linux:$PATH
