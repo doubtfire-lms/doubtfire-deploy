@@ -26,7 +26,7 @@ jobs:
         with:
           image: doubtfire-web:latest
           options: -v ${{ github.workspace }}/doubtfire-web:/doubtfire-web -v ${{ github.workspace }}/doubtfire-web/dist:/doubtfire-web/dist
-          run: ls
+          run: npm install
       -
         uses: addnab/docker-run-action@v3
         with:
