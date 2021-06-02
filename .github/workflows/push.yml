@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - 'development'
+    tags:
+      - 'v*.*.*'
 jobs:
   docker:
     environment: deployment-secrets
@@ -30,19 +32,35 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Setup meta for webserver
+        id: docker_meta
+        uses: docker/metadata-action@v3
+        with:
+          images: lmsdoubtfire/webserver
+          tag-custom: latest
+          tag-semver: |
+            {{raw}}
       - name: Build and push webserver
         id: docker_build
         uses: docker/build-push-action@v2
         with:
           file: webserver.Dockerfile
           push: true
-          tags: lmsdoubtfire/webserver:latest
+          tags: ${{ steps.meta.outputs.tags }}
+      - name: Setup meta for pdfGen
+        id: docker_meta
+        uses: docker/metadata-action@v3
+        with:
+          images: lmsdoubtfire/pdfGen
+          tag-custom: latest
+          tag-semver: |
+            {{raw}}
       - name: Build and push pdfGen
         id: docker_build
         uses: docker/build-push-action@v2
         with:
           file: pdfGen.Dockerfile
           push: true
-          tags: lmsdoubtfire/pdfGen:latest
+          tags: ${{ steps.meta.outputs.tags }}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
