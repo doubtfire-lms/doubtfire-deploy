@@ -26,6 +26,12 @@ jobs:
         with:
           image: doubtfire-web:latest
           options: -v ${{ github.workspace }}/doubtfire-web:/doubtfire-web -v ${{ github.workspace }}/doubtfire-web/dist:/doubtfire-web/dist
+          run: ls
+      -
+        uses: addnab/docker-run-action@v3
+        with:
+          image: doubtfire-web:latest
+          options: -v ${{ github.workspace }}/doubtfire-web:/doubtfire-web -v ${{ github.workspace }}/doubtfire-web/dist:/doubtfire-web/dist
           run: npm run-script deploy
       -
         name: Start containers
