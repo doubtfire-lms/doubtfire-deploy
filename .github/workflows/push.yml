@@ -12,6 +12,9 @@ jobs:
         name: Checkout code
         uses: actions/checkout@v2
       -
+        name: Checkout submodules
+        uses: textbook/git-checkout-submodule-action@master
+      -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       -
