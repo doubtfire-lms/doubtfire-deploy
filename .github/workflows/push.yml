@@ -6,7 +6,7 @@ on:
     tags:
       - 'v*.*.*'
 jobs:
-  docker:
+  docker-webserver:
     environment: deployment-secrets
     runs-on: ubuntu-latest
     steps:
@@ -47,6 +47,21 @@ jobs:
           file: webserver.Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+  docker-pdfGen:
+    environment: deployment-secrets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Setup meta for pdfGen
         id: docker_meta
         uses: docker/metadata-action@v3
