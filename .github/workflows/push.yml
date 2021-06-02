@@ -49,7 +49,7 @@ jobs:
         with:
           context: ./doubtfire-web
           push: true
-          tags: doubtfire-web:latest
+          tags: lmsdoubtfire/doubtfire-web:latest
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
