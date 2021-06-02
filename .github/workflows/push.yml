@@ -15,26 +15,34 @@ jobs:
         name: Checkout submodules
         run: git submodule update --init --recursive
       -
-        name: Build doubtfire-web (create dist/)
-        working-directory: ./doubtfire-web
-        run: npm run-script deploy
-      -
-        name: Start containers
-        run: docker compose -f "docker-compose.yml" up -d --build
-      -
-        name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      -
         name: Build and push
-        id: docker_build
         uses: docker/build-push-action@v2
         with:
-          context: .
-          push: true
-          tags: user/app:latest
+          context: ./doubtfire-web
+          push: false
+          tags: doubtfire-web:latest
       -
+        uses: addnab/docker-run-action@v3
+        with:
+          image: doubtfire-web:latest
+          run: npm run-script deploy
+      -
+        name: Start containers
+        run: docker compose build -f "docker-compose.yml"
+      # -
+      #   name: Login to DockerHub
+      #   uses: docker/login-action@v1
+      #   with:
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      # -
+      #   name: Build and push
+      #   id: docker_build
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: .
+      #     push: true
+      #     tags: user/app:latest
+      # -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
