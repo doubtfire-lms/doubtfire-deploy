@@ -20,7 +20,6 @@ jobs:
           context: ./doubtfire-web
           push: false
           tags: doubtfire-web:latest
-          options: -v ${{ github.workspace }}/doubtfire-web:/doubtfire-web -v ${{ github.workspace }}/doubtfire-web/dist:/doubtfire-web/dist
       - name: Build web application
         uses: addnab/docker-run-action@v3
         with:
