@@ -27,8 +27,7 @@ jobs:
           options: -v ${{ github.workspace }}/doubtfire-web:/doubtfire-web --workdir /doubtfire-web 
           run:  |
             echo "Running Script"
-            find .. | grep node
-            ls -lha /doubtfire-web
+            npm install
             npm run-script deploy
       - name: Login to DockerHub
         uses: docker/login-action@v1
