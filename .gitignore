@@ -2,6 +2,8 @@
 /student-work/**/*
 /database/*
 
+/node_modules/
+
 # Created by https://www.toptal.com/developers/gitignore/api/macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos
 
