@@ -74,11 +74,11 @@ jobs:
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}
-      - name: Build and push pdfGen
+      - name: Build and push pdfgen
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          file: pdfGen.Dockerfile
+          file: pdfgen.Dockerfile
           context: .
           tags: ${{ steps.docker_meta.outputs.tags }}
           push: true
