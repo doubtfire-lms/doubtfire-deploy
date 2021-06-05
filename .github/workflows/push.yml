@@ -21,17 +21,17 @@ jobs:
           push: false
           load: true
           tags: doubtfire-web:latest
-      - name: Build web application
-        run: docker run -v ${{ github.workspace }}/doubtfire-web:/doubtfire-web -v ${{ github.workspace }}/doubtfire-web/dist:/doubtfire-web/dist --workdir /doubtfire-web doubtfire-web:latest npm run-script deploy
       # - name: Build web application
-      #   uses: addnab/docker-run-action@v3
-      #   with:
-      #     image: doubtfire-web:latest
-      #     options: -v ${{ github.workspace }}/doubtfire-web:/doubtfire-web -v ${{ github.workspace }}/doubtfire-web/dist:/doubtfire-web/dist --workdir /doubtfire-web 
-      #     run:  |
-      #       echo "Running Script"
-      #       npm install
-      #       npm run-script deploy
+      #   run: docker run -v ${{ github.workspace }}/doubtfire-web:/doubtfire-web -v ${{ github.workspace }}/doubtfire-web/dist:/doubtfire-web/dist --workdir /doubtfire-web doubtfire-web:latest npm run-script deploy
+      - name: Build web application
+        uses: addnab/docker-run-action@v3
+        with:
+          image: doubtfire-web:latest
+          options: -v ${{ github.workspace }}/doubtfire-web:/doubtfire-web -v ${{ github.workspace }}/doubtfire-web/dist:/doubtfire-web/dist --workdir /doubtfire-web 
+          run:  |
+            echo "Running Script"
+            npm install
+            npm run-script deploy
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
@@ -42,9 +42,9 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: lmsdoubtfire/webserver
-          tag-custom: latest
-          tag-semver: |
-            {{raw}}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
       - name: Build and push webserver
         id: docker_build
         uses: docker/build-push-action@v2
