@@ -50,6 +50,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           file: webserver.Dockerfile
+          context: .
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
       - name: Image digest
