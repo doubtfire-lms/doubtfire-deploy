@@ -1,0 +1,22 @@
+version: '3.9'
+services:
+  webserver:
+    container_name: doubtfire-webserver
+    image: lmsdoubtfire/webserver:development
+    ports:
+      - "3000:3000"
+    depends_on:
+      - database
+    env_file:
+      - doubtfire-base.env
+    volumes:
+      - ./student-work:/student-work
+  pdfgen:
+    container_name: doubtfire-pdfgen
+    image: lmsdoubtfire/pdfgen:development
+    depends_on:
+      - database
+    env_file:
+      - doubtfire-base.env
+    volumes:
+      - ./student-work:/student-work
