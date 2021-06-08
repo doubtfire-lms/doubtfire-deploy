@@ -5,8 +5,6 @@ services:
     image: lmsdoubtfire/webserver:development
     ports:
       - "3000:3000"
-    depends_on:
-      - database
     env_file:
       - doubtfire-base.env
     volumes:
@@ -14,9 +12,11 @@ services:
   pdfgen:
     container_name: doubtfire-pdfgen
     image: lmsdoubtfire/pdfgen:development
-    depends_on:
-      - database
     env_file:
       - doubtfire-base.env
     volumes:
       - ./student-work:/student-work
+  watchtower:
+    image: containrrr/watchtower    
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
