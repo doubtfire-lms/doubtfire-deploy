@@ -12,7 +12,7 @@ services:
     env_file:
       - doubtfire-base.env
     volumes:
-      - ./student-work:/student-work
+      - ./data/student-work:/student-work
   pdfgen:
     container_name: pdfgen
     build:
@@ -23,7 +23,7 @@ services:
     env_file:
       - doubtfire-base.env
     volumes:
-      - ./student-work:/student-work
+      - ./data/student-work:/student-work
   database:
       container_name: database
       image: mariadb
@@ -34,4 +34,4 @@ services:
         MYSQL_USER: dfire
         MYSQL_PASSWORD: pwd
       volumes:
-        - ./database:/var/lib/mysql
+        - ./data/database:/var/lib/mysql

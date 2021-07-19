@@ -1,7 +1,7 @@
 #!/bin/sh
 
-if [ ! -d database ] ; then
-  mkdir -p database
+if [ ! -d ./data/database ] ; then
+  mkdir -p ./data/database
 fi
 
 docker container run \
@@ -11,6 +11,6 @@ docker container run \
         -e MYSQL_PASSWORD=pwd \
         -e MYSQL_DATABASE=doubtfire \
         -p 3306:3306 \
-        -v `pwd`/database:/var/lib/mysql \
+        -v `pwd`/data/database:/var/lib/mysql \
         -d mariadb
 
