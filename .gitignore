@@ -1,7 +1,5 @@
 
-/student-work/**/*
-/database/*
-
+/data/
 /node_modules/
 
 # Created by https://www.toptal.com/developers/gitignore/api/macos
