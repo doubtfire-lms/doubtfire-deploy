@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   webserver:
-    container_name: webserver
+    container_name: df-prod-webserver
     build:
       context: .
       dockerfile: webserver.Dockerfile
@@ -14,7 +14,7 @@ services:
     volumes:
       - ./data/student-work:/student-work
   pdfgen:
-    container_name: pdfgen
+    container_name: df-prod-pdfgen
     build:
       context: .
       dockerfile: pdfgen.Dockerfile
@@ -25,13 +25,49 @@ services:
     volumes:
       - ./data/student-work:/student-work
   database:
-      container_name: database
-      image: mariadb
-      restart: always
-      environment:
-        MYSQL_ROOT_PASSWORD: db-root-password
-        MYSQL_DATABASE: doubtfire
-        MYSQL_USER: dfire
-        MYSQL_PASSWORD: pwd
-      volumes:
-        - ./data/database:/var/lib/mysql
+    container_name: df-prod-database
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: db-root-password
+      MYSQL_DATABASE: doubtfire-dev
+      MYSQL_USER: dfire
+      MYSQL_PASSWORD: pwd
+    volumes:
+      - ./data/database:/var/lib/mysql
+  doubtfire-overseer:
+    container_name: df-prod-overseer
+    build:
+      dockerfile: overseer.Dockerfile
+    depends_on:
+      - df-prod-mq
+    restart: on-failure
+    environment:
+      DOCKER_HOST: host.docker.internal
+      RABBITMQ_HOSTNAME: df-prod-mq
+      RABBITMQ_USERNAME: secure_credentials
+      RABBITMQ_PASSWORD: secure_credentials
+      CONTAINER_NAME: overseer-container
+      HOST_XFS_VOLUME: $PWD/data/overseer-instances/1
+
+    volumes:
+      # Host path for writing the output of execution - required.
+      # TODO: Test by mounting an actual XFS volume.
+      - ./data/overseer-instances/1:/home/overseer/work-dir
+      # Path for reading OnTrack files from - required.
+      # TODO: Map this directly to a constant path that can be written to,
+      # as the path will be a part of the messages
+      # received from OnTrack via RabbitMQ.
+      # TODO: Make the path rw by overseer in docker image.
+      - ./data/student-work:/student-work
+  doubtfire-mq:
+    container_name: df-prod-mq
+    image: rabbitmq:3.8-management
+    ports:
+      - 15672:15672
+    volumes:
+      - ./data/rabbitmq/data/:/var/lib/rabbitmq
+      - ./data/rabbitmq/log/:/var/log/rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: secure_credentials
+      RABBITMQ_DEFAULT_PASS: secure_credentials

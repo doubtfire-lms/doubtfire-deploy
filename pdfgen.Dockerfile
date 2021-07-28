@@ -18,16 +18,21 @@ RUN apt-get update && apt-get install -y \
 # Setup the folder where we will deploy the code
 WORKDIR /doubtfire
 
-# Copy doubtfire-api source
-COPY "$API_HOME" /doubtfire/
-
 # Install LaTex
+COPY "$API_HOME"/.ci-setup /doubtfire/.ci-setup
 RUN /doubtfire/.ci-setup/texlive-install.sh
 
+# Install bundler
+RUN gem install bundler
+
 # Install the Gems
+COPY "$API_HOME"/Gemfile "$API_HOME"/Gemfile.lock /doubtfire/
 RUN bundle install --without passenger webserver
 
 # Setup path
 ENV PATH /tmp/texlive/bin/x86_64-linux:$PATH
+
+# Copy doubtfire-api source
+COPY "$API_HOME" /doubtfire/
 
 CMD bundle exec rake submission:generate_pdfs
