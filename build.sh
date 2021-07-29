@@ -22,7 +22,8 @@ cd "${APP_PATH}"
 "${APP_PATH}/tools/git-ready-to-deploy.sh"
 
 if [ $? -ne 0 ]; then
-  echo "would exit";
+  echo "Please ensure that the deploy directory is free of changes. Commit and push all changes to ensure deploy can be reproduced by others.";
+  exit 1
 fi
 
 
@@ -117,11 +118,11 @@ echo "### Step 2: Build web application"
 echo
 
 cd "${APP_PATH}/doubtfire-web"
-# npm run deploy
+npm run deploy
 
 if [ $? -ne 0 ]; then
-  echo "would exit";
-  # exit 1
+  echo "Failed to build doubtfire web";
+  exit 1
 fi
 
 echo
