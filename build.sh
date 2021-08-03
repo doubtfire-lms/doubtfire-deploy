@@ -50,7 +50,7 @@ fi
 echo
 echo "4. Check overseer"
 
-cd "${APP_PATH}/overseer"
+cd "${APP_PATH}/doubtfire-overseer"
 "${APP_PATH}/tools/git-ready-to-deploy.sh"
 
 if [ $? -ne 0 ]; then
