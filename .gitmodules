@@ -10,3 +10,6 @@
 [submodule "overseer"]
 	path = overseer
 	url = https://github.com/doubtfire-lms/overseer.git
+[submodule "doubtfire-overseer"]
+	path = doubtfire-overseer
+	url = https://github.com/doubtfire-lms/doubtfire-overseer.git
