@@ -27,7 +27,7 @@ function prepare_branch {
   git push -u https://github.com:doubtfire-lms/$PROJECT.git $RELEASE_BRANCH_NAME
 }
 
-prepare_branch 'doubtfire-web', "${APP_PATH}/doubtfire-web"
-prepare_branch 'doubtfire-api', "${APP_PATH}/doubtfire-api"
-prepare_branch 'doubtfire-overseer', "${APP_PATH}/doubtfire-overseer"
-prepare_branch 'doubtfire-deploy', "${APP_PATH}"
+prepare_branch 'doubtfire-web' "${APP_PATH}/doubtfire-web"
+prepare_branch 'doubtfire-api' "${APP_PATH}/doubtfire-api"
+prepare_branch 'doubtfire-overseer' "${APP_PATH}/doubtfire-overseer"
+prepare_branch 'doubtfire-deploy' "${APP_PATH}"

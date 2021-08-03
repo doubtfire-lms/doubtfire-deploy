@@ -90,13 +90,13 @@ select answer in "Skip" "Auto" "Major" "Minor" "Patch"; do
     echo
   }
 
-  prepare_release 'doubtfire-web', "${APP_PATH}/doubtfire-web"
+  prepare_release 'doubtfire-web' "${APP_PATH}/doubtfire-web"
   WEB_VERSION=$(git describe --abbrev=0 --tags)
 
-  prepare_release 'doubtfire-api', "${APP_PATH}/doubtfire-api"
+  prepare_release 'doubtfire-api' "${APP_PATH}/doubtfire-api"
   API_VERSION=$(git describe --abbrev=0 --tags)
 
-  prepare_release 'doubtfire-overseer', "${APP_PATH}/doubtfire-overseer"
+  prepare_release 'doubtfire-overseer' "${APP_PATH}/doubtfire-overseer"
   OVERSEER_VERSION=$(git describe --abbrev=0 --tags)
 
   echo
@@ -117,7 +117,7 @@ select answer in "Skip" "Auto" "Major" "Minor" "Patch"; do
   echo
   echo "Please update release notes, and push them to origin before continuing here..."
 
-  prepare_release 'doubtfire-deploy', "${APP_PATH}"
+  prepare_release 'doubtfire-deploy' "${APP_PATH}"
   DEPLOY_VERSION=$(git describe --abbrev=0 --tags)
 done
 
@@ -146,10 +146,10 @@ select answer in "Skip" "Push"; do
           break;
           ;;
         Push)
-          push_release 'doubtfire-web', "${APP_PATH}/doubtfire-web"
-          push_release 'doubtfire-api', "${APP_PATH}/doubtfire-api"
-          push_release 'doubtfire-overseer', "${APP_PATH}/doubtfire-overseer"
-          push_release 'doubtfire-deploy', "${APP_PATH}"
+          push_release 'doubtfire-web' "${APP_PATH}/doubtfire-web"
+          push_release 'doubtfire-api' "${APP_PATH}/doubtfire-api"
+          push_release 'doubtfire-overseer' "${APP_PATH}/doubtfire-overseer"
+          push_release 'doubtfire-deploy' "${APP_PATH}"
           break;
           ;;
     esac
