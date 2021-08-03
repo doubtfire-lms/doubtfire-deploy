@@ -24,7 +24,7 @@ function prepare_branch {
     exit 1
   fi
 
-  git push -u github.com:doubtfire-lms/$PROJECT.git $RELEASE_BRANCH_NAME
+  git push -u https://github.com:doubtfire-lms/$PROJECT.git $RELEASE_BRANCH_NAME
 }
 
 prepare_branch 'doubtfire-web', "${APP_PATH}/doubtfire-web"
