@@ -12,6 +12,9 @@ echo
 
 read -p "Name: (Format as: 5.0.x) " RELEASE_BRANCH_NAME
 
+echo "What's the name of the remote to push to (doubtfire-lms)"
+read -p "Remote: (eg origin/upstream): " REMOTE
+
 function prepare_branch {
   PROJECT=$1
   PROJECT_PATH=$2
@@ -24,7 +27,7 @@ function prepare_branch {
     exit 1
   fi
 
-  git push -u https://github.com:doubtfire-lms/$PROJECT.git $RELEASE_BRANCH_NAME
+  git push -u $REMOTE $RELEASE_BRANCH_NAME
 }
 
 prepare_branch 'doubtfire-web' "${APP_PATH}/doubtfire-web"
