@@ -74,4 +74,4 @@ echo "### Step 4: Create containers"
 echo
 
 cd "${APP_PATH}"
-docker-compose build
+docker compose build
