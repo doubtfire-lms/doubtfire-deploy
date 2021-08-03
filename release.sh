@@ -13,6 +13,7 @@ APP_PATH=`cd "$APP_PATH"; pwd`
 cd "${APP_PATH}"
 
 echo "## Generate Release Notes and Push to Release Branch"
+
 echo
 echo "### Step 1: Build"
 echo
@@ -29,81 +30,99 @@ echo
 echo "### Step 2. Update version tags"
 echo 
 
-function prepare_release {
-  PROJECT=$1
-  PROJECT_PATH=$2
+select answer in "Full" "Prerelease"; do
+  case $answer in
+    Full)
+      break;
+      ;;
+    Prerelease)
+      PRERELEASE="--prerelease"
+      break;
+      ;;
+  esac
+done
 
-  cd "${PROJECT_PATH}"
+select answer in "Skip" "Auto" "Major" "Minor" "Patch"; do
 
-  echo "${PROJECT} is at version `git describe --abbrev=0 --tags`"
+  function prepare_release {
+    PROJECT=$1
+    PROJECT_PATH=$2
+
+    cd "${PROJECT_PATH}"
+
+    echo "${PROJECT} is at version `git describe --abbrev=0 --tags`"
+    case $answer in
+      Skip)
+        echo "Not changing ${PROJECT} tag"
+        break;
+        ;;
+      Auto)
+        echo "Creating ${PROJECT} release and bumping the major version"
+        standard-version $PRERELEASE
+        break;
+        ;;
+      Major)
+        echo "Creating ${PROJECT} release and bumping the major version"
+        standard-version --release-as major $PRERELEASE
+        break;
+        ;;
+      Minor)
+        echo "Creating ${PROJECT} release and bumping the minor version"
+        standard-version --release-as minor $PRERELEASE
+        break;
+        ;;
+      Patch)
+        echo "Creating ${PROJECT} release and bumping the patch version"
+        standard-version --release-as patch $PRERELEASE
+        break;
+        ;;
+    esac
+
+    CURRENT_BRANCH=$(git branch --show-current)
+    RELEASE_VERSION=`git describe --abbrev=0 --tags`
+    while [ $CURRENT_BRANCH != $RELEASE_VERSION ]; do
+      echo "$PROJECT does not match release branch naming: $CURRENT_BRANCH != $RELEASE_VERSION"
+      read -p "Fix then press enter to continue"
+
+      CURRENT_BRANCH=$(git branch --show-current)
+      RELEASE_VERSION=`git describe --abbrev=0 --tags`
+    done
+    echo
+  }
+
+  prepare_release 'doubtfire-web', "${APP_PATH}/doubtfire-web"
+  WEB_VERSION=$(git describe --abbrev=0 --tags)
+
+  prepare_release 'doubtfire-api', "${APP_PATH}/doubtfire-api"
+  API_VERSION=$(git describe --abbrev=0 --tags)
+
+  prepare_release 'doubtfire-overseer', "${APP_PATH}/doubtfire-overseer"
+  OVERSEER_VERSION=$(git describe --abbrev=0 --tags)
+
   echo
-  echo "Do you wish to make a new ${PROJECT} release?"
-  echo "Even if there are no changes this will still bump the version number"
-  select answer in "Skip" "Major" "Minor" "Patch" "Custom"; do
-      case $answer in
-          Skip)
-            echo "Not changing ${PROJECT} tag"
-            break;
-            ;;
-          Major)
-            echo "Creating the ${PROJECT} release and bumping the major version"
-            standard-version --release-as major
-            break;
-            ;;
-          Minor)
-            echo "Creating the ${PROJECT} release and bumping the minor version"
-            standard-version --release-as minor
-            break;
-            ;;
-          Patch)
-            echo "Creating the ${PROJECT} release and bumping the patch version"
-            standard-version --release-as patch
-            break;
-            ;;
-          Custom)
-            read -p "Enter new tag name: " TAG_NAME
-            standard-version --release-as $TAG_NAME
-            break;
-            ;;
-      esac
-  done
+  echo "### Step 3: Prepare deploy for release"
+  echo
+
+  cd "${APP_PATH}/releases"
+  DATE_WITH_TIME=`date "+%Y-%m%d-%H%M"`
+  mkdir $DATE_WITH_TIME
+  echo "$API_VERSION" > "${DATE_WITH_TIME}/.apiversion"
+  echo "$WEB_VERSION" > "${DATE_WITH_TIME}/.webversion"
+  echo "$OVERSEER_VERSION" > "${DATE_WITH_TIME}/.overseer"
+  cp -r ./release-template/. ./${DATE_WITH_TIME}
+  echo "https://github.com/doubtfire-lms/doubtfire-web/blob/${WEB_VERSION}/CHANGELOG.md" > ${DATE_WITH_TIME}/WEB_CHANGELOG.md
+  echo "https://github.com/doubtfire-lms/doubtfire-api/blob/${API_VERSION}/CHANGELOG.md" > ${DATE_WITH_TIME}/API_CHANGELOG.md
+  echo "https://github.com/doubtfire-lms/doubtfire-api/blob/${OVERSEER_VERSION}/CHANGELOG.md" > ${DATE_WITH_TIME}/OVERSEER_CHANGELOG.md
 
   echo
-}
+  echo "Please update release notes, and push them to origin before continuing here..."
 
-prepare_release 'doubtfire-web', "${APP_PATH}/doubtfire-web"
-WEB_VERSION=$(git describe --abbrev=0 --tags)
-
-prepare_release 'doubtfire-api', "${APP_PATH}/doubtfire-api"
-API_VERSION=$(git describe --abbrev=0 --tags)
-
-prepare_release 'overseer', "${APP_PATH}/overseer"
-OVERSEER_VERSION=$(git describe --abbrev=0 --tags)
-
+  prepare_release 'doubtfire-deploy', "${APP_PATH}"
+  DEPLOY_VERSION=$(git describe --abbrev=0 --tags)
+done
 
 echo
-echo "### Step 4: Prepare deploy for release"
-echo
-
-cd "${APP_PATH}/releases"
-DATE_WITH_TIME=`date "+%Y-%m%d-%H%M"`
-mkdir $DATE_WITH_TIME
-echo "$API_VERSION" > "${DATE_WITH_TIME}/.apiversion"
-echo "$WEB_VERSION" > "${DATE_WITH_TIME}/.webversion"
-echo "$OVERSEER_VERSION" > "${DATE_WITH_TIME}/.overseer"
-cp -r ./release-template/. ./${DATE_WITH_TIME}
-echo "https://github.com/doubtfire-lms/doubtfire-web/blob/${WEB_VERSION}/CHANGELOG.md" > ${DATE_WITH_TIME}/WEB_CHANGELOG.md
-echo "https://github.com/doubtfire-lms/doubtfire-api/blob/${API_VERSION}/CHANGELOG.md" > ${DATE_WITH_TIME}/API_CHANGELOG.md
-echo "https://github.com/doubtfire-lms/doubtfire-api/blob/${OVERSEER_VERSION}/CHANGELOG.md" > ${DATE_WITH_TIME}/OVERSEER_CHANGELOG.md
-
-echo
-echo "Please update release notes, and push them to origin before continuing here..."
-
-prepare_release 'doubtfire-deploy', "${APP_PATH}"
-DEPLOY_VERSION=$(git describe --abbrev=0 --tags)
-
-echo
-echo "### Step 3: Push releases"
+echo "### Step 4: Push releases"
 echo
 
 function push_release {
@@ -129,7 +148,7 @@ select answer in "Skip" "Push"; do
         Push)
           push_release 'doubtfire-web', "${APP_PATH}/doubtfire-web"
           push_release 'doubtfire-api', "${APP_PATH}/doubtfire-api"
-          push_release 'overseer', "${APP_PATH}/overseer"
+          push_release 'doubtfire-overseer', "${APP_PATH}/doubtfire-overseer"
           push_release 'doubtfire-deploy', "${APP_PATH}"
           break;
           ;;
