@@ -1,6 +1,6 @@
 FROM ruby:2.6.7-buster
 
-ARG OVERSEER_HOME=./overseer
+ARG OVERSEER_HOME=./doubtfire-overseer
 
 # docker-ce-cli apt dependencies
 ENV DEBIAN_FRONTEND noninteractive
