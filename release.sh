@@ -71,63 +71,61 @@ select answer in "Skip" "Auto" "Major" "Minor" "Patch"; do
   esac
 done
 
-  function prepare_release {
-    PROJECT=$1
-    PROJECT_PATH=$2
+function prepare_release {
+  PROJECT=$1
+  PROJECT_PATH=$2
 
-    cd "${PROJECT_PATH}"
-    standard-version $RELEASE_AS $PRERELEASE
+  cd "${PROJECT_PATH}"
+  standard-version $RELEASE_AS $PRERELEASE
+
+  CURRENT_BRANCH=$(git branch --show-current)
+  RELEASE_VERSION=`git describe --abbrev=0 --tags`
+
+  while [ ${CURRENT_BRANCH%.x} != ${${RELEASE_VERSION#v}%.*} ]; do
+    echo "$PROJECT does not match release branch naming: $CURRENT_BRANCH != $RELEASE_VERSION"
+    read -p "Fix then press enter to continue (or break to quit)"
 
     CURRENT_BRANCH=$(git branch --show-current)
     RELEASE_VERSION=`git describe --abbrev=0 --tags`
-
-    while [ ${CURRENT_BRANCH%.x} != ${${RELEASE_VERSION#v}%.*} ]; do
-      echo "$PROJECT does not match release branch naming: $CURRENT_BRANCH != $RELEASE_VERSION"
-      read -p "Fix then press enter to continue (or break to quit)"
-
-      CURRENT_BRANCH=$(git branch --show-current)
-      RELEASE_VERSION=`git describe --abbrev=0 --tags`
-    done
-    echo
-  }
-
-  prepare_release 'doubtfire-web' "${APP_PATH}/doubtfire-web"
-  WEB_VERSION=$(git describe --abbrev=0 --tags)
-
-  prepare_release 'doubtfire-api' "${APP_PATH}/doubtfire-api"
-  API_VERSION=$(git describe --abbrev=0 --tags)
-
-  prepare_release 'doubtfire-overseer' "${APP_PATH}/doubtfire-overseer"
-  OVERSEER_VERSION=$(git describe --abbrev=0 --tags)
-
+  done
   echo
-  echo "### Step 3: Prepare deploy for release"
-  echo
+}
 
-  cd "${APP_PATH}/releases"
-  DATE_WITH_TIME=`date "+%Y-%m%d-%H%M"`
-  mkdir $DATE_WITH_TIME
-  echo "$API_VERSION" > "${DATE_WITH_TIME}/.apiversion"
-  echo "$WEB_VERSION" > "${DATE_WITH_TIME}/.webversion"
-  echo "$OVERSEER_VERSION" > "${DATE_WITH_TIME}/.overseer"
-  cp -r ./release-template/. ./${DATE_WITH_TIME}
-  echo "https://github.com/doubtfire-lms/doubtfire-web/blob/${WEB_VERSION}/CHANGELOG.md" > ${DATE_WITH_TIME}/WEB_CHANGELOG.md
-  echo "https://github.com/doubtfire-lms/doubtfire-api/blob/${API_VERSION}/CHANGELOG.md" > ${DATE_WITH_TIME}/API_CHANGELOG.md
-  echo "https://github.com/doubtfire-lms/doubtfire-api/blob/${OVERSEER_VERSION}/CHANGELOG.md" > ${DATE_WITH_TIME}/OVERSEER_CHANGELOG.md
+prepare_release 'doubtfire-web' "${APP_PATH}/doubtfire-web"
+WEB_VERSION=$(git describe --abbrev=0 --tags)
 
-  echo
-  echo "Please update release notes, and push them to origin before continuing here..."
+prepare_release 'doubtfire-api' "${APP_PATH}/doubtfire-api"
+API_VERSION=$(git describe --abbrev=0 --tags)
 
-  prepare_release 'doubtfire-deploy' "${APP_PATH}"
-  DEPLOY_VERSION=$(git describe --abbrev=0 --tags)
-done
+prepare_release 'doubtfire-overseer' "${APP_PATH}/doubtfire-overseer"
+OVERSEER_VERSION=$(git describe --abbrev=0 --tags)
+
+echo
+echo "### Step 3: Prepare deploy for release"
+echo
+
+cd "${APP_PATH}/releases"
+DATE_WITH_TIME=`date "+%Y-%m%d-%H%M"`
+mkdir $DATE_WITH_TIME
+echo "$API_VERSION" > "${DATE_WITH_TIME}/.apiversion"
+echo "$WEB_VERSION" > "${DATE_WITH_TIME}/.webversion"
+echo "$OVERSEER_VERSION" > "${DATE_WITH_TIME}/.overseer"
+cp -r ./release-template/. ./${DATE_WITH_TIME}
+echo "https://github.com/doubtfire-lms/doubtfire-web/blob/${WEB_VERSION}/CHANGELOG.md" > ${DATE_WITH_TIME}/WEB_CHANGELOG.md
+echo "https://github.com/doubtfire-lms/doubtfire-api/blob/${API_VERSION}/CHANGELOG.md" > ${DATE_WITH_TIME}/API_CHANGELOG.md
+echo "https://github.com/doubtfire-lms/doubtfire-api/blob/${OVERSEER_VERSION}/CHANGELOG.md" > ${DATE_WITH_TIME}/OVERSEER_CHANGELOG.md
+
+echo
+echo "Please update release notes, and push them to origin before continuing here..."
+
+read -p "Press enter to continue" TEMP
+
+prepare_release 'doubtfire-deploy' "${APP_PATH}"
+DEPLOY_VERSION=$(git describe --abbrev=0 --tags)
 
 echo
 echo "### Step 4: Push releases"
 echo
-
-echo "What's the name of the remote to push to (doubtfire-lms)"
-read -p "Remote: (eg origin/upstream): " REMOTE
 
 function push_release {
   PROJECT=$1
@@ -150,6 +148,9 @@ select answer in "Skip" "Push"; do
       break;
       ;;
     Push)
+      echo "What's the name of the remote to push to (doubtfire-lms)"
+      read -p "Remote: (eg origin/upstream): " REMOTE
+
       push_release 'doubtfire-web' "${APP_PATH}/doubtfire-web"
       push_release 'doubtfire-api' "${APP_PATH}/doubtfire-api"
       push_release 'doubtfire-overseer' "${APP_PATH}/doubtfire-overseer"
