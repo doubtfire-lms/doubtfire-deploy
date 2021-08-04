@@ -80,7 +80,8 @@ done
 
     CURRENT_BRANCH=$(git branch --show-current)
     RELEASE_VERSION=`git describe --abbrev=0 --tags`
-    while [ $CURRENT_BRANCH != $RELEASE_VERSION ]; do
+
+    if [ ${CURRENT_BRANCH%.x} != ${${RELEASE_VERSION#v}%.*} ]; then
       echo "$PROJECT does not match release branch naming: $CURRENT_BRANCH != $RELEASE_VERSION"
       read -p "Fix then press enter to continue (or break to quit)"
 
