@@ -113,7 +113,7 @@ echo "$OVERSEER_VERSION" > "${DATE_WITH_TIME}/.overseer"
 cp -r ./release-template/. ./${DATE_WITH_TIME}
 echo "https://github.com/doubtfire-lms/doubtfire-web/blob/${WEB_VERSION}/CHANGELOG.md" > ${DATE_WITH_TIME}/WEB_CHANGELOG.md
 echo "https://github.com/doubtfire-lms/doubtfire-api/blob/${API_VERSION}/CHANGELOG.md" > ${DATE_WITH_TIME}/API_CHANGELOG.md
-echo "https://github.com/doubtfire-lms/doubtfire-api/blob/${OVERSEER_VERSION}/CHANGELOG.md" > ${DATE_WITH_TIME}/OVERSEER_CHANGELOG.md
+echo "https://github.com/doubtfire-lms/doubtfire-overseer/blob/${OVERSEER_VERSION}/CHANGELOG.md" > ${DATE_WITH_TIME}/OVERSEER_CHANGELOG.md
 
 echo
 echo "Please update release notes, and push them to origin before continuing here..."
