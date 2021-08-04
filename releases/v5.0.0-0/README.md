@@ -7,6 +7,7 @@ This is a prerelease of Doubtfire based upon the new Docker deployment model. Th
 3. Update web application to allow administration of Overseer and viewing of Overseer results
 
 ## Migration steps
+
 To deploy this version:
 
 1. Setup deployment using docker compose from the associated release.
