@@ -1,6 +1,5 @@
 name: docker-compose-actions-workflow
-on:
-  deployment
+on: [deployment]
 jobs:
   docker-webserver:
     environment: deployment-secrets
