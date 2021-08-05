@@ -1,4 +1,4 @@
-name: docker-compose-actions-workflow
+name: create-doubtfire-deployment
 on: [deployment]
 jobs:
   docker-webserver:
