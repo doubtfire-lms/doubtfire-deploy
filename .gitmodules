@@ -4,9 +4,6 @@
 [submodule "doubtfire-api"]
 	path = doubtfire-api
 	url = https://github.com/doubtfire-lms/doubtfire-api.git
-[submodule "bunny-pub-sub"]
-	path = bunny-pub-sub
-	url = https://github.com/doubtfire-lms/bunny-pub-sub.git
 [submodule "doubtfire-overseer"]
 	path = doubtfire-overseer
 	url = https://github.com/doubtfire-lms/doubtfire-overseer.git
