@@ -1,4 +1,9 @@
-# How to release
-- Duplicate this directory, and rename the directory to the version number
-- Edit the version numbenr in the CHANGELOG.md file, and add the details
-- Optionally retain the tweet or blog post files
+# version tag name
+
+Provide a description of the things that are included in this release.
+
+## Migration steps
+
+To deploy this version:
+
+1. Describe steps needed to deploy the new version

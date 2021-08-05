@@ -1,44 +1,24 @@
 version: '3.9'
 services:
   webserver:
-    container_name: df-prod-webserver
-    build:
-      context: .
-      dockerfile: webserver.Dockerfile
+    container_name: doubtfire-webserver
+    image: lmsdoubtfire/webserver:development
     ports:
       - "3000:3000"
-    depends_on:
-      - database
     env_file:
       - doubtfire-base.env
     volumes:
-      - ./data/student-work:/student-work
+      - ./student-work:/student-work
   pdfgen:
-    container_name: df-prod-pdfgen
-    build:
-      context: .
-      dockerfile: pdfgen.Dockerfile
-    depends_on:
-      - database
+    container_name: doubtfire-pdfgen
+    image: lmsdoubtfire/pdfgen:development
     env_file:
       - doubtfire-base.env
     volumes:
-      - ./data/student-work:/student-work
-  database:
-    container_name: df-prod-database
-    image: mariadb
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: db-root-password
-      MYSQL_DATABASE: doubtfire-dev
-      MYSQL_USER: dfire
-      MYSQL_PASSWORD: pwd
-    volumes:
-      - ./data/database:/var/lib/mysql
-  doubtfire-overseer:
-    container_name: df-prod-overseer
-    build:
-      dockerfile: overseer.Dockerfile
+      - ./student-work:/student-work
+  overseer_1:
+    container_name: doubtfire-overseer_1
+    image: lmsdoubtfire/overseer:development
     depends_on:
       - df-prod-mq
     restart: on-failure
@@ -49,7 +29,6 @@ services:
       RABBITMQ_PASSWORD: secure_credentials
       CONTAINER_NAME: overseer-container
       HOST_XFS_VOLUME: $PWD/data/overseer-instances/1
-
     volumes:
       # Host path for writing the output of execution - required.
       # TODO: Test by mounting an actual XFS volume.
@@ -60,8 +39,9 @@ services:
       # received from OnTrack via RabbitMQ.
       # TODO: Make the path rw by overseer in docker image.
       - ./data/student-work:/student-work
+
   doubtfire-mq:
-    container_name: df-prod-mq
+    container_name: df-rabbitmq
     image: rabbitmq:3.8-management
     ports:
       - 15672:15672
@@ -71,3 +51,4 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: secure_credentials
       RABBITMQ_DEFAULT_PASS: secure_credentials
+    

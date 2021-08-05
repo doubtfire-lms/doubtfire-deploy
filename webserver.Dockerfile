@@ -23,6 +23,9 @@ COPY "$API_HOME" /doubtfire/
 # Copy doubtfire-web dist
 COPY "$WEB_HOME/dist" /doubtfire/public/
 
+# Install bundler
+RUN gem install bundler
+
 # Install the Gems
 RUN bundle install --without passenger
 
