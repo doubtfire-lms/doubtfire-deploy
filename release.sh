@@ -156,8 +156,25 @@ select answer in "Skip" "Push"; do
       push_release 'doubtfire-api' "${APP_PATH}/doubtfire-api"
       push_release 'doubtfire-overseer' "${APP_PATH}/doubtfire-overseer"
       push_release 'doubtfire-deploy' "${APP_PATH}"
+
+      echo
+      echo "Run workflow to push to Docker hub?"
+      select workflow in 'Skip' 'Run'do
+        case $workflow in
+          Skip)
+            break;
+            ;;
+          Run)
+            read -p "What is your Github username? username: " GH_USER
+
+            curl --user "$GH_USER" -d "{\"ref\":\"${RELEASE_VERSION}\"}" -H 'Content-Type: application/json' -H 'Accept: application/vnd.github.v3+json' 'https://api.github.com/repos/doubtfire-lms/doubtfire-deploy/actions/workflows/11926685/dispatches'
+            break;
+            ;;
+        esac
+      done
+
+
       break;
       ;;
   esac
 done
-
