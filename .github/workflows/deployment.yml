@@ -1,5 +1,7 @@
 name: create-doubtfire-deployment
-on: [deployment]
+on:
+  deployment:
+  workflow_dispatch:
 jobs:
   docker-webserver:
     environment: deployment-secrets
