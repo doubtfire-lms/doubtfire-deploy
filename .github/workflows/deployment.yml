@@ -28,6 +28,7 @@ jobs:
           options: -v ${{ github.workspace }}/doubtfire-web:/doubtfire-web -v ${{ github.workspace }}/doubtfire-web/dist:/doubtfire-web/dist --workdir /doubtfire-web 
           run:  |
             echo "Running deploy script in local doubtfire-web"
+            npm install
             npm run-script deploy
       - name: Login to DockerHub
         uses: docker/login-action@v1
