@@ -159,7 +159,7 @@ select answer in "Skip" "Push"; do
 
       echo
       echo "Run workflow to push to Docker hub?"
-      select workflow in 'Skip' 'Run'do
+      select workflow in 'Skip' 'Run' do
         case $workflow in
           Skip)
             break;
