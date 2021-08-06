@@ -2,14 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [](https://github.com/macite/doubtfire-deploy/compare/v4.0.0...v) (2021-08-04)
+## [5.0.0-1](https://github.com/macite/doubtfire-deploy/compare/v4.0.0...v5.0.0-1) (2021-08-06)
 
 
 ### Features
 
+* add ability to run deploy workflow from release ([1294c8f](https://github.com/macite/doubtfire-deploy/commit/1294c8f1355a5e95fa901b6ac2241d6097a8b0e3))
 * Add docker compose for deployment ([7890b1f](https://github.com/macite/doubtfire-deploy/commit/7890b1f1c7b356324b0c39308c9dcd522018b39b))
 * add release and branch creation scripts ([b2911e7](https://github.com/macite/doubtfire-deploy/commit/b2911e71e18769752782022fc49e363afe1b17a7))
-* add script to change remotes of submodules ([126cc54](https://github.com/macite/doubtfire-deploy/commit/126cc54a0905040a263573b359b16ac4107eb38e))
 * Add scripts to assist setting up production ([591392b](https://github.com/macite/doubtfire-deploy/commit/591392be0ca3b32117aa587f646eea88c42ba926))
 * introduce overseer docker image ([53db4ef](https://github.com/macite/doubtfire-deploy/commit/53db4ef2a89646e9222bbf682fe7f8204892c866))
 * introduce release script to simplify build and release process ([1bd04e6](https://github.com/macite/doubtfire-deploy/commit/1bd04e69aafe064201f7a11a1fbe30a9e92a92c2))
@@ -24,14 +24,9 @@ All notable changes to this project will be documented in this file. See [standa
 * add the env to the github action ([9361c60](https://github.com/macite/doubtfire-deploy/commit/9361c60b4f811954e2aad4b07d179c7d8001ecc0))
 * Adjust context for docker build ([f6d105f](https://github.com/macite/doubtfire-deploy/commit/f6d105fb09bd6305bfb4d669659960a8601083df))
 * correct comma use in bash script parameters ([c8c2d0f](https://github.com/macite/doubtfire-deploy/commit/c8c2d0f953280183f475c123581869cd773ab59c))
-* correct comparison of the release and current branch names ([fb5ce09](https://github.com/macite/doubtfire-deploy/commit/fb5ce09080543d037e2e30cc7ffd94773ae9dcdd))
-* correct issue with release script use of select ([af4a6a0](https://github.com/macite/doubtfire-deploy/commit/af4a6a012948523de2033512df5ecee32e3ef47c))
 * Correct meta for docker and redo npm install ([bec78b6](https://github.com/macite/doubtfire-deploy/commit/bec78b6bbdfcd34cce5a6e3977ca0b79dde95818))
-* correct overseer change log path for release ([e83552d](https://github.com/macite/doubtfire-deploy/commit/e83552d8e4a9f79296d6b5a59e6d04198f576aa0))
 * Correct path to pdfGen dockerfile ([db6f29c](https://github.com/macite/doubtfire-deploy/commit/db6f29c7915523dec075c25fb49f613e85107545))
-* correct syntax in release script and order of deploy changes ([a37edee](https://github.com/macite/doubtfire-deploy/commit/a37edeeac57a08c835160bea3bb0ea53ed1ed5b4))
 * Correct typo in pdfgen image name ([370ed89](https://github.com/macite/doubtfire-deploy/commit/370ed892ce7f22a4cac8c7c38428635a3f9d62ea))
-* correct use of while in branch test ([4eb167d](https://github.com/macite/doubtfire-deploy/commit/4eb167dc03c7f3fd22fcd17250f34563de12f405))
 * Ensure build errors end build process ([ad3a995](https://github.com/macite/doubtfire-deploy/commit/ad3a995608e7bc78d0bcbfdb1446b6817eac56b5))
 * ensure remote only asked for once ([e39aa2a](https://github.com/macite/doubtfire-deploy/commit/e39aa2a4d588ae6f3b8d4d70fdfe4f7895709a91))
 * pull submodules correctly on ghactions ([97c8a07](https://github.com/macite/doubtfire-deploy/commit/97c8a0724a50569ce512001ccdc4e225566264d2))
