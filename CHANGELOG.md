@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.0.0-2](https://github.com/macite/doubtfire-deploy/compare/v5.0.0-1...v5.0.0-2) (2021-08-09)
+
+
+### Bug Fixes
+
+* correct syntax error in release script ([b88a836](https://github.com/macite/doubtfire-deploy/commit/b88a8362fe3700244fd2da17fe9dc5badf03f69e))
+* correct tag name in dist docker compose ([db4549f](https://github.com/macite/doubtfire-deploy/commit/db4549f82c97eb710a132e69e0440ea0c10fface))
+
 ## [5.0.0-1](https://github.com/macite/doubtfire-deploy/compare/v4.0.0...v5.0.0-1) (2021-08-06)
 
 
