@@ -20,14 +20,14 @@ services:
     container_name: doubtfire-overseer_1
     image: lmsdoubtfire/overseer:5.0
     depends_on:
-      - df-prod-mq
+      - doubtfire-mq
     restart: on-failure
     environment:
       DOCKER_HOST: host.docker.internal
-      RABBITMQ_HOSTNAME: df-prod-mq
+      RABBITMQ_HOSTNAME: doubtfire-mq
       RABBITMQ_USERNAME: secure_credentials
       RABBITMQ_PASSWORD: secure_credentials
-      CONTAINER_NAME: overseer-container
+      CONTAINER_NAME: overseer-container-1
       HOST_XFS_VOLUME: $PWD/data/overseer-instances/1
     volumes:
       # Host path for writing the output of execution - required.
