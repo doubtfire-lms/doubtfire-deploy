@@ -25,10 +25,10 @@ COPY --from=doubtfire-web:local /doubtfire-web/dist /doubtfire/public/
 # COPY "$WEB_HOME/dist" /doubtfire/public/
 
 # Install bundler
-RUN gem install bundler
+RUN gem install bundler -v "< 2.0"
 
 # Install the Gems
-RUN bundle install --without passenger
+RUN bundle _1.17.3_ install --without passenger
 
 EXPOSE 3000
 ENV RAILS_ENV production
