@@ -21,7 +21,8 @@ WORKDIR /doubtfire
 # Copy doubtfire-api source
 COPY "$API_HOME" /doubtfire/
 # Copy doubtfire-web dist
-COPY "$WEB_HOME/dist" /doubtfire/public/
+COPY --from=doubtfire-web:local /doubtfire-web/dist /doubtfire/public/
+# COPY "$WEB_HOME/dist" /doubtfire/public/
 
 # Install bundler
 RUN gem install bundler
