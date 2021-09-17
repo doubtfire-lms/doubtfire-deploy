@@ -23,7 +23,7 @@ COPY "$API_HOME"/.ci-setup /doubtfire/.ci-setup
 RUN /doubtfire/.ci-setup/texlive-install.sh
 
 # Install bundler
-RUN gem install bundler
+RUN gem install bundler -v "< 2.0"
 
 # Install the Gems
 COPY "$API_HOME"/Gemfile "$API_HOME"/Gemfile.lock /doubtfire/
