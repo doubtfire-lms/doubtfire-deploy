@@ -24,7 +24,7 @@ COPY "$API_HOME" /doubtfire/
 COPY "$WEB_HOME/dist" /doubtfire/public/
 
 # Install bundler
-RUN gem install bundler -v 2.0.0.pre.3 --pre
+RUN gem install bundler
 
 # Install the Gems
 RUN bundle install --without passenger
