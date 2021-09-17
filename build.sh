@@ -63,7 +63,7 @@ echo
 
 cd "${APP_PATH}/doubtfire-web"
 docker image build . -t doubtfire-web:local
-docker run -v `pwd`:/doubtfire-web -v `pwd`/dist:/doubtfire-web/dist  doubtfire-web:local npm run deploy
+# docker run -v `pwd`:/doubtfire-web -v `pwd`/dist:/doubtfire-web/dist  doubtfire-web:local npm run deploy
 
 if [ $? -ne 0 ]; then
   echo "Failed to build doubtfire web";
