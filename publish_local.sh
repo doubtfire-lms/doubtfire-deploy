@@ -30,10 +30,14 @@ cd "./doubtfire-web"
 docker image build --no-cache --rm --tag doubtfire-web:local .
 
 echo "Generate web application to doubtfire-web/dist"
-cd "${APP_PATH}"
 docker run -it -v "${APP_PATH}/doubtfire-web":/doubtfire-web -v "${APP_PATH}/doubtfire-web/dist":/doubtfire-web/dist --workdir /doubtfire-web doubtfire-web:local npm run-script deploy
 
+echo
+echo "------------------------------------------------------------------------------"
+echo
+
 echo "Generating ${DH_USER}/webserver:test image"
+cd "${APP_PATH}"
 docker image build --no-cache --rm --tag "${DH_USER}/webserver:test" -f webserver.Dockerfile .
 
 echo "Publishing ${DH_USER}/webserver:test image"
@@ -44,8 +48,8 @@ echo "--------------------------------------------------------------------------
 echo
 
 echo "Generating PDF Gen"
-echo "Generating ${DH_USER}/pdfGen:test image"
-docker image build --no-cache --rm --tag "${DH_USER}/pdfGen:test" -f pdfgen.Dockerfile .
+echo "Generating ${DH_USER}/pdfgen:test image"
+docker image build --no-cache --rm --tag "${DH_USER}/pdfgen:test" -f pdfgen.Dockerfile .
 
 echo "Publishing ${DH_USER}/pdfGen:test image"
 docker push "${DH_USER}/pdfGen:test"
