@@ -2,7 +2,7 @@ version: '3.9'
 services:
   webserver:
     container_name: doubtfire-webserver
-    image: lmsdoubtfire/webserver:5.0
+    image: lmsdoubtfire/webserver:6.0.0
     ports:
       - "3000:3000"
     env_file:
@@ -11,14 +11,14 @@ services:
       - ./student-work:/student-work
   pdfgen:
     container_name: doubtfire-pdfgen
-    image: lmsdoubtfire/pdfgen:5.0
+    image: lmsdoubtfire/pdfgen:6.0.0
     env_file:
       - doubtfire-base.env
     volumes:
       - ./student-work:/student-work
   overseer_1:
     container_name: doubtfire-overseer_1
-    image: lmsdoubtfire/overseer:5.0
+    image: lmsdoubtfire/overseer:6.0.0
     depends_on:
       - doubtfire-mq
     restart: on-failure
