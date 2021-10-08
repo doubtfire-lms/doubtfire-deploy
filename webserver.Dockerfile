@@ -24,10 +24,11 @@ COPY "$API_HOME" /doubtfire/
 COPY "$WEB_HOME/dist" /doubtfire/public/
 
 # Install bundler
-RUN gem install bundler -v 1.17.3
+RUN gem install bundler -v 2.2.28
+RUN bundle config set --global without development test staging
 
 # Install the Gems
-RUN bundle install --without passenger
+RUN bundle install
 
 EXPOSE 3000
 ENV RAILS_ENV production
