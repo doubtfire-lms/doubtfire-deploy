@@ -23,11 +23,12 @@ COPY "$API_HOME"/.ci-setup /doubtfire/.ci-setup
 RUN /doubtfire/.ci-setup/texlive-install.sh
 
 # Install bundler
-RUN gem install bundler -v 1.17.3
+RUN gem install bundler -v 2.2.28
+RUN bundle config set --global without development test staging
 
 # Install the Gems
 COPY "$API_HOME"/Gemfile "$API_HOME"/Gemfile.lock /doubtfire/
-RUN bundle install --without passenger webserver
+RUN bundle install
 
 # Setup path
 ENV PATH /tmp/texlive/bin/x86_64-linux:$PATH
