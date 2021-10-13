@@ -76,7 +76,7 @@ function prepare_release {
   PROJECT_PATH=$2
 
   cd "${PROJECT_PATH}"
-  standard-version $RELEASE_AS $PRERELEASE
+  standard-version $RELEASE_AS $PRERELEASE --skip.commit
 
   CURRENT_BRANCH=$(git branch --show-current)
   RELEASE_VERSION=`git describe --abbrev=0 --tags`
