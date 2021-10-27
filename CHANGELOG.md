@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.0.1](https://github.com/macite/doubtfire-deploy/compare/v5.0.0...v5.0.1) (2021-10-27)
+
+
+### Bug Fixes
+
+* trigger image builds on push to v tags ([dbd91ed](https://github.com/macite/doubtfire-deploy/commit/dbd91ed3c9f7a9435471fadc5186d9b3b60325ff))
+
 ## [5.0.0](https://github.com/macite/doubtfire-deploy/compare/v5.0.0-2...v5.0.0) (2021-10-13)
 
 
