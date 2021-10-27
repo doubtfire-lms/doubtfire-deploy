@@ -1,6 +1,5 @@
 name: create-doubtfire-deployment
 on:
-on:
   push:
     tags:
       - 'v*'
