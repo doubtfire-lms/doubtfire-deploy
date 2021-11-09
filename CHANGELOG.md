@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.0.1](https://github.com/macite/doubtfire-deploy/compare/v5.0.0...v5.0.1) (2021-10-27)
+
+
+### Bug Fixes
+
+* trigger image builds on push to v tags ([dbd91ed](https://github.com/macite/doubtfire-deploy/commit/dbd91ed3c9f7a9435471fadc5186d9b3b60325ff))
+
+## [5.0.0](https://github.com/macite/doubtfire-deploy/compare/v5.0.0-2...v5.0.0) (2021-10-13)
+
+
+### Features
+
+* add test publish script to aid in testing deployments ([94f7ea2](https://github.com/macite/doubtfire-deploy/commit/94f7ea2f881de832632e43aa343bff5f0a024c94))
+
+
+### Bug Fixes
+
+* correct links in dist compose for rabbit mq ([fb9d0c9](https://github.com/macite/doubtfire-deploy/commit/fb9d0c9ffecaadbe21e88bf8d5a5ef65722ec239))
+* ignore data in dist folder and ensure db container script is executable ([ba71fd0](https://github.com/macite/doubtfire-deploy/commit/ba71fd0ef2dd83d301a5b91184f894074dc94f9c))
+* push to version branch and fix syntax error in release script ([3244b51](https://github.com/macite/doubtfire-deploy/commit/3244b516e488d95bb63671bc0b6b5d811344976f))
+
 ## [5.0.0-2](https://github.com/macite/doubtfire-deploy/compare/v5.0.0-1...v5.0.0-2) (2021-08-09)
 
 
