@@ -1,5 +1,8 @@
 name: create-doubtfire-deployment
 on:
+  push:
+    tags:
+      - 'v*'
   deployment:
   workflow_dispatch:
 jobs:
@@ -41,7 +44,7 @@ jobs:
         with:
           images: lmsdoubtfire/webserver
           tags: |
-            type=ref,event=branch
+            type=ref,event=tag
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
@@ -77,7 +80,7 @@ jobs:
         with:
           images: lmsdoubtfire/pdfGen
           tags: |
-            type=ref,event=branch
+            type=ref,event=tag
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
@@ -113,7 +116,7 @@ jobs:
         with:
           images: lmsdoubtfire/overseer
           tags: |
-            type=ref,event=branch
+            type=ref,event=tag
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
