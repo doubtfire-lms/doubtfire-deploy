@@ -72,7 +72,7 @@ services:
 
   doubtfire-web:
     container_name: doubtfire-web
-    image: doubtfire-web:6.0.x-dev
+    image: lmsdoubtfire/doubtfire-web:6.0.x-dev
     command: /bin/bash -c 'npm install; npm start'
     ports:
       - "4200:4200"
