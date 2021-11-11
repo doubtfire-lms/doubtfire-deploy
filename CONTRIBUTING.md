@@ -37,7 +37,7 @@ Development of Doubtfire uses Docker containers to remove the need to install a 
 
     `git clone --recurse-submodules https://github.com/YOUR_USERNAME/doubtfire-deploy`
 
-3. Open a Terminal that supports `sh` scripts (on Windows, you will need WSL, Msys2, or Cygwin). Run the following command to set your fork as the remote.
+3. Open a Terminal that supports `sh` scripts (on Windows, you will need WSL(Ubuntu LTs, Ubuntu, etc.), Msys2, GitBash, or Cygwin). Run the following command to set your fork as the remote.
 
     `./change_remotes.sh`
 
