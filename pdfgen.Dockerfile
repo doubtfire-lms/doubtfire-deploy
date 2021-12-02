@@ -2,6 +2,7 @@
 FROM ruby:2.6.7-buster
 
 ARG API_HOME=./doubtfire-api
+ARG PDFGEN_HOME=./pdfGen
 
 # Setup dependencies
 ARG DEBIAN_FRONTEND=noninteractive
@@ -13,10 +14,14 @@ RUN apt-get update && apt-get install -y \
   libmagickwand-dev \
   libmariadb-dev \
   python3-pygments \
-  tzdata
+  tzdata \
+  cron
 
 # Setup the folder where we will deploy the code
 WORKDIR /doubtfire
+
+# Crontab file copied to cron.d directory.
+COPY "$PDFGEN_HOME"/cronjob /etc/cron.d/container_cronjob
 
 # Install LaTex
 COPY "$API_HOME"/.ci-setup /doubtfire/.ci-setup
@@ -34,5 +39,6 @@ ENV PATH /tmp/texlive/bin/x86_64-linux:$PATH
 
 # Copy doubtfire-api source
 COPY "$API_HOME" /doubtfire/
+COPY "$PDFGEN_HOME"/script.sh /doubtfire/
 
-CMD bundle exec rake submission:generate_pdfs
+CMD script.sh
