@@ -20,9 +20,6 @@ RUN apt-get update && apt-get install -y \
 # Setup the folder where we will deploy the code
 WORKDIR /doubtfire
 
-# Crontab file copied to cron.d directory.
-COPY "$PDFGEN_HOME"/cronjob /etc/cron.d/container_cronjob
-
 # Install LaTex
 COPY "$API_HOME"/.ci-setup /doubtfire/.ci-setup
 RUN /doubtfire/.ci-setup/texlive-install.sh
@@ -39,6 +36,11 @@ ENV PATH /tmp/texlive/bin/x86_64-linux:$PATH
 
 # Copy doubtfire-api source
 COPY "$API_HOME" /doubtfire/
-COPY "$PDFGEN_HOME"/script.sh /doubtfire/
 
-CMD script.sh
+# Crontab file copied to cron.d directory.
+COPY "$PDFGEN_HOME"/entry_point.sh /doubtfire/
+COPY "$PDFGEN_HOME"/crontab /etc/cron.d/container_cronjob
+
+RUN touch /var/log/cron.log
+
+CMD /doubtfire/entry_point.sh
