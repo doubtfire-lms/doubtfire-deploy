@@ -18,6 +18,9 @@ crontab /etc/cron.d/container_cronjob
 
 echo "RESET CRONTAB" >> /var/log/cron.log
 
+# Ensure mail settings are accessible only by root
+chown root:root /etc/msmtprc
+chmod 600 /etc/msmtprc
 
 # Run cron and follow log
 chmod 644 /etc/cron.d/container_cronjob && cron -f && tail -f /var/log/cron.log > /proc/1/fd/1 2>/proc/1/fd/2
