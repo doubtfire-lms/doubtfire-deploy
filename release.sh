@@ -106,23 +106,23 @@ echo
 echo "### Step 3: Prepare deploy for release"
 echo
 
-cd "${APP_PATH}/releases"
-mkdir -p $RELEASE_VERSION
-echo "$API_VERSION" > "${RELEASE_VERSION}/.apiversion"
-echo "$WEB_VERSION" > "${RELEASE_VERSION}/.webversion"
-echo "$OVERSEER_VERSION" > "${RELEASE_VERSION}/.overseer"
-cp -r ./release-template/. ./${RELEASE_VERSION}
-echo "https://github.com/doubtfire-lms/doubtfire-web/blob/${WEB_VERSION}/CHANGELOG.md" > ${RELEASE_VERSION}/WEB_CHANGELOG.md
-echo "https://github.com/doubtfire-lms/doubtfire-api/blob/${API_VERSION}/CHANGELOG.md" > ${RELEASE_VERSION}/API_CHANGELOG.md
-echo "https://github.com/doubtfire-lms/doubtfire-overseer/blob/${OVERSEER_VERSION}/CHANGELOG.md" > ${RELEASE_VERSION}/OVERSEER_CHANGELOG.md
-
-echo
-echo "Please update release notes, and push them to origin before continuing here..."
-
-read -p "Press enter to continue" TEMP
-
 prepare_release 'doubtfire-deploy' "${APP_PATH}"
 DEPLOY_VERSION=$(git describe --abbrev=0 --tags)
+
+cd "${APP_PATH}/releases"
+mkdir -p $RELEASE_VERSION
+echo "$API_VERSION" > "${DEPLOY_VERSION}/.apiversion"
+echo "$WEB_VERSION" > "${DEPLOY_VERSION}/.webversion"
+echo "$OVERSEER_VERSION" > "${DEPLOY_VERSION}/.overseer"
+cp -r ./release-template/. ./${DEPLOY_VERSION}
+echo "https://github.com/doubtfire-lms/doubtfire-web/blob/${WEB_VERSION}/CHANGELOG.md" > ${DEPLOY_VERSION}/WEB_CHANGELOG.md
+echo "https://github.com/doubtfire-lms/doubtfire-api/blob/${API_VERSION}/CHANGELOG.md" > ${DEPLOY_VERSION}/API_CHANGELOG.md
+echo "https://github.com/doubtfire-lms/doubtfire-overseer/blob/${OVERSEER_VERSION}/CHANGELOG.md" > ${DEPLOY_VERSION}/OVERSEER_CHANGELOG.md
+
+echo
+echo "Please update release notes, commit, and push to origin before continuing..."
+
+read -p "Press enter to continue" TEMP
 
 echo
 echo "### Step 4: Push releases"
