@@ -15,7 +15,8 @@ RUN apt-get update && apt-get install -y \
   libmariadb-dev \
   python3-pygments \
   tzdata \
-  cron
+  cron \
+  msmtp-mta bsd-mailx
 
 # Setup the folder where we will deploy the code
 WORKDIR /doubtfire
