@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.0.4](https://github.com/macite/doubtfire-deploy/compare/v5.0.3...v5.0.4) (2021-12-06)
+
+
+### Features
+
+* add scheduled cron tasks for repeated actions ([2f9ca9c](https://github.com/macite/doubtfire-deploy/commit/2f9ca9c99ef71a5a1231e810a8a13e9c9b47441a))
+* add scheduled tasks to PDFGen container ([442ebba](https://github.com/macite/doubtfire-deploy/commit/442ebbaf8bb2e9c278e63fa187c927afb0cb188e))
+* enhance deployment handling of errors ([4661cd7](https://github.com/macite/doubtfire-deploy/commit/4661cd733e64a04461777a324b9b960fb08ba72d))
+
 ### [5.0.3](https://github.com/macite/doubtfire-deploy/compare/v5.0.2...v5.0.3) (2021-11-19)
 
 ### [5.0.2](https://github.com/macite/doubtfire-deploy/compare/v5.0.1...v5.0.2) (2021-11-19)
