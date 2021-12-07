@@ -76,7 +76,27 @@ function prepare_release {
   PROJECT_PATH=$2
 
   cd "${PROJECT_PATH}"
-  standard-version $RELEASE_AS $PRERELEASE --skip.commit
+
+  CURRENT_TAG=$(git describe --exact-match --tags) 2>>/dev/null
+
+  if [ $CURRENT_TAG ]; then
+    echo "$PROJECT is currently on tag $CURRENT_TAG"
+    echo "Do you want to create a new release for this project?"
+
+    select answer in "Skip" "Tag"; do
+      case $answer in
+        Skip)
+          break;
+          ;;
+        Tag)
+          standard-version $RELEASE_AS $PRERELEASE --skip.commit
+          break;
+          ;;
+      esac
+    done
+  else
+    standard-version $RELEASE_AS $PRERELEASE --skip.commit
+  fi
 
   CURRENT_BRANCH=$(git branch --show-current)
   RELEASE_VERSION=`git describe --abbrev=0 --tags`
