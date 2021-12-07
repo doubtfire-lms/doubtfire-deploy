@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.0.5](https://github.com/macite/doubtfire-deploy/compare/v5.0.4...v5.0.5) (2021-12-07)
+
+
+### Features
+
+* add mail configuration options ([5c4189a](https://github.com/macite/doubtfire-deploy/commit/5c4189a3191281300205175e2b5aaaafef054743))
+
+
+### Bug Fixes
+
+* update actions in release script ([55e1d33](https://github.com/macite/doubtfire-deploy/commit/55e1d33804b6cad24be8a2d9cfecf0ef4bb2afd9))
+
 ### [5.0.4](https://github.com/macite/doubtfire-deploy/compare/v5.0.3...v5.0.4) (2021-12-06)
 
 
