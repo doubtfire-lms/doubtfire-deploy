@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.0.6](https://github.com/macite/doubtfire-deploy/compare/v5.0.5...v5.0.6) (2021-12-09)
+
+
+### Bug Fixes
+
+* improve the release process ([1d196f0](https://github.com/macite/doubtfire-deploy/commit/1d196f0794cd95c496a8e7f5714ec45702fe4f79))
+
 ### [5.0.5](https://github.com/macite/doubtfire-deploy/compare/v5.0.4...v5.0.5) (2021-12-07)
 
 
