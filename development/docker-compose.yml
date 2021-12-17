@@ -80,4 +80,3 @@ services:
       - doubtfire-api
     volumes:
       - ../doubtfire-web:/doubtfire-web
-      - ../doubtfire-web/dist:/doubtfire-web/dist
