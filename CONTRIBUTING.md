@@ -52,9 +52,10 @@ Development of Doubtfire uses Docker containers to remove the need to install a 
     exit
     ```
 
-5. Now you can use `docker compose` to up a running environment.
+5. Now you can use `docker compose` to start a running environment.
 
    ```bash
+   # Run in the development folder
    docker compose up
    ```
 
@@ -77,9 +78,12 @@ Development of Doubtfire uses Docker containers to remove the need to install a 
     - Access the backend API using:
       - Rails console for interactive code: `bundle exec rails c`
       - Test using
+        - Setup test environment: Run the following in a single docker terminal connected to doubtfire-api.
+          - `rails db:environment:set RAILS_ENV=test`
+          - `RAILS_ENV=test bundle exec rake db:populate`
         - Run all unit tests using: `bundle exec rails test`
-        - Run tests from a single file: `bundle exec rake test test/models/break_test.rb`
-        - Run a single test: `bundle exec rake test test/models/break_test.rb test_breaks_not_colliding`
+        - Run tests from a single file: `bundle exec rails test test/models/break_test.rb`
+        - Run a single test: `bundle exec rails test test/api/auth_test.rb:107`
       - Setup the databse:
         - Reset the database: `bundle exec rake db:reset db:migrate`
         - Migrate the database on schema changes: `bundle exec rake db:migrate`
@@ -91,15 +95,15 @@ Development of Doubtfire uses Docker containers to remove the need to install a 
         - Start overseer result subscriber: `bundle exec rake register_q_assessment_results_subscriber`
 
     - Access the **doubtfire-web** container use:
-      - Attach a terminal to the doubtfire-web container: `docker compose exec doubtfire-web bash`
-      - Or run a new container if web is not running: `docker compose run --rm doubtfire-web bash`
+      - Attach a terminal to the doubtfire-web container: `docker compose exec doubtfire-web /bin/bash`
+      - Or run a new container if web is not running: `docker compose run --rm doubtfire-web /bin/bash`
     - In the doubtfire-web container you will have access to `ng` and `npm`
 
     Some things to know about the setup:
 
     - The containers link to `../data` as a volume to store database details, tmp files, and student work.
     - If you do not gracefully terminal the api you may need to remove the `pid` file from the tmp folder. You can use `rm ../data/tmp/pids/server.pid` to do this.
-    - When you bring up the *doubtfire-web* project, it will run `npm install` to setup the node_modules. If you change the package.json in *doubtfire-web* you can just restart the container update the node modules.
+    - When you bring up the *doubtfire-web* project, it will run `npm install` to setup the node_modules. If you change the package.json in *doubtfire-web* you can just restart the container to update the node modules.
 
 ## Forking workflow
 
