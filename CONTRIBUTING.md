@@ -1,4 +1,5 @@
 ![Doubtfire Logo](http://puu.sh/lyClF/fde5bfbbe7.png)
+
 # Contributing to Doubtfire
 
 We welcome additions and extensions to Doubtfire that help progress our goal of supporting student learning through frequent formative feedback and delayed summative assessment.
@@ -10,6 +11,8 @@ This guide provides high-level details on how to contribute to any of the Doubtf
 - [Contributing to Doubtfire](#contributing-to-doubtfire)
   - [Table of Contents](#table-of-contents)
   - [Getting started](#getting-started)
+    - [Development Containers](#development-containers)
+    - [Working with Docker Compose](#working-with-docker-compose)
   - [Forking workflow](#forking-workflow)
     - [About the Doubtfire Branch Structure](#about-the-doubtfire-branch-structure)
     - [Ensure you have your author credentials set up](#ensure-you-have-your-author-credentials-set-up)
@@ -27,7 +30,20 @@ The **doubtfire-deploy** project provides the base repository containing submodu
 - [doubtfire-web](https://github.com/doubtfire-lms/doubtfire-web) hosts the frontend code implemented in [Angular](https://angular.io) and [AngularJS](https://angularjs.org). This implements the web application that connects to the backend api.
 - [doubtfire-overseer](https://github.com/doubtfire-lms/doubtfire-overseer) provides facilities to run automated tasks on student submissions. Please get in touch with the core team if you want access to this repository. You can make contributions without access to this repository.
 
-Development of Doubtfire uses Docker containers to remove the need to install a range of native tools used within the project. To get started:
+Development of Doubtfire uses Docker containers to remove the need to install a range of native tools used within the project.
+
+### Development Containers
+
+There are several docker compose setups to aid in speeding up the development.
+
+- Each subproject has its own docker compose that should be used when working on a single repository.
+- The **development** folder in the doubtfire deploy project contains separate docker compose setups for working with combinations of projects:
+  - The **docker-compose.yml** file contains the most likely setup with development setups for both the api and web projets. This should be used when working on both the api and the web front end. You can run this using **run-api-web.sh**.
+  - The **docker-compose.full.yml** contains a setup with all of the containers needed to run Doubtfire with overseer. This requires access to the overseer repository. You can run this using **run-full.sh**
+
+### Working with Docker Compose
+
+To get started:
 
 1. Fork [doubtfire-deploy](https://github.com/doubtfire-lms/doubtfire-deploy), [doubtfire-api](https://github.com/doubtfire-lms/doubtfire-api), and [doubtfire-web](https://github.com/doubtfire-lms/doubtfire-web)
 
@@ -44,7 +60,7 @@ Development of Doubtfire uses Docker containers to remove the need to install a 
 4. Change into the **development** directory and use [Docker Compose](https://docs.docker.com/compose/) to setup the database.
 
     ```bash
-    cd development
+    cd development/api-web
     docker compose run --rm doubtfire-api bash
     # now in the container run...
     bundle exec rails db:environment:set RAILS_ENV=development
