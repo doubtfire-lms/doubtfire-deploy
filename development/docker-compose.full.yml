@@ -1,0 +1,84 @@
+version: '3'
+services:
+  doubtfire-api:
+    container_name: doubtfire-api
+    image: lmsdoubtfire/doubtfire-api:6.0.x-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../doubtfire-api/:/doubtfire
+      - ../data/tmp:/doubtfire/tmp
+      - ../data/student-work:/student-work
+    depends_on:
+      - dev-db
+    env_file:
+      - api.env
+      - overseer.env
+
+  dev-db:
+    container_name: doubtfire-dev-db
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: db-root-password
+      MYSQL_DATABASE: doubtfire-dev
+      MYSQL_USER: dfire
+      MYSQL_PASSWORD: pwd
+    volumes:
+      - ../data/database:/var/lib/mysql
+
+  doubtfire-web:
+    container_name: doubtfire-web
+    image: lmsdoubtfire/doubtfire-web:6.0.x-dev
+    command: /bin/bash -c 'npm install; npm start'
+    ports:
+      - "4200:4200"
+    depends_on:
+      - doubtfire-api
+    volumes:
+      - ../doubtfire-web:/doubtfire-web
+
+  overseer-receive:
+    image: lmsdoubtfire/doubtfire-api:6.0.x-dev
+    env_file:
+      - api.env
+      - overseer.env
+    volumes:
+      - ../doubtfire-api/:/doubtfire
+      - ../data/tmp:/doubtfire/tmp
+      - ../data/student-work:/student-work
+    command: /bin/bash -c "bundle exec rake register_q_assessment_results_subscriber"
+
+  overseer-worker-1:
+    build: ../doubtfire-overseer
+    env_file:
+      - api.env
+      - overseer.env
+    environment:
+      DOCKER_HOST: host.docker.internal
+      CONTAINER_NAME: overseer-container-1
+      HOST_XFS_VOLUME: $PWD/../data/overseer-instances/1
+    volumes:
+      - ../doubtfire-overseer/:/app
+      # Host path for writing the output of execution - required.
+      # TODO: Test by mounting an actual XFS volume.
+      # /stage/ontrack-overseer-[1-4]
+      - ../data/overseer-instances/1:/home/overseer/work-dir
+      # Path for reading OnTrack files from - required.
+      # TODO: Map this directly to a constant path that can be written to,
+      # as the path will be a part of the messages
+      # received from OnTrack via RabbitMQ.
+      # TODO: Make the path rw by overseer in docker image.
+      - ../data/student-work:/student-work
+    command: /bin/bash -c "bundle exec ruby ./app.rb"
+
+  doubtfire-mq:
+    container_name: df-rabbitmq
+    image: rabbitmq:3.8-management
+    ports:
+      - 15672:15672
+    volumes:
+      - ../data/rabbitmq/data/:/var/lib/rabbitmq
+      - ../data/rabbitmq/log/:/var/log/rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: secure_credentials
+      RABBITMQ_DEFAULT_PASS: secure_credentials
