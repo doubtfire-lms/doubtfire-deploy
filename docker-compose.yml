@@ -24,6 +24,8 @@ services:
       - doubtfire-base.env
     volumes:
       - ./data/student-work:/student-work
+      # To configure mail settings... ensure msmtprc file exists and map using
+      # - ./pdfGen/msmtprc:/etc/msmtprc
   database:
     container_name: df-prod-database
     image: mariadb

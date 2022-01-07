@@ -24,7 +24,7 @@ COPY "$API_HOME" /doubtfire/
 COPY "$WEB_HOME/dist" /doubtfire/public/
 
 # Install bundler
-RUN gem install bundler
+RUN gem install bundler -v 1.17.3
 
 # Install the Gems
 RUN bundle install --without passenger
@@ -36,4 +36,4 @@ ENV RAILS_ENV production
 LABEL com.centurylinklabs.watchtower.lifecycle.post-update="rake db:migrate"
 
 # we set this when we run watchtower: https://containrrr.dev/watchtower/arguments/#wait_until_timeout
-CMD bundle exec rails s -b 0.0.0.0
+CMD bundle exec rake db:migrate && bundle exec rails s -b 0.0.0.0

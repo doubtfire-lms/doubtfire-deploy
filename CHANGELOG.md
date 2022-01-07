@@ -2,6 +2,71 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.0.8](https://github.com/macite/doubtfire-deploy/compare/v5.0.7...v5.0.8) (2022-01-07)
+
+### [5.0.7](https://github.com/macite/doubtfire-deploy/compare/v5.0.6...v5.0.7) (2022-01-07)
+
+### [5.0.6](https://github.com/macite/doubtfire-deploy/compare/v5.0.5...v5.0.6) (2021-12-09)
+
+
+### Bug Fixes
+
+* improve the release process ([1d196f0](https://github.com/macite/doubtfire-deploy/commit/1d196f0794cd95c496a8e7f5714ec45702fe4f79))
+
+### [5.0.5](https://github.com/macite/doubtfire-deploy/compare/v5.0.4...v5.0.5) (2021-12-07)
+
+
+### Features
+
+* add mail configuration options ([5c4189a](https://github.com/macite/doubtfire-deploy/commit/5c4189a3191281300205175e2b5aaaafef054743))
+
+
+### Bug Fixes
+
+* update actions in release script ([55e1d33](https://github.com/macite/doubtfire-deploy/commit/55e1d33804b6cad24be8a2d9cfecf0ef4bb2afd9))
+
+### [5.0.4](https://github.com/macite/doubtfire-deploy/compare/v5.0.3...v5.0.4) (2021-12-06)
+
+
+### Features
+
+* add scheduled cron tasks for repeated actions ([2f9ca9c](https://github.com/macite/doubtfire-deploy/commit/2f9ca9c99ef71a5a1231e810a8a13e9c9b47441a))
+* add scheduled tasks to PDFGen container ([442ebba](https://github.com/macite/doubtfire-deploy/commit/442ebbaf8bb2e9c278e63fa187c927afb0cb188e))
+* enhance deployment handling of errors ([4661cd7](https://github.com/macite/doubtfire-deploy/commit/4661cd733e64a04461777a324b9b960fb08ba72d))
+
+### [5.0.3](https://github.com/macite/doubtfire-deploy/compare/v5.0.2...v5.0.3) (2021-11-19)
+
+### [5.0.2](https://github.com/macite/doubtfire-deploy/compare/v5.0.1...v5.0.2) (2021-11-19)
+
+### [5.0.1](https://github.com/macite/doubtfire-deploy/compare/v5.0.0...v5.0.1) (2021-10-27)
+
+
+### Bug Fixes
+
+* trigger image builds on push to v tags ([dbd91ed](https://github.com/macite/doubtfire-deploy/commit/dbd91ed3c9f7a9435471fadc5186d9b3b60325ff))
+
+## [5.0.0](https://github.com/macite/doubtfire-deploy/compare/v5.0.0-2...v5.0.0) (2021-10-13)
+
+
+### Features
+
+* add test publish script to aid in testing deployments ([94f7ea2](https://github.com/macite/doubtfire-deploy/commit/94f7ea2f881de832632e43aa343bff5f0a024c94))
+
+
+### Bug Fixes
+
+* correct links in dist compose for rabbit mq ([fb9d0c9](https://github.com/macite/doubtfire-deploy/commit/fb9d0c9ffecaadbe21e88bf8d5a5ef65722ec239))
+* ignore data in dist folder and ensure db container script is executable ([ba71fd0](https://github.com/macite/doubtfire-deploy/commit/ba71fd0ef2dd83d301a5b91184f894074dc94f9c))
+* push to version branch and fix syntax error in release script ([3244b51](https://github.com/macite/doubtfire-deploy/commit/3244b516e488d95bb63671bc0b6b5d811344976f))
+
+## [5.0.0-2](https://github.com/macite/doubtfire-deploy/compare/v5.0.0-1...v5.0.0-2) (2021-08-09)
+
+
+### Bug Fixes
+
+* correct syntax error in release script ([b88a836](https://github.com/macite/doubtfire-deploy/commit/b88a8362fe3700244fd2da17fe9dc5badf03f69e))
+* correct tag name in dist docker compose ([db4549f](https://github.com/macite/doubtfire-deploy/commit/db4549f82c97eb710a132e69e0440ea0c10fface))
+
 ## [5.0.0-1](https://github.com/macite/doubtfire-deploy/compare/v4.0.0...v5.0.0-1) (2021-08-06)
 
 

@@ -76,7 +76,27 @@ function prepare_release {
   PROJECT_PATH=$2
 
   cd "${PROJECT_PATH}"
-  standard-version $RELEASE_AS $PRERELEASE
+
+  CURRENT_TAG=$(git describe --exact-match --tags) 2>>/dev/null
+
+  if [ $CURRENT_TAG ]; then
+    echo "$PROJECT is currently on tag $CURRENT_TAG"
+    echo "Do you want to create a new release for this project?"
+
+    select answer in "Skip" "Tag"; do
+      case $answer in
+        Skip)
+          break;
+          ;;
+        Tag)
+          standard-version $RELEASE_AS $PRERELEASE --skip.commit
+          break;
+          ;;
+      esac
+    done
+  else
+    standard-version $RELEASE_AS $PRERELEASE --skip.commit
+  fi
 
   CURRENT_BRANCH=$(git branch --show-current)
   RELEASE_VERSION=`git describe --abbrev=0 --tags`
@@ -106,23 +126,23 @@ echo
 echo "### Step 3: Prepare deploy for release"
 echo
 
-cd "${APP_PATH}/releases"
-mkdir -p $RELEASE_VERSION
-echo "$API_VERSION" > "${RELEASE_VERSION}/.apiversion"
-echo "$WEB_VERSION" > "${RELEASE_VERSION}/.webversion"
-echo "$OVERSEER_VERSION" > "${RELEASE_VERSION}/.overseer"
-cp -r ./release-template/. ./${RELEASE_VERSION}
-echo "https://github.com/doubtfire-lms/doubtfire-web/blob/${WEB_VERSION}/CHANGELOG.md" > ${RELEASE_VERSION}/WEB_CHANGELOG.md
-echo "https://github.com/doubtfire-lms/doubtfire-api/blob/${API_VERSION}/CHANGELOG.md" > ${RELEASE_VERSION}/API_CHANGELOG.md
-echo "https://github.com/doubtfire-lms/doubtfire-overseer/blob/${OVERSEER_VERSION}/CHANGELOG.md" > ${RELEASE_VERSION}/OVERSEER_CHANGELOG.md
-
-echo
-echo "Please update release notes, and push them to origin before continuing here..."
-
-read -p "Press enter to continue" TEMP
-
 prepare_release 'doubtfire-deploy' "${APP_PATH}"
 DEPLOY_VERSION=$(git describe --abbrev=0 --tags)
+
+cd "${APP_PATH}/releases"
+mkdir -p $RELEASE_VERSION
+echo "$API_VERSION" > "${DEPLOY_VERSION}/.apiversion"
+echo "$WEB_VERSION" > "${DEPLOY_VERSION}/.webversion"
+echo "$OVERSEER_VERSION" > "${DEPLOY_VERSION}/.overseer"
+cp -r ./release-template/. ./${DEPLOY_VERSION}
+echo "https://github.com/doubtfire-lms/doubtfire-web/blob/${WEB_VERSION}/CHANGELOG.md" > ${DEPLOY_VERSION}/WEB_CHANGELOG.md
+echo "https://github.com/doubtfire-lms/doubtfire-api/blob/${API_VERSION}/CHANGELOG.md" > ${DEPLOY_VERSION}/API_CHANGELOG.md
+echo "https://github.com/doubtfire-lms/doubtfire-overseer/blob/${OVERSEER_VERSION}/CHANGELOG.md" > ${DEPLOY_VERSION}/OVERSEER_CHANGELOG.md
+
+echo
+echo "Please update release notes, commit, and push to origin before continuing..."
+
+read -p "Press enter to continue" TEMP
 
 echo
 echo "### Step 4: Push releases"
@@ -134,7 +154,7 @@ function push_release {
 
   cd "${PROJECT_PATH}"
   CURRENT_BRANCH=$(git branch --show-current)
-  git push --follow-tags $REMOTE ${CURRENT_BRANCH}:releases
+  git push --follow-tags $REMOTE ${CURRENT_BRANCH}
   if [ $? -ne 0 ]; then
     echo "Oh no... fix up this mess please";
     exit 1
@@ -159,7 +179,7 @@ select answer in "Skip" "Push"; do
 
       echo
       echo "Run workflow to push to Docker hub?"
-      select workflow in 'Skip' 'Run' do
+      select workflow in 'Skip' 'Run'; do
         case $workflow in
           Skip)
             break;
