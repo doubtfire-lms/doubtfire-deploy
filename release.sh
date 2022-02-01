@@ -19,7 +19,7 @@ echo "### Step 1: Check we are ready... requires repository to track remote bran
 echo
 
 cd "${APP_PATH}"
-# "${APP_PATH}/check.sh"
+"${APP_PATH}/check.sh"
 
 if [ $? -ne 0 ]; then
   echo "Ensure that everything is clean and ready to go!";
