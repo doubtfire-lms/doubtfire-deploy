@@ -4,7 +4,7 @@
 
 We welcome additions and extensions to Doubtfire that help progress our goal of supporting student learning through frequent formative feedback and delayed summative assessment.
 
-This guide provides high-level details on how to contribute to any of the Doubtfire repositories.
+This guide provides high-level details on how to contribute to the Doubtfire repositories.
 
 ## Table of Contents
 
@@ -30,7 +30,7 @@ The **doubtfire-deploy** project provides the base repository containing submodu
 - [doubtfire-web](https://github.com/doubtfire-lms/doubtfire-web) hosts the frontend code implemented in [Angular](https://angular.io) and [AngularJS](https://angularjs.org). This implements the web application that connects to the backend api.
 - [doubtfire-overseer](https://github.com/doubtfire-lms/doubtfire-overseer) provides facilities to run automated tasks on student submissions. Please get in touch with the core team if you want access to this repository. You can make contributions without access to this repository.
 
-Development of Doubtfire uses Docker containers to remove the need to install a range of native tools used within the project.
+Development of Doubtfire uses Docker containers to remove the need to install a range of native tools used within the project. The Doubtfire Deploy project helps when working across multiple components of the Doubtfire application, and is used for testing and publishing versions for deployment.
 
 ### Development Containers
 
@@ -47,7 +47,7 @@ To get started:
 
 1. Fork [doubtfire-deploy](https://github.com/doubtfire-lms/doubtfire-deploy), [doubtfire-api](https://github.com/doubtfire-lms/doubtfire-api), and [doubtfire-web](https://github.com/doubtfire-lms/doubtfire-web)
 
-    To push your contributions, you will need a fork of each repository.
+    To push your contributions, you will need a fork of each repository. Contributions can then be made by making pull requests back into the main repositories.
 
 2. Clone your [doubtfire-deploy](https://github.com/doubtfire-lms/doubtfire-deploy). Make sure to fetch submodules to get the subprojects.
 
@@ -123,7 +123,7 @@ To get started:
 
 ## Forking workflow
 
-We follow a [Forking workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow) when developing Doubtfire.
+We follow a [Forking workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow) when developing on any Doubtfire repository.
 
 ### About the Doubtfire Branch Structure
 
