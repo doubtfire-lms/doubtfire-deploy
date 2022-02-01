@@ -15,35 +15,24 @@ cd "${APP_PATH}"
 echo "## Generate Release Notes and Push to Release Branch"
 
 echo
-echo "### Step 1: Build"
+echo "### Step 1: Check we are ready... requires repository to track remote branches"
 echo
 
 cd "${APP_PATH}"
-"${APP_PATH}/build.sh"
+"${APP_PATH}/check.sh"
 
 if [ $? -ne 0 ]; then
-  echo "Ensure that everything builds";
+  echo "Ensure that everything is clean and ready to go!";
   exit 1
 fi
 
 echo
 echo "### Step 2. Update version tags"
-echo 
+echo
 
 echo "Doubtfire is at version `git describe --abbrev=0 --tags`"
 
-select answer in "Full" "Prerelease"; do
-  case $answer in
-    Full)
-      break;
-      ;;
-    Prerelease)
-      PRERELEASE="--prerelease"
-      break;
-      ;;
-  esac
-done
-
+# default skip version update to false
 SKIP=0
 
 select answer in "Skip" "Auto" "Major" "Minor" "Patch"; do
@@ -83,23 +72,21 @@ function prepare_release {
     echo "$PROJECT is currently on tag $CURRENT_TAG"
     echo "Do you want to create a new release for this project?"
 
-    select answer in "Skip" "Tag"; do
+    select answer in "No" "Yes"; do
       case $answer in
-        Skip)
-          break;
+        No)
+          return $CURRENT_TAG
           ;;
-        Tag)
-          standard-version $RELEASE_AS $PRERELEASE --skip.commit
+        Yes)
           break;
           ;;
       esac
     done
-  else
-    standard-version $RELEASE_AS $PRERELEASE --skip.commit
   fi
 
+  RELEASE_VERSION=$(standard-version --dry-run -r $RELEASE_AS  | grep "tagging release " | sed 's/^.* release //')
+
   CURRENT_BRANCH=$(git branch --show-current)
-  RELEASE_VERSION=`git describe --abbrev=0 --tags`
   TRUNC_RELEASE=${RELEASE_VERSION#v}
 
   while [ ${CURRENT_BRANCH%.x} != ${TRUNC_RELEASE%.*} ]; do
@@ -107,30 +94,49 @@ function prepare_release {
     read -p "Fix then press enter to continue (or break to quit)"
 
     CURRENT_BRANCH=$(git branch --show-current)
-    RELEASE_VERSION=`git describe --abbrev=0 --tags`
+    RELEASE_VERSION=$(standard-version --dry-run -r $RELEASE_AS  | grep "tagging release " | sed 's/^.* release //')
     TRUNC_RELEASE=${RELEASE_VERSION#v}
   done
-  echo
+
+  echo "We will update ${PROJECT} to ${RELEASE_VERSION}. Proceed?"
+  select answer in "Yes" "No"; do
+    case $answer in
+      No)
+        exit -1
+        ;;
+      Yes)
+        break
+        ;;
+    esac
+  done
+
+  return $RELEASE_VERSION
 }
 
-prepare_release 'doubtfire-web' "${APP_PATH}/doubtfire-web"
-WEB_VERSION=$(git describe --abbrev=0 --tags)
+function do_release {
+  PROJECT=$1
+  PROJECT_PATH=$2
 
-prepare_release 'doubtfire-api' "${APP_PATH}/doubtfire-api"
-API_VERSION=$(git describe --abbrev=0 --tags)
+  standard-version --dry-run -r $RELEASE_AS
+}
 
-prepare_release 'doubtfire-overseer' "${APP_PATH}/doubtfire-overseer"
-OVERSEER_VERSION=$(git describe --abbrev=0 --tags)
+
+WEB_VERSION=prepare_release 'doubtfire-web' "${APP_PATH}/doubtfire-web"
+API_VERSION=prepare_release 'doubtfire-api' "${APP_PATH}/doubtfire-api"
+OVERSEER_VERSION=prepare_release 'doubtfire-overseer' "${APP_PATH}/doubtfire-overseer"
+DEPLOY_VERSION=prepare_release 'doubtfire-deploy' "${APP_PATH}"
+
+do_release 'doubtfire-web' "${APP_PATH}/doubtfire-web"
+do_release 'doubtfire-api' "${APP_PATH}/doubtfire-api"
+do_release 'doubtfire-overseer' "${APP_PATH}/doubtfire-overseer"
+
 
 echo
 echo "### Step 3: Prepare deploy for release"
 echo
 
-prepare_release 'doubtfire-deploy' "${APP_PATH}"
-DEPLOY_VERSION=$(git describe --abbrev=0 --tags)
-
 cd "${APP_PATH}/releases"
-mkdir -p $RELEASE_VERSION
+mkdir -p $DEPLOY_VERSION
 echo "$API_VERSION" > "${DEPLOY_VERSION}/.apiversion"
 echo "$WEB_VERSION" > "${DEPLOY_VERSION}/.webversion"
 echo "$OVERSEER_VERSION" > "${DEPLOY_VERSION}/.overseer"
@@ -140,9 +146,11 @@ echo "https://github.com/doubtfire-lms/doubtfire-api/blob/${API_VERSION}/CHANGEL
 echo "https://github.com/doubtfire-lms/doubtfire-overseer/blob/${OVERSEER_VERSION}/CHANGELOG.md" > ${DEPLOY_VERSION}/OVERSEER_CHANGELOG.md
 
 echo
-echo "Please update release notes, commit, and push to origin before continuing..."
+echo "Please update release notes, commit, and commit before continuing..."
 
 read -p "Press enter to continue" TEMP
+
+do_release 'doubtfire-deploy' "${APP_PATH}"
 
 echo
 echo "### Step 4: Push releases"
@@ -151,6 +159,7 @@ echo
 function push_release {
   PROJECT=$1
   PROJECT_PATH=$2
+  REMOTE=$3
 
   cd "${PROJECT_PATH}"
   CURRENT_BRANCH=$(git branch --show-current)
@@ -172,27 +181,10 @@ select answer in "Skip" "Push"; do
       echo "What's the name of the remote to push to (doubtfire-lms)"
       read -p "Remote: (eg origin/upstream): " REMOTE
 
-      push_release 'doubtfire-web' "${APP_PATH}/doubtfire-web"
-      push_release 'doubtfire-api' "${APP_PATH}/doubtfire-api"
-      push_release 'doubtfire-overseer' "${APP_PATH}/doubtfire-overseer"
-      push_release 'doubtfire-deploy' "${APP_PATH}"
-
-      echo
-      echo "Run workflow to push to Docker hub?"
-      select workflow in 'Skip' 'Run'; do
-        case $workflow in
-          Skip)
-            break;
-            ;;
-          Run)
-            read -p "What is your Github username? username: " GH_USER
-
-            curl --user "$GH_USER" -d "{\"ref\":\"${RELEASE_VERSION}\"}" -H 'Content-Type: application/json' -H 'Accept: application/vnd.github.v3+json' 'https://api.github.com/repos/doubtfire-lms/doubtfire-deploy/actions/workflows/11926685/dispatches'
-            break;
-            ;;
-        esac
-      done
-
+      push_release 'doubtfire-web' "${APP_PATH}/doubtfire-web" $REMOTE
+      push_release 'doubtfire-api' "${APP_PATH}/doubtfire-api" $REMOTE
+      push_release 'doubtfire-overseer' "${APP_PATH}/doubtfire-overseer" $REMOTE
+      push_release 'doubtfire-deploy' "${APP_PATH}" $REMOTE
 
       break;
       ;;

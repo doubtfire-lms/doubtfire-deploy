@@ -70,33 +70,3 @@ cd "${APP_PATH}/doubtfire-overseer"
 if [ $? -ne 0 ]; then
   confirm_quit
 fi
-
-echo
-echo "### Step 2: Build web application"
-echo
-
-echo "Rebuild web?"
-select answer in "Yes" "No"; do
-  case $answer in
-    No)
-      break;
-      ;;
-    Yes)
-      cd "${APP_PATH}/doubtfire-web"
-      docker image build . -t doubtfire-web:local
-      docker run -v `pwd`:/doubtfire-web -v `pwd`/dist:/doubtfire-web/dist  doubtfire-web:local npm run deploy
-
-      if [ $? -ne 0 ]; then
-        echo "Failed to build doubtfire web";
-        confirm_quit
-      fi
-      ;;
-  esac
-done
-
-echo
-echo "### Step 4: Create containers"
-echo
-
-cd "${APP_PATH}"
-docker compose build
