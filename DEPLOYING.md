@@ -84,4 +84,16 @@ The setups to configure these components include:
 6. Configure email settings:
    - Edit **shared-files/aliases** to map the root user email to the support email address that the application will use.
    - Edit **shared-files/msmtprc** to include the necessary details used to connect to your mail server.
+7. Initialise the database by running:
+   - `DISABLE_DATABASE_ENVIRONMENT_CHECK=1 bundle exec rake db:setup db:init`. When prompted about running in production, respond with `Yes` (case sensitive) to allow the database initialisation to proceed.
+   - Verify the database setup in the rails console `bundle exec rails c`, and update username and email to match expected admin user:
+
+      ```ruby
+      u = User.first
+      u.email = '...'
+      u.username = '...'
+      u.save!
+      ```
+
+    When successful you should be able to login as the admin user.
 
