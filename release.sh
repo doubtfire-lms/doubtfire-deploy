@@ -121,10 +121,10 @@ function do_release {
 }
 
 
-WEB_VERSION=prepare_release 'doubtfire-web' "${APP_PATH}/doubtfire-web"
-API_VERSION=prepare_release 'doubtfire-api' "${APP_PATH}/doubtfire-api"
-OVERSEER_VERSION=prepare_release 'doubtfire-overseer' "${APP_PATH}/doubtfire-overseer"
-DEPLOY_VERSION=prepare_release 'doubtfire-deploy' "${APP_PATH}"
+WEB_VERSION=$(prepare_release 'doubtfire-web' "${APP_PATH}/doubtfire-web")
+API_VERSION=$(prepare_release 'doubtfire-api' "${APP_PATH}/doubtfire-api")
+OVERSEER_VERSION=$(prepare_release 'doubtfire-overseer' "${APP_PATH}/doubtfire-overseer")
+DEPLOY_VERSION=$(prepare_release 'doubtfire-deploy' "${APP_PATH}")
 
 do_release 'doubtfire-web' "${APP_PATH}/doubtfire-web"
 do_release 'doubtfire-api' "${APP_PATH}/doubtfire-api"
