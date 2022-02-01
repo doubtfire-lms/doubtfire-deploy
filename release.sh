@@ -19,7 +19,7 @@ echo "### Step 1: Check we are ready... requires repository to track remote bran
 echo
 
 cd "${APP_PATH}"
-"${APP_PATH}/check.sh"
+# "${APP_PATH}/check.sh"
 
 if [ $? -ne 0 ]; then
   echo "Ensure that everything is clean and ready to go!";
@@ -61,12 +61,15 @@ select answer in "Skip" "Auto" "Major" "Minor" "Patch"; do
 done
 
 function prepare_release {
-  PROJECT=$1
-  PROJECT_PATH=$2
+  local PROJECT=$1
+  local PROJECT_PATH=$2
+  local __resultvar=$3
+
+  echo "Preparing ${PROJECT} release at ${PROJECT_PATH}"
 
   cd "${PROJECT_PATH}"
 
-  CURRENT_TAG=$(git describe --exact-match --tags) 2>>/dev/null
+  CURRENT_TAG=$(git describe --exact-match --tags 2>>/dev/null)
 
   if [ $CURRENT_TAG ]; then
     echo "$PROJECT is currently on tag $CURRENT_TAG"
@@ -75,7 +78,8 @@ function prepare_release {
     select answer in "No" "Yes"; do
       case $answer in
         No)
-          return $CURRENT_TAG
+          eval $__resultvar="'$CURRENT_TAG'"
+          return 0
           ;;
         Yes)
           break;
@@ -84,7 +88,7 @@ function prepare_release {
     done
   fi
 
-  RELEASE_VERSION=$(standard-version --dry-run -r $RELEASE_AS  | grep "tagging release " | sed 's/^.* release //')
+  RELEASE_VERSION=$(standard-version $RELEASE_AS --dry-run  | grep "tagging release " | sed 's/^.* release //')
 
   CURRENT_BRANCH=$(git branch --show-current)
   TRUNC_RELEASE=${RELEASE_VERSION#v}
@@ -99,7 +103,7 @@ function prepare_release {
   done
 
   echo "We will update ${PROJECT} to ${RELEASE_VERSION}. Proceed?"
-  select answer in "Yes" "No"; do
+  select answer in "No" "Yes"; do
     case $answer in
       No)
         exit -1
@@ -110,7 +114,7 @@ function prepare_release {
     esac
   done
 
-  return $RELEASE_VERSION
+  eval $__resultvar="'$RELEASE_VERSION'"
 }
 
 function do_release {
@@ -120,16 +124,28 @@ function do_release {
   standard-version --dry-run -r $RELEASE_AS
 }
 
+prepare_release 'doubtfire-web' "${APP_PATH}/doubtfire-web" WEB_VERSION
+prepare_release 'doubtfire-api' "${APP_PATH}/doubtfire-api" API_VERSION
+prepare_release 'doubtfire-overseer' "${APP_PATH}/doubtfire-overseer" OVERSEER_VERSION
+prepare_release 'doubtfire-deploy' "${APP_PATH}" DEPLOY_VERSION
 
-WEB_VERSION=$(prepare_release 'doubtfire-web' "${APP_PATH}/doubtfire-web")
-API_VERSION=$(prepare_release 'doubtfire-api' "${APP_PATH}/doubtfire-api")
-OVERSEER_VERSION=$(prepare_release 'doubtfire-overseer' "${APP_PATH}/doubtfire-overseer")
-DEPLOY_VERSION=$(prepare_release 'doubtfire-deploy' "${APP_PATH}")
+echo "All projects are now ready. Proceed to create tagged commits?"
+
+select answer in "No" "Yes"; do
+  case $answer in
+    No)
+      exit 1
+      ;;
+    Yes)
+      break;
+      ;;
+  esac
+done
+
 
 do_release 'doubtfire-web' "${APP_PATH}/doubtfire-web"
 do_release 'doubtfire-api' "${APP_PATH}/doubtfire-api"
 do_release 'doubtfire-overseer' "${APP_PATH}/doubtfire-overseer"
-
 
 echo
 echo "### Step 3: Prepare deploy for release"
@@ -146,7 +162,7 @@ echo "https://github.com/doubtfire-lms/doubtfire-api/blob/${API_VERSION}/CHANGEL
 echo "https://github.com/doubtfire-lms/doubtfire-overseer/blob/${OVERSEER_VERSION}/CHANGELOG.md" > ${DEPLOY_VERSION}/OVERSEER_CHANGELOG.md
 
 echo
-echo "Please update release notes, commit, and commit before continuing..."
+echo "Please update release notes and commit before continuing..."
 
 read -p "Press enter to continue" TEMP
 
@@ -157,9 +173,9 @@ echo "### Step 4: Push releases"
 echo
 
 function push_release {
-  PROJECT=$1
-  PROJECT_PATH=$2
-  REMOTE=$3
+  local PROJECT=$1
+  local PROJECT_PATH=$2
+  local REMOTE=$3
 
   cd "${PROJECT_PATH}"
   CURRENT_BRANCH=$(git branch --show-current)
