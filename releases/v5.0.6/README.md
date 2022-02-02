@@ -1,4 +1,4 @@
-# version tag name
+# v5.0.6
 
 This release makes portfolio evidence paths relative to the student work folder, allowing
 different setups to use different locations for these files.
