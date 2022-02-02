@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0](https://github.com/macite/doubtfire-deploy/compare/v5.0.6...v6.0.0) (2022-02-02)
+
+
+### Features
+
+* add development compose to simplify getting started ([98310ae](https://github.com/macite/doubtfire-deploy/commit/98310ae43dfcc2bc012e92d6a884868a48f997b7))
+* provide production docker config ([0385fdf](https://github.com/macite/doubtfire-deploy/commit/0385fdf8e8c89bf105e6076d40ccb04fa5ba4652))
+* update release process ([549b11c](https://github.com/macite/doubtfire-deploy/commit/549b11cb4e4df77b77ea4929b6e3a8345248bf9e))
+
+
+### Bug Fixes
+
+* correct use of function in script ([4c93934](https://github.com/macite/doubtfire-deploy/commit/4c939347a881bb94dd73bcfa59d03400b2de3aa7))
+* correct use of standard version on release ([2f02598](https://github.com/macite/doubtfire-deploy/commit/2f02598ec06a343a885cdcbf0969d2f4768de6ab))
+* ensure release checks respository state ([69d7f3e](https://github.com/macite/doubtfire-deploy/commit/69d7f3ebf90c97a7e1bda849e986fc532c365f56))
+* ensure release notes are in commit before tag ([21ec887](https://github.com/macite/doubtfire-deploy/commit/21ec8873ef7cfa861dd6f58f6999db7c3c9b0611))
+* remove pdfgen settings ([8b1d689](https://github.com/macite/doubtfire-deploy/commit/8b1d6891e29829bb9fa691ad4ee932c0d30ee5c2))
+* simplify volumes in development compose ([77cb990](https://github.com/macite/doubtfire-deploy/commit/77cb9900b5f16be94c5bc11a39ea39cd1143c1a2))
+
 ### [5.0.6](https://github.com/macite/doubtfire-deploy/compare/v5.0.5...v5.0.6) (2021-12-09)
 
 
