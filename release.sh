@@ -121,7 +121,7 @@ function do_release {
   PROJECT=$1
   PROJECT_PATH=$2
 
-  standard-version --dry-run -r $RELEASE_AS
+  standard-version --dry-run $RELEASE_AS
 }
 
 prepare_release 'doubtfire-web' "${APP_PATH}/doubtfire-web" WEB_VERSION
