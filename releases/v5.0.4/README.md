@@ -1,4 +1,4 @@
-# version tag name
+# v5.0.4
 
 This release introduced scheduled tasks using cron that, by default, will do the following:
 

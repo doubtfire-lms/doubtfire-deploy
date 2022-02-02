@@ -1,4 +1,4 @@
-# version tag name
+# v5.0.5
 
 This release provides configuration options for mail settings.
 
