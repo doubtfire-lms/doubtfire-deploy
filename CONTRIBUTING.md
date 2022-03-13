@@ -60,7 +60,7 @@ To get started:
 4. Change into the **development** directory and use [Docker Compose](https://docs.docker.com/compose/) to setup the database.
 
     ```bash
-    cd development/api-web
+    cd development
     docker compose run --rm doubtfire-api bash
     # now in the container run...
     bundle exec rails db:environment:set RAILS_ENV=development
