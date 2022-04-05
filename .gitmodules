@@ -1,9 +1,9 @@
 [submodule "doubtfire-web"]
 	path = doubtfire-web
-	url = git@github.com:thoth-tech/doubtfire-web.git
+	url = https://github.com/thoth-tech/doubtfire-web.git
 [submodule "doubtfire-api"]
 	path = doubtfire-api
-	url = git@github.com:thoth-tech/doubtfire-api.git
+	url = https://github.com/thoth-tech/doubtfire-api.git
 [submodule "doubtfire-overseer"]
 	path = doubtfire-overseer
-	url = https://github.com/doubtfire-lms/doubtfire-overseer.git
+	url = https://github.com/thoth-tech/doubtfire-overseer.git
