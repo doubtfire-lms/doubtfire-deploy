@@ -13,9 +13,9 @@ This guide provides high-level details on how to contribute to Thoth-Tech's Doub
   - [Doubtfire-deploy](#doubtfire-deploy)
     - [Development Containers](#development-containers)
   - [Getting Started](#getting-started)
-  	- [Logging In](#logging-in)
-  	- [Troubleshooting](#troubleshooting)
-  	- [Interacting with the API](#interacting-with-the-api)
+    - [Logging In](#logging-in)
+    - [Troubleshooting](#troubleshooting)
+    - [Interacting with the API](#interacting-with-the-api)
   - [Git Strategy](#git-strategy)
 
 ## Doubtfire-deploy
@@ -39,11 +39,11 @@ There are several docker compose setups to aid in speeding up the development.
 
 ## Getting Started
 
-To run OnTrack locally on your machine:
-
 1. Open a terminal and clone Thoth Tech's doubtfire-deploy repo
 
-    `git clone --recurse-submodules https://github.com/thoth-tech/doubtfire-deploy`
+    ```sh
+    git clone --recurse-submodules https://github.com/thoth-tech/doubtfire-deploy
+    ```
 
 2. Change into the **development** directory and use [Docker Compose](https://docs.docker.com/compose/) to setup the database. This will populate it with dummy data.
 
@@ -125,7 +125,7 @@ You may encounter errors in the setup process. Here are a few common errors with
   - If you do not gracefully terminate the api you may need to remove the `pid` file from the tmp folder. You can use `rm ../data/tmp/pids/server.pid` to do this.
   - When you bring up the *doubtfire-web* project, it will run `npm install` to setup the node_modules. If you change the package.json in *doubtfire-web* you can just restart the container to update the node modules.
 
-  ## Git Strategy
+## Git Strategy
 
   When contributing to the doubtfire projects in the thoth-tech repo, please make sure to follow the git strategy detailed in the [Git Contribution Guide](https://github.com/thoth-tech/handbook/blob/main/docs/processes/quality-assurance/git-contribution-guide.md#git-contribution-guide).
 
