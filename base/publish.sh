@@ -16,18 +16,23 @@ echo
 
 docker login
 
+docker buildx create --name mybuilder --use
+
 function push_image {
   NAME=$1
-  
-  echo "Pushing $NAME"
+
+  echo "Setting up build for $NAME"
   echo
 
-  docker push "lmsdoubtfire/${NAME}:${CURRENT_BRANCH}-dev"
+  cd ../${NAME}
+
+  docker buildx build --platform linux/amd64,linux/arm64 -t "lmsdoubtfire/${NAME}:${CURRENT_BRANCH}-dev" --push .
   if [ $? -ne 0 ]; then
-    echo "Push failed";
+    echo "Ensure that everything builds";
     exit 1
   fi
 }
+
 
 push_image "doubtfire-api"
 push_image "doubtfire-web"
