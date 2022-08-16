@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Check for standard-version
 if ! command -v standard-version &> /dev/null; then
