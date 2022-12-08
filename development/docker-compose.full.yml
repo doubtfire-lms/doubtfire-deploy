@@ -1,8 +1,20 @@
 version: '3'
 services:
+  dev-db:
+    container_name: doubtfire-dev-db
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: db-root-password
+      MYSQL_DATABASE: doubtfire-dev
+      MYSQL_USER: dfire
+      MYSQL_PASSWORD: pwd
+    volumes:
+      - ../data/database:/var/lib/mysql
+
   doubtfire-api:
     container_name: doubtfire-api
-    image: lmsdoubtfire/doubtfire-api:development-dev
+    image: lmsdoubtfire/doubtfire-api:7.0-dev
+    build: ../doubtfire-api
     ports:
       - "3000:3000"
     volumes:
@@ -15,20 +27,10 @@ services:
       - api.env
       - overseer.env
 
-  dev-db:
-    container_name: doubtfire-dev-db
-    image: mariadb
-    environment:
-      MYSQL_ROOT_PASSWORD: db-root-password
-      MYSQL_DATABASE: doubtfire-dev
-      MYSQL_USER: dfire
-      MYSQL_PASSWORD: pwd
-    volumes:
-      - ../data/database:/var/lib/mysql
-
   doubtfire-web:
     container_name: doubtfire-web
-    image: lmsdoubtfire/doubtfire-web:development-dev
+    image: lmsdoubtfire/doubtfire-web:7.0-dev
+    build: ../doubtfire-web
     command: /bin/bash -c 'npm install; npm start'
     ports:
       - "4200:4200"
