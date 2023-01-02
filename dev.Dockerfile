@@ -1,0 +1,107 @@
+FROM mcr.microsoft.com/devcontainers/ruby:3.1-bullseye
+
+# DEBIAN_FRONTEND=noninteractive is required to install tzdata in non interactive way
+ENV DEBIAN_FRONTEND noninteractive
+ENV USER='vscode'
+ENV NODE_VERSION 18.12.1
+ENV NODE_ENV docker
+ENV NPM_CONFIG_PREFIX="/home/${USER}/.npm-global"
+
+COPY --chown="${USER}":"${USER}" doubtfire-api/.ci-setup/ /workspace/doubtfire-api/.ci-setup/
+
+RUN apt-get update \
+  && apt-get install -y \
+    ffmpeg \
+    ghostscript \
+    imagemagick \
+    libmagic-dev \
+    libmagickwand-dev \
+    libmariadb-dev \
+    python3-pygments \
+    tzdata \
+    wget \
+    libc6-dev \
+    mariadb-server \
+    gosu \
+  && ARCH= && dpkgArch="$(dpkg --print-architecture)" \
+  && case "${dpkgArch##*-}" in \
+    amd64) ARCH='x64';; \
+    ppc64el) ARCH='ppc64le';; \
+    s390x) ARCH='s390x';; \
+    arm64) ARCH='arm64';; \
+    armhf) ARCH='armv7l';; \
+    i386) ARCH='x86';; \
+    *) echo "unsupported architecture"; exit 1 ;; \
+  esac \
+  # gpg keys listed at https://github.com/nodejs/node#release-keys
+  && set -ex \
+  && for key in \
+    4ED778F539E3634C779C87C6D7062848A1AB005C \
+    141F07595B7B3FFE74309A937405533BE57C7D57 \
+    74F12602B6F1C4E913FAA37AD3A89613643B6201 \
+    61FC681DFB92A079F1685E77973F295594EC4689 \
+    8FCCA13FEF1D0C2E91008E09770F7A9A5AE15600 \
+    C4F0DFFF4E8C1A8236409D08E73BC641CC11F4C8 \
+    890C08DB8579162FEE0DF9DB8BEAB4DFCF555EF4 \
+    C82FA3AE1CBEDC6BE46B9360C43CEC45C17AB93C \
+    108F52B48DB57BB0CC439B2997B01419BD92F80A \
+  ; do \
+      gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
+      gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
+  done \
+  && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH.tar.xz" \
+  && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
+  && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
+  && grep " node-v$NODE_VERSION-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+  && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+  && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
+  && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
+  # smoke tests
+  && node --version \
+  && npm --version \
+  && gem install bundler -v '~> 2.3.18' \
+  && /workspace/doubtfire-api/.ci-setup/texlive-install.sh \
+  && rm -rf /workspace/doubtfire-api/.ci-setup/texlive-install.sh \
+  && rm -rf /install-tl-* \
+  && mkdir /run/mysqld
+
+USER "${USER}"
+
+WORKDIR /workspace
+
+COPY --chown="${USER}":"${USER}" package.json /workspace
+RUN mkdir -p "${NPM_CONFIG_PREFIX}/lib" \
+  && npm install -g npm@9.2.0 \
+  && npm --global config set user "${USER}" \
+  && npm install -g husky --save-dev
+
+RUN npm install
+
+# Install oh-my-zsh, powerlevel10k theme, and plugins
+RUN git clone https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k \
+  && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting \
+  && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+ENV RAILS_ENV development
+ENV PATH /tmp/texlive/bin/x86_64-linux:/tmp/texlive/bin/aarch64-linux:$PATH
+
+WORKDIR /workspace/doubtfire-web
+COPY --chown="${USER}":"${USER}" doubtfire-web/package.json /workspace/doubtfire-web
+
+# Install web ui packages
+RUN npm install
+
+# Setup the folder where we will deploy the code
+WORKDIR /workspace/doubtfire-api
+
+COPY --chown="${USER}":"${USER}" doubtfire-api/Gemfile /workspace/doubtfire-api/Gemfile
+COPY --chown="${USER}":"${USER}" doubtfire-api/Gemfile.lock /workspace/doubtfire-api/Gemfile.lock
+
+RUN bundle install \
+  && npx husky install
+
+WORKDIR /workspace
+
+RUN sudo ln -s /workspace/doubtfire-api /doubtfire
+
+EXPOSE 9876

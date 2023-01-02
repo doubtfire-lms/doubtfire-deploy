@@ -1,0 +1,77 @@
+//devcontainer.json
+{
+  "name": "Formatif Development Container",
+  "image": "formatif-devcontainer:7.0-dev",
+  "runArgs": ["--env-file",".devcontainer/devcontainer.env"],
+
+  // "dockerFile": "../dev.Dockerfile",
+  // "dockerComposeFile": "../development/docker-compose.yml",
+  // "service": "formatif-dev-container",
+  // "shutdownAction": "stopCompose",
+  // "workspaceFolder": "/workspace",
+
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh"
+      },
+
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "EditorConfig.EditorConfig",
+        "ms-vsliveshare.vsliveshare",
+        "ms-vsliveshare.vsliveshare-audio",
+        "ms-vsliveshare.vsliveshare-pack",
+        "rebornix.ruby",
+        "misogi.ruby-rubocop",
+        "castwide.solargraph",
+        "wingrunr21.vscode-ruby",
+        "vscode-icons-team.vscode-icons",
+        "cschlosser.doxdocgen",
+        "eamodio.gitlens",
+        "GitHub.vscode-pull-request-github",
+        "GitHub.copilot",
+        "Angular.ng-template",
+        "johnpapa.Angular2",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  },
+
+  "mounts": [
+    {
+      "source": "${localWorkspaceFolder}/data/database",
+      "target": "/var/lib/mysql",
+      "type": "bind"
+    },
+    {
+      "source": "${localWorkspaceFolder}/data/tmp",
+      "target": "/workspace/tmp",
+      "type": "bind"
+    },
+    {
+      "source": "${localWorkspaceFolder}/data/student-work",
+      "target": "/student-work",
+      "type": "bind"
+    },
+    {
+      "source": "ws_node_modules",
+      "target": "/workspace/node_modules",
+      "type": "volume"
+    },
+    {
+      "source": "web_node_modules",
+      "target": "/workspace/doubtfire-web/node_modules",
+      "type": "volume"
+    }
+  ],
+
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "workspaceFolder": "/workspace",
+
+  "forwardPorts": [3000,4200,9876],
+
+  "postCreateCommand": "cp .devcontainer/.zshrc $HOME && cp .devcontainer/.p10k.zsh $HOME && echo 'Granting access to student work' && sudo find /student-work/* -exec chmod 777 {} \\;",
+
+  "postStartCommand": "sudo ./.devcontainer/launch_db.sh mysqld"
+}

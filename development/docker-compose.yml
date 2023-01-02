@@ -1,5 +1,26 @@
 version: '3'
 services:
+  formatif-dev-container:
+    container_name: formatif-dev-container
+    build:
+      context: ../
+      dockerfile: dev.Dockerfile
+    volumes:
+      # Mounts the project folder to '/workspace'. While this file is in .devcontainer,
+      # mounts are relative to the first file in the list, which is a level up.
+      - ..:/workspace:cached
+      - ../data/tmp:/workspace/tmp
+      - ../data/student-work:/student-work
+      - ws_node_modules:/workspace/node_modules
+      - web_node_modules:/workspace/doubtfire-web/node_modules
+      - ../data/database:/var/lib/mysql
+    ports:
+      - "9876:9876"
+    # Overrides default command so things don't shut down after the process ends.
+    command: /bin/sh -c "while sleep 5000; do :; done"
+    env_file:
+      - api.env
+
   dev-db:
     container_name: doubtfire-dev-db
     image: mariadb
@@ -82,3 +103,7 @@ services:
       - doubtfire-api
     volumes:
       - ../doubtfire-web:/doubtfire-web
+
+volumes:
+  ws_node_modules:
+  web_node_modules:
