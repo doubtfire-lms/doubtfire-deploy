@@ -41,6 +41,7 @@ services:
 
   overseer-receive:
     image: lmsdoubtfire/doubtfire-api:development-dev
+    build: ../doubtfire-api
     env_file:
       - api.env
       - overseer.env
