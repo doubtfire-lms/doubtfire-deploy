@@ -6,11 +6,15 @@ ENV USER='vscode'
 ENV NODE_VERSION 18.12.1
 ENV NODE_ENV docker
 ENV NPM_CONFIG_PREFIX="/home/${USER}/.npm-global"
+ENV BUNDLE_PATH=/home/${USER}/.gems
 
 COPY --chown="${USER}":"${USER}" doubtfire-api/.ci-setup/ /workspace/doubtfire-api/.ci-setup/
 
-RUN apt-get update \
+RUN curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg \
+  && echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list \
+  && apt-get update \
   && apt-get install -y \
+    lsb-release \
     ffmpeg \
     ghostscript \
     imagemagick \
@@ -23,6 +27,8 @@ RUN apt-get update \
     libc6-dev \
     mariadb-server \
     gosu \
+    redis \
+  && apt-get clean \
   && ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \
     amd64) ARCH='x64';; \
@@ -59,7 +65,7 @@ RUN apt-get update \
   # smoke tests
   && node --version \
   && npm --version \
-  && gem install bundler -v '~> 2.3.18' \
+  && gem install bundler -v '~> 2.4.3' \
   && /workspace/doubtfire-api/.ci-setup/texlive-install.sh \
   && rm -rf /workspace/doubtfire-api/.ci-setup/texlive-install.sh \
   && rm -rf /install-tl-* \
@@ -105,3 +111,11 @@ WORKDIR /workspace
 RUN sudo ln -s /workspace/doubtfire-api /doubtfire
 
 EXPOSE 9876
+
+ENV PATH=/home/$USER/.gems/ruby/3.1.0/bin:$PATH
+ENV GEM_PATH=/home/$USER/.gems/ruby/3.1.0:$GEM_PATH
+
+COPY .devcontainer/docker-entrypoint.sh /
+RUN sudo chmod +x /docker-entrypoint.sh
+ENTRYPOINT [ "/docker-entrypoint.sh" ]
+CMD [ "sleep", "infinity" ]

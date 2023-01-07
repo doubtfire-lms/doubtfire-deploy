@@ -63,6 +63,11 @@
       "source": "web_node_modules",
       "target": "/workspace/doubtfire-web/node_modules",
       "type": "volume"
+    },
+    {
+      "source": "api_bundle",
+      "target": "/home/vscode/.gems",
+      "type": "volume"
     }
   ],
 
@@ -71,7 +76,9 @@
 
   "forwardPorts": [3000,4200,9876],
 
-  "postCreateCommand": "cp .devcontainer/.zshrc $HOME && cp .devcontainer/.p10k.zsh $HOME && echo 'Granting access to student work' && sudo find /student-work/* -exec chmod 777 {} \\;",
+  "postCreateCommand": "cp .devcontainer/.zshrc $HOME && cp .devcontainer/.p10k.zsh $HOME && echo 'Granting access to student work' && sudo find /student-work/* -exec chmod 777 {} \\; &",
 
-  "postStartCommand": "sudo ./.devcontainer/launch_db.sh mysqld"
+  // "postStartCommand": "sudo ./.devcontainer/launch_db.sh mysqld & sudo ./.devcontainer/launch_redis.sh"
+  "postStartCommand": "git config --global --add safe.directory /workspace/doubtfire-api && git config --global --add safe.directory /workspace/doubtfire-web && git config --global --add safe.directory /workspace",
+  "overrideCommand": false
 }
