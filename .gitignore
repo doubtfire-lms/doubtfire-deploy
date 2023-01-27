@@ -1,5 +1,7 @@
 /tmp/
-/data/
+/data/**
+!/data/**/
+!/data/**/.gitkeep
 /node_modules/
 
 # Created by https://www.toptal.com/developers/gitignore/api/macos
