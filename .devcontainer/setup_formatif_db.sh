@@ -1,16 +1,64 @@
 #!/bin/bash
 
 # Wait for mysql to start
-delay 5
+check_process() {
+  [ "$1" = "" ] && return 0
+  [ $(pgrep -n $1) ] && return 1 || return 0
+}
 
-if [[ "`mysql --user=root --password="${MYSQL_ROOT_PASSWORD}" -qfsBNe "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='${MYSQL_DATABASE}';" 2>&1`" -gt 0 ]];
-then
+check_process "mysqld"
+CHECK_RET=$?
+if [ $CHECK_RET -eq 0 ]; then # none exist
+  echo 'Waiting for mysqld to start'
+  sleep 5
+fi
+
+check_process "mysqld"
+CHECK_RET=$?
+if [ $CHECK_RET -eq 0 ]; then # none exist
+  echo 'Failed to find mysqld - please make sure the database is running'
+  exit 1
+fi
+
+NEXT_WAIT_TIME=0
+# Loop until mysqld is ready...
+while true; do
+  RESP=`mysql --user=root --password="${MYSQL_ROOT_PASSWORD}" -qfsBNe "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='${MYSQL_DATABASE}';" 2>>/dev/null`
+
+  if [ $? -ne 0 ]; then
+    # Check mysqld is still running...
+    check_process "mysqld"
+    CHECK_RET=$?
+    if [ $CHECK_RET -eq 0 ]; then # none exist
+      echo "Mysqld has stopped... unable to check and create database"
+      exit 1
+    fi
+
+    if [ $NEXT_WAIT_TIME -ge 10 ]; then
+      echo "Unable to connect to mysql after $NEXT_WAIT_TIME retries"
+      exit 1
+    fi
+
+    sleep $(( NEXT_WAIT_TIME++ ))
+  else
+    break
+  fi
+done
+
+if [[ $RESP -gt 0 ]]; then
   echo "Database already exists"
 else
-  echo "Creating and populating database"
+  echo "Creating and populating database in the background - do not shutdown!"
   cd /workspace/doubtfire-api
-  bundle exec rake db:populate
 
-  echo "Simulating sign off"
-  bundle exec rake db:simulate_signoff
+  (
+    bundle exec rake db:populate >>/workspace/tmp/database_populate.log 2>>/workspace/tmp/database_populate.log
+
+    echo "Database created - you can open another terminal while this completes if you want.."
+
+    echo "Simulating sign off in the background"
+    bundle exec rake db:simulate_signoff >>/workspace/tmp/database_populate.log 2>>/workspace/tmp/database_populate.log
+
+    echo "Database populate complete..."
+  ) &
 fi

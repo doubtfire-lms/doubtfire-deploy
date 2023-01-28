@@ -1,6 +1,6 @@
 #!/bin/sh
 my_dir="$(dirname "$0")"
-source "${my_dir}/version.sh"
+source "${my_dir}/../development/version.sh"
 
 CURRENT_BRANCH=$(git branch --show-current)
 
@@ -12,13 +12,10 @@ echo
 echo "Run publish.sh when you are ready to push the new images to docker hub."
 echo
 echo " You are on branch:     ${CURRENT_BRANCH}"
-echo "           api version: ${CURRENT_API_VERSION}"
-echo "           web version: ${CURRENT_WEB_VERSION}"
+echo " dev container version: ${CURRENT_WEB_VERSION}"
 echo
 echo "This will produce docker images with the following names"
-echo " - lmsdoubtfire/doubtfire-api:${CURRENT_API_VERSION}-dev"
-echo " - lmsdoubtfire/doubtfire-web:${CURRENT_WEB_VERSION}-dev"
-# echo " - lmsdoubtfire/doubtfire-overseer:${CURRENT_BRANCH}-dev"
+echo " - lmsdoubtfire/formatif-devcontainer:${CURRENT_DEV_VERSION}-dev"
 echo
 
 read -p "Enter to continue..."
@@ -50,7 +47,9 @@ function build_image {
   fi
 }
 
+build_image "formatif-devcontainer" "${CURRENT_DEV_VERSION}" "../" "dev.Dockerfile"
 
-build_image "doubtfire-api" "${CURRENT_API_VERSION}"  "../doubtfire-api" "Dockerfile"
-build_image "doubtfire-web" "${CURRENT_WEB_VERSION}"  "../doubtfire-web" "Dockerfile"
-# build_image "doubtfire-overseer"
+echo
+echo "Test using:"
+echo "docker compose run --rm formatif-dev-container /bin/zsh"
+echo

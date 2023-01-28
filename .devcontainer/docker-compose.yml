@@ -1,0 +1,29 @@
+version: '3'
+services:
+  formatif-dev-container:
+    container_name: formatif-dev-container
+    image: formatif-devcontainer:7.0-dev
+    build:
+      context: ../
+      dockerfile: dev.Dockerfile
+    volumes:
+      # Mounts the project folder to '/workspace'. While this file is in .devcontainer,
+      # mounts are relative to the first file in the list, which is a level up.
+      - ..:/workspace:cached
+      - ../data/tmp:/workspace/tmp
+      - ../data/student-work:/student-work
+      - ws_node_modules:/workspace/node_modules
+      - web_node_modules:/workspace/doubtfire-web/node_modules
+      - ../data/database:/var/lib/mysql
+    ports:
+      - "9876:9876"
+      - "4200:4200"
+      - "3000:3000"
+    # Overrides default command so things don't shut down after the process ends.
+    command: /bin/sh -c "while sleep 5000; do :; done"
+    env_file:
+      - devcontainer.env
+
+volumes:
+  ws_node_modules:
+  web_node_modules:
