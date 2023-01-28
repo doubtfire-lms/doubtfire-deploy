@@ -89,8 +89,10 @@ RUN git clone https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/t
   && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
 ENV RAILS_ENV development
-ENV PATH /tmp/texlive/bin/x86_64-linux:/tmp/texlive/bin/aarch64-linux:$PATH
+ENV PATH /home/$USER/.gems/ruby/3.1.0/bin:$PATH:/tmp/texlive/bin/x86_64-linux:/tmp/texlive/bin/aarch64-linux:$PATH
+ENV GEM_PATH /home/$USER/.gems/ruby/3.1.0:$GEM_PATH
 
+# Install the web ui
 WORKDIR /workspace/doubtfire-web
 COPY --chown="${USER}":"${USER}" doubtfire-web/package.json /workspace/doubtfire-web
 
@@ -112,10 +114,10 @@ RUN sudo ln -s /workspace/doubtfire-api /doubtfire
 
 EXPOSE 9876
 
-ENV PATH=/home/$USER/.gems/ruby/3.1.0/bin:$PATH
-ENV GEM_PATH=/home/$USER/.gems/ruby/3.1.0:$GEM_PATH
+COPY --chown="${USER}":"${USER}" .devcontainer /workspace/.devcontainer
 
-COPY .devcontainer/docker-entrypoint.sh /
-RUN sudo chmod +x /docker-entrypoint.sh
-ENTRYPOINT [ "/docker-entrypoint.sh" ]
+ENV HISTFILE /workspace/tmp/.zsh_history
+
+RUN sudo chmod +x /workspace/.devcontainer/*.sh
+ENTRYPOINT [ "/workspace/.devcontainer/docker-entrypoint.sh" ]
 CMD [ "sleep", "infinity" ]
