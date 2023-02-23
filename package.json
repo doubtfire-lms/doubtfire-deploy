@@ -1,6 +1,6 @@
 {
   "name": "doubtfire",
-  "version": "6.0.0",
+  "version": "7.0.0",
   "devDependencies": {
     "@commitlint/cli": "^17.0",
     "@commitlint/config-conventional": "^17.0",
