@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.0.0](https://github.com/macite/doubtfire-deploy/compare/v6.0.0...v7.0.0) (2023-02-23)
+
+
+### Features
+
+* build and populate database in dev container ([5799267](https://github.com/macite/doubtfire-deploy/commit/57992670cfb63ceeef2e171ef17fa610056efbb8))
+
 ## [6.0.0](https://github.com/macite/doubtfire-deploy/compare/v5.0.6...v6.0.0) (2022-02-02)
 
 
