@@ -1,12 +1,5 @@
 #!/bin/sh
 
-# Check for standard-version
-if ! command -v standard-version &> /dev/null
-then
-  echo "standard-version could not be found, install it via npm i -g standard-version"
-  exit
-fi
-
 APP_PATH=`echo $0 | awk '{split($0,patharr,"/"); idx=1; while(patharr[idx+1] != "") { if (patharr[idx] != "/") {printf("%s/", patharr[idx]); idx++ }} }'`
 APP_PATH=`cd "$APP_PATH"; pwd`
 
@@ -88,7 +81,7 @@ function prepare_release {
     done
   fi
 
-  RELEASE_VERSION=$(standard-version $RELEASE_AS --dry-run  | grep "tagging release " | sed 's/^.* release //')
+  RELEASE_VERSION=$(npx standard-version $RELEASE_AS --dry-run  | grep "tagging release " | sed 's/^.* release //')
 
   CURRENT_BRANCH=$(git branch --show-current)
   TRUNC_RELEASE=${RELEASE_VERSION#v}
@@ -98,7 +91,7 @@ function prepare_release {
     read -p "Fix then press enter to continue (or break to quit)"
 
     CURRENT_BRANCH=$(git branch --show-current)
-    RELEASE_VERSION=$(standard-version --dry-run -r $RELEASE_AS  | grep "tagging release " | sed 's/^.* release //')
+    RELEASE_VERSION=$(npx standard-version --dry-run -r $RELEASE_AS  | grep "tagging release " | sed 's/^.* release //')
     TRUNC_RELEASE=${RELEASE_VERSION#v}
   done
 
@@ -123,7 +116,7 @@ function do_release {
 
   cd "${PROJECT_PATH}"
 
-  standard-version $RELEASE_AS
+  npx standard-version $RELEASE_AS
 }
 
 prepare_release 'doubtfire-web' "${APP_PATH}/doubtfire-web" WEB_VERSION

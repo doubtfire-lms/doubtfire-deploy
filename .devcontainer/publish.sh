@@ -33,9 +33,9 @@ function push_image {
   echo "Setting up build for $NAME"
   echo
 
-  cd ${FOLDER}
+  cd "${FOLDER}"
 
-  docker buildx build --platform linux/amd64,linux/arm64 -t "lmsdoubtfire/${NAME}:${VERSION}-dev" --push .
+  docker buildx build --platform linux/amd64,linux/arm64 -f "${DOCKERFILE}" -t "lmsdoubtfire/${NAME}:${VERSION}-dev" --push .
   if [ $? -ne 0 ]; then
     echo "Ensure that everything builds";
     exit 1
