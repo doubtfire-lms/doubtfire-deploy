@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 my_dir="$(dirname "$0")"
 source "${my_dir}/../development/version.sh"
 
