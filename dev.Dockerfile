@@ -79,7 +79,8 @@ COPY --chown="${USER}":"${USER}" package.json /workspace
 RUN mkdir -p "${NPM_CONFIG_PREFIX}/lib" \
   && npm install -g npm@9.2.0 \
   && npm --global config set user "${USER}" \
-  && npm install -g husky --save-dev
+  && npm install -g husky --save-dev \
+  && npm i -g standard-version
 
 RUN npm install
 

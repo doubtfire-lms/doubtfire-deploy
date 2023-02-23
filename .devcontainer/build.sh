@@ -29,7 +29,7 @@ function build_image {
   echo "Setting up build for $NAME"
   echo
 
-  cd ${FOLDER}
+  cd "${FOLDER}"
 
   docker image rm "${NAME}:${VERSION}-dev" 2>/dev/null
   docker image rm "lmsdoubtfire/${NAME}:${VERSION}-dev" 2>/dev/null
