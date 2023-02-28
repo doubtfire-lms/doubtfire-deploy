@@ -28,6 +28,7 @@ RUN curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/
     mariadb-server \
     gosu \
     redis \
+    inkscape \
   && apt-get clean \
   && ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \
