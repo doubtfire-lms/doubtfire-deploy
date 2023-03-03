@@ -28,6 +28,7 @@ RUN curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/
     mariadb-server \
     gosu \
     redis \
+    inkscape \
   && apt-get clean \
   && ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \
@@ -65,7 +66,7 @@ RUN curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/
   # smoke tests
   && node --version \
   && npm --version \
-  && gem install bundler -v '~> 2.4.3' \
+  && gem install bundler -v '~> 2.4.5' \
   && /workspace/doubtfire-api/.ci-setup/texlive-install.sh \
   && rm -rf /workspace/doubtfire-api/.ci-setup/texlive-install.sh \
   && rm -rf /install-tl-* \
