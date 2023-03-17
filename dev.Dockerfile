@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/devcontainers/ruby:3.1-bullseye
 # DEBIAN_FRONTEND=noninteractive is required to install tzdata in non interactive way
 ENV DEBIAN_FRONTEND noninteractive
 ENV USER='vscode'
-ENV NODE_VERSION 18.12.1
+ENV NODE_VERSION 18.15.0
 ENV NODE_ENV docker
 ENV NPM_CONFIG_PREFIX="/home/${USER}/.npm-global"
 ENV BUNDLE_PATH=/home/${USER}/.gems
@@ -46,6 +46,7 @@ RUN curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/
     4ED778F539E3634C779C87C6D7062848A1AB005C \
     141F07595B7B3FFE74309A937405533BE57C7D57 \
     74F12602B6F1C4E913FAA37AD3A89613643B6201 \
+    DD792F5973C6DE52C432CBDAC77ABFA00DDBF2B7 \
     61FC681DFB92A079F1685E77973F295594EC4689 \
     8FCCA13FEF1D0C2E91008E09770F7A9A5AE15600 \
     C4F0DFFF4E8C1A8236409D08E73BC641CC11F4C8 \
@@ -78,8 +79,7 @@ WORKDIR /workspace
 
 COPY --chown="${USER}":"${USER}" package.json /workspace
 RUN mkdir -p "${NPM_CONFIG_PREFIX}/lib" \
-  && npm install -g npm@9.2.0 \
-  && npm --global config set user "${USER}" \
+  && npm install -g npm@9.6.1 \
   && npm install -g husky --save-dev \
   && npm i -g standard-version
 
