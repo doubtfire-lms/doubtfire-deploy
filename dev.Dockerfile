@@ -2,6 +2,14 @@ FROM mcr.microsoft.com/devcontainers/ruby:3.1-bullseye
 
 # DEBIAN_FRONTEND=noninteractive is required to install tzdata in non interactive way
 ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update \
+  && apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common \
+  && curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - \
+  && add-apt-repository "deb [arch=amd64,arm64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" \
+  && curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg \
+  && echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
+
 ENV USER='vscode'
 ENV NODE_VERSION 18.15.0
 ENV NODE_ENV docker
@@ -10,9 +18,7 @@ ENV BUNDLE_PATH=/home/${USER}/.gems
 
 COPY --chown="${USER}":"${USER}" doubtfire-api/.ci-setup/ /workspace/doubtfire-api/.ci-setup/
 
-RUN curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg \
-  && echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list \
-  && apt-get update \
+RUN apt-get update \
   && apt-get install -y \
     lsb-release \
     ffmpeg \
@@ -29,6 +35,9 @@ RUN curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/
     gosu \
     redis \
     inkscape \
+    docker-ce \
+    docker-ce-cli \
+    containerd.io \
   && apt-get clean \
   && ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \
