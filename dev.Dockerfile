@@ -92,7 +92,7 @@ RUN mkdir -p "${NPM_CONFIG_PREFIX}/lib" \
   && npm install -g husky --save-dev \
   && npm i -g standard-version
 
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Install oh-my-zsh, powerlevel10k theme, and plugins
 RUN git clone https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k \
