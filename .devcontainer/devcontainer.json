@@ -1,7 +1,7 @@
 //devcontainer.json
 {
   "name": "Formatif Development Container",
-  "image": "lmsdoubtfire/formatif-devcontainer:7.0-dev",
+  "image": "lmsdoubtfire/formatif-devcontainer:8.0-dev",
   "runArgs": ["--env-file",".devcontainer/devcontainer.env"],
 
   // "dockerFile": "../dev.Dockerfile",
