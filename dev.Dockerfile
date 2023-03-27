@@ -92,7 +92,7 @@ RUN mkdir -p "${NPM_CONFIG_PREFIX}/lib" \
   && npm install -g husky --save-dev \
   && npm i -g standard-version
 
-RUN npm install --legacy-peer-deps
+RUN npm install
 
 # Install oh-my-zsh, powerlevel10k theme, and plugins
 RUN git clone https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k \
@@ -108,7 +108,7 @@ WORKDIR /workspace/doubtfire-web
 COPY --chown="${USER}":"${USER}" doubtfire-web/package.json /workspace/doubtfire-web
 
 # Install web ui packages
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Setup the folder where we will deploy the code
 WORKDIR /workspace/doubtfire-api
