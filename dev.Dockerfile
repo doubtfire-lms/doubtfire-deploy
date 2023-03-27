@@ -2,17 +2,23 @@ FROM mcr.microsoft.com/devcontainers/ruby:3.1-bullseye
 
 # DEBIAN_FRONTEND=noninteractive is required to install tzdata in non interactive way
 ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update \
+  && apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common \
+  && curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - \
+  && add-apt-repository "deb [arch=amd64,arm64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" \
+  && curl -fsSL https://packages.redis.io/gpg | gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg \
+  && echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/redis.list
+
 ENV USER='vscode'
-ENV NODE_VERSION 18.12.1
+ENV NODE_VERSION 18.15.0
 ENV NODE_ENV docker
 ENV NPM_CONFIG_PREFIX="/home/${USER}/.npm-global"
 ENV BUNDLE_PATH=/home/${USER}/.gems
 
 COPY --chown="${USER}":"${USER}" doubtfire-api/.ci-setup/ /workspace/doubtfire-api/.ci-setup/
 
-RUN curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg \
-  && echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list \
-  && apt-get update \
+RUN apt-get update \
   && apt-get install -y \
     lsb-release \
     ffmpeg \
@@ -29,6 +35,9 @@ RUN curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/
     gosu \
     redis \
     inkscape \
+    docker-ce \
+    docker-ce-cli \
+    containerd.io \
   && apt-get clean \
   && ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \
@@ -46,6 +55,7 @@ RUN curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/
     4ED778F539E3634C779C87C6D7062848A1AB005C \
     141F07595B7B3FFE74309A937405533BE57C7D57 \
     74F12602B6F1C4E913FAA37AD3A89613643B6201 \
+    DD792F5973C6DE52C432CBDAC77ABFA00DDBF2B7 \
     61FC681DFB92A079F1685E77973F295594EC4689 \
     8FCCA13FEF1D0C2E91008E09770F7A9A5AE15600 \
     C4F0DFFF4E8C1A8236409D08E73BC641CC11F4C8 \
@@ -78,8 +88,7 @@ WORKDIR /workspace
 
 COPY --chown="${USER}":"${USER}" package.json /workspace
 RUN mkdir -p "${NPM_CONFIG_PREFIX}/lib" \
-  && npm install -g npm@9.2.0 \
-  && npm --global config set user "${USER}" \
+  && npm install -g npm@9.6.1 \
   && npm install -g husky --save-dev \
   && npm i -g standard-version
 
