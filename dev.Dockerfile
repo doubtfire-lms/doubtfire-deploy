@@ -108,7 +108,7 @@ WORKDIR /workspace/doubtfire-web
 COPY --chown="${USER}":"${USER}" doubtfire-web/package.json /workspace/doubtfire-web
 
 # Install web ui packages
-RUN npm install --legacy-peer-deps
+RUN npm install
 
 # Setup the folder where we will deploy the code
 WORKDIR /workspace/doubtfire-api
