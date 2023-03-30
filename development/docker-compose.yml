@@ -82,7 +82,7 @@ services:
       - doubtfire-api
     volumes:
       - ../doubtfire-web:/doubtfire-web
+      - web_node_modules:/doubtfire-web/node_modules
 
 volumes:
-  ws_node_modules:
   web_node_modules:
