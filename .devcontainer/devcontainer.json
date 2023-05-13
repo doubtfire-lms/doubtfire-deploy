@@ -31,10 +31,10 @@
         "GitHub.vscode-pull-request-github",
         "GitHub.copilot",
         "Angular.ng-template",
-        "johnpapa.Angular2",
         "ms-azuretools.vscode-docker",
         "esbenp.prettier-vscode",
-        "foxundermoon.shell-format"
+        "foxundermoon.shell-format",
+        "bradlc.vscode-tailwindcss"
       ]
     }
   },
