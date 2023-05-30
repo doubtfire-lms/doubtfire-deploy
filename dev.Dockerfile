@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/devcontainers/ruby:3.1-bullseye
 # DEBIAN_FRONTEND=noninteractive is required to install tzdata in non interactive way
 ENV DEBIAN_FRONTEND noninteractive
 ENV USER='vscode'
-ENV NODE_VERSION 18.12.1
+ENV NODE_VERSION 16.20.0
 ENV NODE_ENV docker
 ENV NPM_CONFIG_PREFIX="/home/${USER}/.npm-global"
 ENV BUNDLE_PATH=/home/${USER}/.gems
@@ -80,8 +80,7 @@ COPY --chown="${USER}":"${USER}" package.json /workspace
 RUN mkdir -p "${NPM_CONFIG_PREFIX}/lib" \
   && npm install -g npm@9.2.0 \
   && npm --global config set user "${USER}" \
-  && npm install -g husky --save-dev \
-  && npm i -g standard-version
+  && npm install -g husky standard-version @angular/cli
 
 RUN npm install
 
@@ -91,7 +90,7 @@ RUN git clone https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/t
   && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
 ENV RAILS_ENV development
-ENV PATH /home/$USER/.gems/ruby/3.1.0/bin:$PATH:/tmp/texlive/bin/x86_64-linux:/tmp/texlive/bin/aarch64-linux:$PATH
+ENV PATH /home/$USER/.gems/ruby/3.1.0/bin:$PATH:/tmp/texlive/bin/x86_64-linux:/tmp/texlive/bin/aarch64-linux:$PATH:/home/${USER}/.npm-global/bin
 ENV GEM_PATH /home/$USER/.gems/ruby/3.1.0:$GEM_PATH
 
 # Install the web ui
@@ -107,8 +106,7 @@ WORKDIR /workspace/doubtfire-api
 COPY --chown="${USER}":"${USER}" doubtfire-api/Gemfile /workspace/doubtfire-api/Gemfile
 COPY --chown="${USER}":"${USER}" doubtfire-api/Gemfile.lock /workspace/doubtfire-api/Gemfile.lock
 
-RUN bundle install \
-  && npx husky install
+RUN bundle install
 
 WORKDIR /workspace
 

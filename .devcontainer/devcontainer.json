@@ -34,7 +34,9 @@
         "johnpapa.Angular2",
         "ms-azuretools.vscode-docker",
         "esbenp.prettier-vscode",
-        "foxundermoon.shell-format"
+        "foxundermoon.shell-format",
+        "cyrilletuzi.angular-schematics",
+        "bradlc.vscode-tailwindcss"
       ]
     }
   },
