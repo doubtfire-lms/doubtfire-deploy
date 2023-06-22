@@ -2,7 +2,7 @@
 {
   "name": "Formatif Development Container",
   "image": "lmsdoubtfire/formatif-devcontainer:8.0-dev",
-  "runArgs": ["--env-file",".devcontainer/devcontainer.env"],
+  "runArgs": ["--env-file", ".devcontainer/devcontainer.env"],
 
   // "dockerFile": "../dev.Dockerfile",
   // "dockerComposeFile": "../development/docker-compose.yml",
@@ -75,7 +75,7 @@
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
   "workspaceFolder": "/workspace",
 
-  "forwardPorts": [3000,4200,9876],
+  "forwardPorts": [3000, 4200, 9876],
 
   "postCreateCommand": "/workspace/.devcontainer/post_create.sh",
   "postStartCommand": "/workspace/.devcontainer/post_start.sh",
