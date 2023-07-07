@@ -199,7 +199,7 @@ docker_init_database_dir() {
     installArgs+=(--skip-test-db)
   fi
   # "Other options are passed to mysqld." (so we pass all "mysqld" arguments directly here)
-  mysql_install_db "${installArgs[@]}" "${@:2}" --default-time-zone=SYSTEM --enforce-storage-engine=
+  mysql_install_db "${installArgs[@]}" "${@:2}" --default-time-zone=SYSTEM --user=vscode --enforce-storage-engine=
   mysql_note "Database files initialized"
 }
 
