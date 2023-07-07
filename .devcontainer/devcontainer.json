@@ -41,19 +41,19 @@
 
   "mounts": [
     {
-      "source": "${localWorkspaceFolder}/data/database",
+      "source": "formatif-dev-database",
       "target": "/var/lib/mysql",
-      "type": "bind"
+      "type": "volume"
     },
     {
-      "source": "${localWorkspaceFolder}/data/tmp",
+      "source": "formatif-dev-tmp",
       "target": "/workspace/tmp",
-      "type": "bind"
+      "type": "volume"
     },
     {
-      "source": "${localWorkspaceFolder}/data/student-work",
+      "source": "formatif-dev-student-work",
       "target": "/student-work",
-      "type": "bind"
+      "type": "volume"
     },
     {
       "source": "ws_node_modules",
