@@ -6,7 +6,7 @@
     {
       "label": "Serve web frontend",
       "type": "shell",
-      "command": "npm start",
+      "command": "npm install && npm start",
       "group": "build",
       "presentation": {
         "group": "buildGroup",
@@ -21,7 +21,7 @@
     {
       "label": "Serve Rails API",
       "type": "shell",
-      "command": "rails s",
+      "command": "bundle install && rails s",
       "group": "build",
       "presentation": {
         "group": "buildGroup",
