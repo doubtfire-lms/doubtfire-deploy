@@ -41,9 +41,43 @@ There are several docker compose setups to aid in speeding up the development.
   - The **docker-compose.yml** file contains the most likely setup with development setups for both the api and web projets. This should be used when working on both the api and the web front end. You can run this using **run-api-web.sh**.
   - The **docker-compose.full.yml** contains a setup with all of the containers needed to run Doubtfire with overseer. This requires access to the overseer repository. You can run this using **run-full.sh**
 
+### Working with Dev Containers
+
+This is the primary method for setting up your development enviroment:
+
+Pre requisittes: Vscode, Docker
+OS: Windows/Linux/Mac OS
+
+1. Fork [doubtfire-deploy](https://github.com/doubtfire-lms/doubtfire-deploy), [doubtfire-api](https://github.com/doubtfire-lms/doubtfire-api), and [doubtfire-web](https://github.com/doubtfire-lms/doubtfire-web)
+
+    To push your contributions, you will need a fork of each repository. Contributions can then be made by making pull requests back into the main repositories.
+
+2. Clone your [doubtfire-deploy](https://github.com/doubtfire-lms/doubtfire-deploy). Make sure to fetch submodules to get the subprojects.
+
+    `git clone --recurse-submodules https://github.com/YOUR_USERNAME/doubtfire-deploy`
+
+3. Open a Terminal that supports `sh` scripts (on Windows, you will need WSL, Msys2, or Cygwin). Run the following command to set your fork as the remote.
+
+    `./change_remotes.sh`
+
+4. In Visual studio press F1: Find Dev Containers: Open folder in Container (This will reopen the repo you cloned in a container)
+
+5. The container will automaticlly setup the DB, Frontend, Backend and your development enviroment ready for use.
+
+6. Open a web browser and navigate to:
+
+    - [http://localhost:3000/api/docs/](http://localhost:3000/api/docs/) to interact with the API using [Swagger](https://swagger.io).
+    - [http://localhost:4200](http://localhost:4200) to use the web application.
+
+    The database will include a number of default users, each with password being "password".
+    - Admin user: **aadmin**
+    - Convenor user: **aconvenor**
+    - Tutor user: **atutor**
+    - Students: **student_1**
+
 ### Working with Docker Compose
 
-To get started:
+Alternative setup using Docker-Compose:
 
 1. Fork [doubtfire-deploy](https://github.com/doubtfire-lms/doubtfire-deploy), [doubtfire-api](https://github.com/doubtfire-lms/doubtfire-api), and [doubtfire-web](https://github.com/doubtfire-lms/doubtfire-web)
 
