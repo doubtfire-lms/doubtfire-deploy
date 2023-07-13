@@ -59,6 +59,7 @@ else
   echo "Creating and populating database - do not shutdown!"
   cd /workspace/doubtfire-api
 
+  bundle install
   bundle exec rake db:populate
   echo "Database created - you can open another terminal while this completes if you want.."
 

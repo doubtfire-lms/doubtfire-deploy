@@ -171,7 +171,7 @@ docker_verify_minimum_env() {
 }
 
 # creates folders for the database
-# also ensures permission for user mysql of run as root
+# also ensures permission for user mysql of run as root -- changing to vscode for devcontainer
 docker_create_db_directories() {
   local user
   user="$(id -u)"
@@ -182,9 +182,11 @@ docker_create_db_directories() {
 
   if [ "$user" = "0" ]; then
     # this will cause less disk access than `chown -R`
-    find "$DATADIR" \! -user mysql -exec chown mysql '{}' +
+    find "$DATADIR" \! -user vscode -exec chown vscode '{}' +
+    find /var/lib/mysql \! -user vscode -exec chown vscode '{}' +
+    find /run/mysqld \! -user vscode -exec chown vscode '{}' +
     # See https://github.com/MariaDB/mariadb-docker/issues/363
-    find "${SOCKET%/*}" -maxdepth 0 \! -user mysql -exec chown mysql '{}' \;
+    find "${SOCKET%/*}" -maxdepth 0 \! -user vscode -exec chown vscode '{}' \;
   fi
 }
 
@@ -197,7 +199,7 @@ docker_init_database_dir() {
     installArgs+=(--skip-test-db)
   fi
   # "Other options are passed to mysqld." (so we pass all "mysqld" arguments directly here)
-  mysql_install_db "${installArgs[@]}" "${@:2}" --default-time-zone=SYSTEM --enforce-storage-engine=
+  mysql_install_db "${installArgs[@]}" "${@:2}" --default-time-zone=SYSTEM --user=vscode --enforce-storage-engine=
   mysql_note "Database files initialized"
 }
 
@@ -381,8 +383,8 @@ _main() {
 
     # If container is started as root user, restart as dedicated mysql user
     if [ "$(id -u)" = "0" ]; then
-      mysql_note "Switching to dedicated user 'mysql'"
-      exec gosu mysql "$BASH_SOURCE" "$@"
+      mysql_note "Switching to dedicated user 'vscode'"
+      exec gosu vscode "$BASH_SOURCE" "$@"
     fi
 
     # there's no database, so it needs to be initialized
@@ -413,7 +415,7 @@ _main() {
       echo
     fi
   fi
-  exec "$@" >>/workspace/tmp/database.log 2>>/workspace/tmp/database.log &
+  exec "$@" >/workspace/tmp/database.log 2>>/workspace/tmp/database.log &
 }
 
 # If we are sourced from elsewhere, don't perform any further actions
