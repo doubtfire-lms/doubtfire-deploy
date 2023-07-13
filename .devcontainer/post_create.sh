@@ -5,8 +5,15 @@ ln -sf /workspace/.devcontainer/.zshrc $HOME
 ln -s /workspace/.devcontainer/.p10k.zsh $HOME
 ln -s /workspace/.devcontainer/.irbrc $HOME
 
-echo 'Granting access to student work in the background'
-sudo find /student-work/* -exec chmod a+rw {} \; &
+
+sudo chown vscode:vscode /var/lib/mysql
+# sudo chmod a+rw /var/lib/mysql
+sudo chmod a+rw /workspace/tmp
+sudo chmod a+rw /workspace/node_modules
+#sudo chmod a+rw /student-work
+sudo chown vscode:vscode /student-work
+sudo chmod a+rw /workspace/doubtfire-web/node_modules
+sudo chmod a+rw /home/vscode/.gems
 
 echo 'Starting Services'
-/workspace/.devcontainer/docker-entrypoint.sh echo "Done"
+sudo -E /workspace/.devcontainer/docker-entrypoint.sh echo "Done"

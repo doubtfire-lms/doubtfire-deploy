@@ -1,8 +1,8 @@
 //devcontainer.json
 {
   "name": "Formatif Development Container",
-  "image": "lmsdoubtfire/formatif-devcontainer:8.0-dev",
-  "runArgs": ["--env-file",".devcontainer/devcontainer.env"],
+  "image": "lmsdoubtfire/formatif-devcontainer:8.1-dev",
+  "runArgs": ["--env-file", ".devcontainer/devcontainer.env"],
 
   // "dockerFile": "../dev.Dockerfile",
   // "dockerComposeFile": "../development/docker-compose.yml",
@@ -31,29 +31,29 @@
         "GitHub.vscode-pull-request-github",
         "GitHub.copilot",
         "Angular.ng-template",
-        "johnpapa.Angular2",
         "ms-azuretools.vscode-docker",
         "esbenp.prettier-vscode",
-        "foxundermoon.shell-format"
+        "foxundermoon.shell-format",
+        "bradlc.vscode-tailwindcss"
       ]
     }
   },
 
   "mounts": [
     {
-      "source": "${localWorkspaceFolder}/data/database",
+      "source": "formatif-dev-database",
       "target": "/var/lib/mysql",
-      "type": "bind"
+      "type": "volume"
     },
     {
-      "source": "${localWorkspaceFolder}/data/tmp",
+      "source": "formatif-dev-tmp",
       "target": "/workspace/tmp",
-      "type": "bind"
+      "type": "volume"
     },
     {
-      "source": "${localWorkspaceFolder}/data/student-work",
+      "source": "formatif-dev-student-work",
       "target": "/student-work",
-      "type": "bind"
+      "type": "volume"
     },
     {
       "source": "ws_node_modules",
@@ -75,7 +75,7 @@
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
   "workspaceFolder": "/workspace",
 
-  "forwardPorts": [3000,4200,9876],
+  "forwardPorts": [3000, 4200, 9876],
 
   "postCreateCommand": "/workspace/.devcontainer/post_create.sh",
   "postStartCommand": "/workspace/.devcontainer/post_start.sh",

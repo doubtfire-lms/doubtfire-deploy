@@ -109,7 +109,7 @@ WORKDIR /workspace/doubtfire-web
 COPY --chown="${USER}":"${USER}" doubtfire-web/package.json /workspace/doubtfire-web
 
 # Install web ui packages
-RUN npm install --legacy-peer-deps
+RUN npm install
 
 # Setup the folder where we will deploy the code
 WORKDIR /workspace/doubtfire-api
@@ -131,5 +131,11 @@ COPY --chown="${USER}":"${USER}" .devcontainer /workspace/.devcontainer
 ENV HISTFILE /workspace/tmp/.zsh_history
 
 RUN sudo chmod +x /workspace/.devcontainer/*.sh
+RUN sudo rm -rf /var/lib/mysql/* && \
+    sudo chown vscode:vscode /var/lib/mysql && \
+    mkdir /workspace/tmp && \
+    sudo mkdir /student-work && \
+    sudo chown vscode:vscode /student-work
+
 ENTRYPOINT [ "/workspace/.devcontainer/docker-entrypoint.sh" ]
 CMD [ "sleep", "infinity" ]

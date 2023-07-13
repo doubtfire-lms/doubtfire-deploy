@@ -1,0 +1,46 @@
+// See https://go.microsoft.com/fwlink/?LinkId=733558
+// for the documentation about the tasks.json format
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Serve web frontend",
+      "type": "shell",
+      "command": "npm install && npm start",
+      "group": "build",
+      "presentation": {
+        "group": "buildGroup",
+        "reveal": "always",
+        "panel": "new",
+        "echo": false
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/doubtfire-web/"
+      }
+    },
+    {
+      "label": "Serve Rails API",
+      "type": "shell",
+      "command": "bundle install && rails s",
+      "group": "build",
+      "presentation": {
+        "group": "buildGroup",
+        "reveal": "always",
+        "panel": "new",
+        "echo": false
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/doubtfire-api/"
+      }
+    },
+    {
+      "label": "Serve",
+      "dependsOn": ["Serve web frontend", "Serve Rails API"],
+      "group": "build",
+      "runOptions": {
+        "runOn": "folderOpen" // This starts both tasks when the container is started
+      },
+      "dependsOrder": "parallel" // no dependencies between tasks
+    }
+  ]
+}

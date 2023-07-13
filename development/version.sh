@@ -6,4 +6,4 @@
 # Non-breaking changes should increment the minor version.
 export CURRENT_API_VERSION=8.0
 export CURRENT_WEB_VERSION=8.0
-export CURRENT_DEV_VERSION=8.0
+export CURRENT_DEV_VERSION=8.1
