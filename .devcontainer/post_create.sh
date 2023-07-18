@@ -16,4 +16,4 @@ sudo chmod a+rw /workspace/doubtfire-web/node_modules
 sudo chmod a+rw /home/vscode/.gems
 
 echo 'Starting Services'
-sudo -E /workspace/.devcontainer/docker-entrypoint.sh echo "Done"
+/workspace/.devcontainer/docker-entrypoint.sh echo "Done"

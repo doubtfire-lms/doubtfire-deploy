@@ -2,7 +2,7 @@ version: '3'
 services:
   formatif-dev-container:
     container_name: formatif-dev-container
-    image: formatif-devcontainer:8.1-dev
+    image: formatif-devcontainer:8.2-dev
     build:
       context: ../
       dockerfile: dev.Dockerfile

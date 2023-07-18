@@ -63,9 +63,10 @@ else
   bundle exec rake db:populate
   echo "Database created - you can open another terminal while this completes if you want.."
 
-  echo "Simulating sign off in the background"
-  (
-    bundle exec rake db:simulate_signoff >>/workspace/tmp/database_populate.log 2>>/workspace/tmp/database_populate.log
-    rm /workspace/tmp/database_populate.log
-  )&
+  echo "Simulating sign off in the background - this may take a while.... but you can get started working - we are all setup"
+
+  bundle exec rake db:simulate_signoff >>/workspace/tmp/database_populate.log 2>>/workspace/tmp/database_populate.log
+  rm /workspace/tmp/database_populate.log
+
+  echo "Simulation of signoff complete"
 fi
