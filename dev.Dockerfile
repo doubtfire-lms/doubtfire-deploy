@@ -91,6 +91,7 @@ COPY --chown="${USER}":"${USER}" package.json /workspace
 RUN mkdir -p "${NPM_CONFIG_PREFIX}/lib" \
   && npm install -g npm@9.6.1 \
   && npm install -g husky --save-dev \
+  && npm install -g @angular/cli \
   && npm i -g standard-version
 
 RUN npm install
@@ -101,7 +102,7 @@ RUN git clone https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/t
   && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
 ENV RAILS_ENV development
-ENV PATH /home/$USER/.gems/ruby/3.1.0/bin:$PATH:/tmp/texlive/bin/x86_64-linux:/tmp/texlive/bin/aarch64-linux:$PATH
+ENV PATH /home/$USER/.gems/ruby/3.1.0/bin:$PATH:/tmp/texlive/bin/x86_64-linux:/tmp/texlive/bin/aarch64-linux:$PATH:/home/$USER/.npm-global/bin
 ENV GEM_PATH /home/$USER/.gems/ruby/3.1.0:$GEM_PATH
 
 # Install the web ui
@@ -117,8 +118,7 @@ WORKDIR /workspace/doubtfire-api
 COPY --chown="${USER}":"${USER}" doubtfire-api/Gemfile /workspace/doubtfire-api/Gemfile
 COPY --chown="${USER}":"${USER}" doubtfire-api/Gemfile.lock /workspace/doubtfire-api/Gemfile.lock
 
-RUN bundle install \
-  && npx husky install
+RUN bundle install
 
 WORKDIR /workspace
 
