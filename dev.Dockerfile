@@ -22,7 +22,8 @@ RUN apt-get update \
   && apt-get install -y \
     lsb-release \
     ffmpeg \
-    ghostscript qpdf \
+    ghostscript \
+    qpdf \
     imagemagick \
     libmagic-dev \
     libmagickwand-dev \
