@@ -70,6 +70,9 @@ The setups to configure these components include:
        - DF_LDAP_ATTRIBUTE
        - DF_LDAP_BASE
        - DF_LDAP_SSL
+       - DF_LDAP_USE_ADMIN_TO_BIND
+       - DF_LDAP_ADMIN_USER
+       - DF_LDAP_ADMIN_PWD
    - **DF_ENCRYPTION_*** - is used in encrypting data in the database. Generate these from within the *apiserver* container using `rails db:encryption:init`. See [Active Record Encryption](https://guides.rubyonrails.org/active_record_encryption.html).
    - Setup email settings, see [Action Mailer](https://guides.rubyonrails.org/action_mailer_basics.html).
      - Set **DF_MAIL_PERFORM_DELIVERIES** to `yes` (lowercase) to enable mail sending
