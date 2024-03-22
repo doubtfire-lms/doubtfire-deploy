@@ -11,6 +11,12 @@ services:
     volumes:
       - ../data/database:/var/lib/mysql
 
+  redis-sidekiq:
+    container_name: doubtfire-redis-sidekiq
+    image: redis:7.0
+    volumes:
+      - redis_sidekiq_data:/data
+
   doubtfire-api:
     container_name: doubtfire-api
     image: lmsdoubtfire/doubtfire-api:8.0-dev
@@ -71,6 +77,12 @@ services:
       # RABBITMQ_USERNAME: secure_credentials
       # RABBITMQ_PASSWORD: secure_credentials
 
+      # Turn It In
+      TII_ENABLED: false
+
+      # Redis
+      DF_REDIS_SIDEKIQ_URL: redis://doubtfire-redis-sidekiq:6379/0
+
   doubtfire-web:
     container_name: doubtfire-web
     image: lmsdoubtfire/doubtfire-web:8.0-dev
@@ -86,3 +98,4 @@ services:
 
 volumes:
   web_node_modules:
+  redis_sidekiq_data:

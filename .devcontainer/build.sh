@@ -12,7 +12,7 @@ echo
 echo "Run publish.sh when you are ready to push the new images to docker hub."
 echo
 echo " You are on branch:     ${CURRENT_BRANCH}"
-echo " dev container version: ${CURRENT_WEB_VERSION}"
+echo " dev container version: ${CURRENT_DEV_VERSION}"
 echo
 echo "This will produce docker images with the following names"
 echo " - lmsdoubtfire/formatif-devcontainer:${CURRENT_DEV_VERSION}-dev"
