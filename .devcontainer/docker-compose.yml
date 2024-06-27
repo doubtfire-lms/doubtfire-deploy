@@ -6,6 +6,7 @@ networks:
     internal: true
 
 services:
+
   formatif-dev-container:
     container_name: 1-formatif-dev-container
     image: lmsdoubtfire/formatif-devcontainer:10.0.0-5
