@@ -36,6 +36,7 @@ RUN apt-get update \
     gosu \
     redis \
     inkscape \
+    librsvg2-bin \
     docker-ce \
     docker-ce-cli \
     containerd.io \
