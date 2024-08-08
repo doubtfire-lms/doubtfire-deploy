@@ -17,7 +17,7 @@ services:
       # mounts are relative to the first file in the list, which is a level up.
       - ..:/workspace:cached
       - formatif_tmp_compose:/workspace/tmp
-      - formatif_student-work_compose:/student-work
+      - ../data/student-work:/student-work
       - ws_node_modules:/workspace/node_modules
       - web_node_modules:/workspace/doubtfire-web/node_modules
       - formatif_gems_compose:/home/vscode/.gems
@@ -74,6 +74,21 @@ services:
       - formatif-dev-container
     command: /bin/sh -c "sleep infinity"
 
+  ## docker-compose run
+  ## --rm makes it close
+  ## can do this for latex too
+  jplag:
+    container_name: jplag
+    build:
+      context: ../jplag
+      dockerfile: jplag.Dockerfile
+    volumes:
+      - jplag_data:/jplag
+      - ../data/student-work:/student-work
+    env_file:
+      - ./devcontainer.env
+    network_mode: "host"
+
 volumes:
   ws_node_modules:
   web_node_modules:
@@ -82,3 +97,4 @@ volumes:
   formatif_db_compose:
   formatif_gems_compose:
   formatif_redis_sidekiq_data:
+  jplag_data:
