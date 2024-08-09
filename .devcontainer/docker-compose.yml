@@ -1,8 +1,7 @@
 version: '3'
 services:
   formatif-dev-container:
-    container_name: formatif-dev-container
-    image: formatif-devcontainer:8.3-dev
+    container_name: 1-formatif-dev-container
     build:
       context: ../
       dockerfile: dev.Dockerfile
@@ -16,6 +15,7 @@ services:
       - web_node_modules:/workspace/doubtfire-web/node_modules
       - formatif_db_compose:/var/lib/mysql
       - formatif_gems_compose:/home/vscode/.gems
+      - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "9876:9876"
       - "4200:4200"
@@ -24,6 +24,22 @@ services:
     command: /bin/sh -c "while sleep 5000; do :; done"
     env_file:
       - devcontainer.env
+
+
+  texlive:
+    container_name: 1-formatif-texlive-container
+    image:  texlive/texlive:latest
+    volumes:
+      - formatif_student-work_compose:/student-work
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ../doubtfire-api/lib/shell/texlive:/texlive/shell
+      - ../doubtfire-api/tmp/texlive-latex:/workdir/texlive-latex
+      - ../doubtfire-api/public/assets/images/:/workspace/doubtfire-api/public/assets/images/
+    command: /bin/sh -c "while sleep 5000; do :; done"
+    # TODO: apt-get update && apt-get install -y imagemagick
+    # TODO: apt-get update && apt-get install -y inkscape
+    # TODO: apt-get update && apt-get install -y librsvg2-bin
+
 
 volumes:
   ws_node_modules:

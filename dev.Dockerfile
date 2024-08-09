@@ -78,7 +78,7 @@ RUN apt-get update \
   && node --version \
   && npm --version \
   && gem install bundler -v '~> 2.4.5' \
-  && /workspace/doubtfire-api/.ci-setup/texlive-install.sh \
+  # && /workspace/doubtfire-api/.ci-setup/texlive-install.sh \
   && rm -rf /workspace/doubtfire-api/.ci-setup/texlive-install.sh \
   && rm -rf /install-tl-* \
   && mkdir /run/mysqld

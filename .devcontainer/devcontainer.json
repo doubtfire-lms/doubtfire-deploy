@@ -1,13 +1,13 @@
 //devcontainer.json
 {
   "name": "Formatif Development Container",
-  "image": "lmsdoubtfire/formatif-devcontainer:8.3-dev",
-  "runArgs": ["--env-file", ".devcontainer/devcontainer.env"],
+  // "image": "lmsdoubtfire/formatif-devcontainer:8.3-dev",
+  // "runArgs": ["--env-file", ".devcontainer/devcontainer.env"],
 
   // "dockerFile": "../dev.Dockerfile",
-  // "dockerComposeFile": "../development/docker-compose.yml",
-  // "service": "formatif-dev-container",
-  // "shutdownAction": "stopCompose",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "formatif-dev-container",
+  "shutdownAction": "stopCompose",
   // "workspaceFolder": "/workspace",
 
   "customizations": {
@@ -72,7 +72,7 @@
     }
   ],
 
-  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  // "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
   "workspaceFolder": "/workspace",
 
   "forwardPorts": [3000, 4200, 9876],
