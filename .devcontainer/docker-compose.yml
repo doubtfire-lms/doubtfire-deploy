@@ -25,21 +25,18 @@ services:
     env_file:
       - devcontainer.env
 
-
   texlive:
     container_name: 1-formatif-texlive-container
-    image:  texlive/texlive:latest
+    build:
+      context: ../
+      dockerfile: texlive.Dockerfile
     volumes:
       - formatif_student-work_compose:/student-work
       - /var/run/docker.sock:/var/run/docker.sock
       - ../doubtfire-api/lib/shell/texlive:/texlive/shell
       - ../doubtfire-api/tmp/texlive-latex:/workdir/texlive-latex
-      - ../doubtfire-api/public/assets/images/:/workspace/doubtfire-api/public/assets/images/
+      - ../doubtfire-api/public/assets/images:/workspace/doubtfire-api/public/assets/images
     command: /bin/sh -c "while sleep 5000; do :; done"
-    # TODO: apt-get update && apt-get install -y imagemagick
-    # TODO: apt-get update && apt-get install -y inkscape
-    # TODO: apt-get update && apt-get install -y librsvg2-bin
-
 
 volumes:
   ws_node_modules:
