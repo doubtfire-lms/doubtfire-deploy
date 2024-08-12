@@ -37,6 +37,8 @@ services:
       - ../doubtfire-api/tmp/texlive-latex:/workdir/texlive-latex
       - ../doubtfire-api/public/assets/images:/workspace/doubtfire-api/public/assets/images
       - ../doubtfire-api/test_files:/workspace/doubtfire-api/test_files
+    depends_on:
+      - formatif-dev-container
     command: /bin/sh -c "while sleep 5000; do :; done"
 
 volumes:
