@@ -1,7 +1,7 @@
 FROM texlive/texlive:latest
 
 RUN apt-get update \
-    && apt-get install -y \ 
+    && apt-get install -y \
     imagemagick \
     inkscape \
     librsvg2-bin \
