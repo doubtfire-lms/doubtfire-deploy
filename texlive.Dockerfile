@@ -8,4 +8,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+COPY ./doubtfire-api/lib/shell/texlive/latex-build.sh /texlive/shell/latex-build.sh
+RUN chmod +x /texlive/shell/latex-build.sh
+
 CMD ["sh", "-c", "while sleep 5000; do :; done"]
