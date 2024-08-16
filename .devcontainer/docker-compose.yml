@@ -24,6 +24,9 @@ services:
     command: /bin/sh -c "while sleep 5000; do :; done"
     env_file:
       - devcontainer.env
+    environment:
+      LATEX_CONTAINER_NAME: "1-formatif-texlive-container"
+      LATEX_BUILD_PATH: "/texlive/shell/latex-build.sh"
 
   texlive:
     container_name: 1-formatif-texlive-container
