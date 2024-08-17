@@ -26,7 +26,7 @@ services:
       - devcontainer.env
     environment:
       LATEX_CONTAINER_NAME: "1-formatif-texlive-container"
-      LATEX_BUILD_PATH: "/texlive/shell/latex-build.sh"
+      LATEX_BUILD_PATH: "/texlive/shell/latex_build.sh"
 
   texlive:
     container_name: 1-formatif-texlive-container
