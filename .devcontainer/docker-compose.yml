@@ -17,7 +17,7 @@ services:
       # mounts are relative to the first file in the list, which is a level up.
       - ..:/workspace:cached
       - formatif_tmp_compose:/workspace/tmp
-      - ../data/student-work:/student-work
+      - formatif_student-work_compose:/student-work
       - ws_node_modules:/workspace/node_modules
       - web_node_modules:/workspace/doubtfire-web/node_modules
       - formatif_gems_compose:/home/vscode/.gems
@@ -83,11 +83,10 @@ services:
       context: ../jplag
       dockerfile: jplag.Dockerfile
     volumes:
+      - formatif_student-work_compose:/student-work
       - jplag_data:/jplag
-      - ../data/student-work:/student-work
     env_file:
       - ./devcontainer.env
-    network_mode: "host"
 
 volumes:
   ws_node_modules:
