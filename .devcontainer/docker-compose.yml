@@ -35,7 +35,6 @@ services:
       dockerfile: texlive.Dockerfile
     volumes:
       - formatif_student-work_compose:/student-work
-      - /var/run/docker.sock:/var/run/docker.sock
       - ../doubtfire-api/tmp/texlive-latex:/workdir/texlive-latex
       - ../doubtfire-api/public/assets/images:/workspace/doubtfire-api/public/assets/images
       - ../doubtfire-api/test_files:/workspace/doubtfire-api/test_files
