@@ -25,8 +25,8 @@ services:
     env_file:
       - devcontainer.env
     environment:
-      LATEX_CONTAINER_NAME: "1-formatif-texlive-container"
-      LATEX_BUILD_PATH: "/texlive/shell/latex_build.sh"
+      LATEX_CONTAINER_NAME: 1-formatif-texlive-container
+      LATEX_BUILD_PATH: /texlive/shell/latex_build.sh
 
   texlive:
     container_name: 1-formatif-texlive-container
@@ -35,7 +35,7 @@ services:
       dockerfile: texlive.Dockerfile
     volumes:
       - formatif_student-work_compose:/student-work
-      - ../doubtfire-api/tmp/texlive-latex:/workdir/texlive-latex
+      - ../doubtfire-api/tmp/rails-latex:/workdir/texlive-latex
       - ../doubtfire-api/public/assets/images:/workspace/doubtfire-api/public/assets/images
       - ../doubtfire-api/test_files:/workspace/doubtfire-api/test_files
     depends_on:
