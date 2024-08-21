@@ -17,7 +17,7 @@ services:
       # mounts are relative to the first file in the list, which is a level up.
       - ..:/workspace:cached
       - formatif_tmp_compose:/workspace/tmp
-      - formatif_student-work_compose:/student-work
+      - student-work:/student-work
       - ws_node_modules:/workspace/node_modules
       - web_node_modules:/workspace/doubtfire-web/node_modules
       - formatif_gems_compose:/home/vscode/.gems
@@ -38,6 +38,24 @@ services:
       LATEX_BUILD_PATH: /texlive/shell/latex_build.sh
     depends_on:
       - dev-db
+      - ./devcontainer.env
+
+
+  ## docker-compose run
+  ## --rm makes it close
+  ## can do this for latex too
+  jplag:
+    container_name: jplag
+    build:
+      context: ../jplag
+      dockerfile: jplag.Dockerfile
+    volumes:
+      - student-work:/student-work
+      - jplag_data:/jplag
+      - ../doubtfire-api/tmp/jplag:/tmp/jplag
+    command: /bin/sh -c "while sleep 5000; do :; done"
+    env_file:
+      - ./devcontainer.env
 
   dev-db:
     container_name: doubtfire-dev-db
@@ -74,25 +92,11 @@ services:
       - formatif-dev-container
     command: /bin/sh -c "sleep infinity"
 
-  ## docker-compose run
-  ## --rm makes it close
-  ## can do this for latex too
-  jplag:
-    container_name: jplag
-    build:
-      context: ../jplag
-      dockerfile: jplag.Dockerfile
-    volumes:
-      - formatif_student-work_compose:/student-work
-      - jplag_data:/jplag
-    env_file:
-      - ./devcontainer.env
-
 volumes:
   ws_node_modules:
   web_node_modules:
   formatif_tmp_compose:
-  formatif_student-work_compose:
+  student-work: {}
   formatif_db_compose:
   formatif_gems_compose:
   formatif_redis_sidekiq_data:
