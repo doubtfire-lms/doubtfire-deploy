@@ -3,7 +3,7 @@
 echo "Starting Formatif development container..."
 
 # Start mysql
-sudo -E /workspace/.devcontainer/launch_db.sh mysqld
+# sudo -E /workspace/.devcontainer/launch_db.sh mysqld
 
 # Start the redis server
 mkdir -p /workspace/tmp/sidekiq-redis
