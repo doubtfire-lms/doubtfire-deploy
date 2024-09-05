@@ -1,8 +1,7 @@
 version: '3'
 services:
   formatif-dev-container:
-    container_name: formatif-dev-container
-    image: formatif-devcontainer:8.3-dev
+    container_name: dbtest-formatif-dev-container
     build:
       context: ../
       dockerfile: dev.Dockerfile
@@ -14,7 +13,7 @@ services:
       - formatif_student-work_compose:/student-work
       - ws_node_modules:/workspace/node_modules
       - web_node_modules:/workspace/doubtfire-web/node_modules
-      - formatif_db_compose:/var/lib/mysql
+      # - formatif_db_compose:/var/lib/mysql
       - formatif_gems_compose:/home/vscode/.gems
     ports:
       - "9876:9876"

@@ -32,7 +32,7 @@ RUN apt-get update \
     tzdata \
     wget \
     libc6-dev \
-    mariadb-server \
+    # mariadb-server \
     gosu \
     redis \
     inkscape \

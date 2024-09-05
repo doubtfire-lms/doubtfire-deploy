@@ -1,14 +1,17 @@
 //devcontainer.json
 {
   "name": "Formatif Development Container",
-  "image": "lmsdoubtfire/formatif-devcontainer:8.3-dev",
-  "runArgs": ["--env-file", ".devcontainer/devcontainer.env"],
+  // "image": "lmsdoubtfire/formatif-devcontainer:8.3-dev",
+  // "runArgs": ["--env-file", ".devcontainer/devcontainer.env"],
 
   // "dockerFile": "../dev.Dockerfile",
-  // "dockerComposeFile": "../development/docker-compose.yml",
-  // "service": "formatif-dev-container",
-  // "shutdownAction": "stopCompose",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "formatif-dev-container",
+  "shutdownAction": "stopCompose",
   // "workspaceFolder": "/workspace",
+
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
 
   "customizations": {
     "vscode": {
@@ -39,41 +42,38 @@
     }
   },
 
-  "mounts": [
-    {
-      "source": "formatif-dev-database",
-      "target": "/var/lib/mysql",
-      "type": "volume"
-    },
-    {
-      "source": "formatif-dev-tmp",
-      "target": "/workspace/tmp",
-      "type": "volume"
-    },
-    {
-      "source": "formatif-dev-student-work",
-      "target": "/student-work",
-      "type": "volume"
-    },
-    {
-      "source": "ws_node_modules",
-      "target": "/workspace/node_modules",
-      "type": "volume"
-    },
-    {
-      "source": "web_node_modules",
-      "target": "/workspace/doubtfire-web/node_modules",
-      "type": "volume"
-    },
-    {
-      "source": "api_bundle",
-      "target": "/home/vscode/.gems",
-      "type": "volume"
-    }
-  ],
-
-  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
-  "workspaceFolder": "/workspace",
+  // "mounts": [
+  //   {
+  //     "source": "formatif-dev-database",
+  //     "target": "/var/lib/mysql",
+  //     "type": "volume"
+  //   },
+  //   {
+  //     "source": "formatif-dev-tmp",
+  //     "target": "/workspace/tmp",
+  //     "type": "volume"
+  //   },
+  //   {
+  //     "source": "formatif-dev-student-work",
+  //     "target": "/student-work",
+  //     "type": "volume"
+  //   },
+  //   {
+  //     "source": "ws_node_modules",
+  //     "target": "/workspace/node_modules",
+  //     "type": "volume"
+  //   },
+  //   {
+  //     "source": "web_node_modules",
+  //     "target": "/workspace/doubtfire-web/node_modules",
+  //     "type": "volume"
+  //   },
+  //   {
+  //     "source": "api_bundle",
+  //     "target": "/home/vscode/.gems",
+  //     "type": "volume"
+  //   }
+  // ],
 
   "forwardPorts": [3000, 4200, 9876],
 
