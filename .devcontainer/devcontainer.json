@@ -6,7 +6,7 @@
 
   // "dockerFile": "../dev.Dockerfile",
   "dockerComposeFile": "./docker-compose.yml",
-  "service": "formatif-dev-container",
+  "service": "db-formatif-dev-container",
   "shutdownAction": "stopCompose",
   // "workspaceFolder": "/workspace",
 

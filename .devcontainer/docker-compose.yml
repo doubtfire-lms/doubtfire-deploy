@@ -1,7 +1,7 @@
 version: '3'
 services:
-  formatif-dev-container:
-    container_name: dbtest-formatif-dev-container
+  db-formatif-dev-container:
+    container_name: db-formatif-dev-container
     build:
       context: ../
       dockerfile: dev.Dockerfile
@@ -25,7 +25,7 @@ services:
       - devcontainer.env
     depends_on:
       - dev-db
-    
+
   dev-db:
     container_name: doubtfire-dev-db
     image: mariadb:10
