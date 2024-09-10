@@ -18,6 +18,7 @@ services:
       - ..:/workspace:cached
       - formatif_tmp_compose:/workspace/tmp
       - student-work:/student-work
+      - jplag_results:/jplag_results
       - ws_node_modules:/workspace/node_modules
       - web_node_modules:/workspace/doubtfire-web/node_modules
       - formatif_gems_compose:/home/vscode/.gems
@@ -52,8 +53,13 @@ services:
     volumes:
       - student-work:/student-work
       - jplag_data:/jplag
+      - jplag_results:/jplag/results
       - ../doubtfire-api/tmp/jplag:/tmp/jplag
-    command: /bin/sh -c "while sleep 5000; do :; done"
+    expose:
+      - "1996:1996"
+    ports:
+      - "1996:1996"
+    command: /bin/sh -c "sleep infinity"
     env_file:
       - ./devcontainer.env
 
@@ -101,3 +107,4 @@ volumes:
   formatif_gems_compose:
   formatif_redis_sidekiq_data:
   jplag_data:
+  jplag_results:
