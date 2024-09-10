@@ -132,9 +132,8 @@ COPY --chown="${USER}":"${USER}" .devcontainer /workspace/.devcontainer
 ENV HISTFILE /workspace/tmp/.zsh_history
 
 RUN sudo chmod +x /workspace/.devcontainer/*.sh
-RUN sudo rm -rf /var/lib/mysql/* && \
-    sudo chown vscode:vscode /var/lib/mysql && \
-    mkdir /workspace/tmp && \
+
+RUN mkdir /workspace/tmp && \
     sudo mkdir /student-work && \
     sudo chown vscode:vscode /student-work
 
