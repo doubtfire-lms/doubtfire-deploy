@@ -37,7 +37,7 @@ services:
     container_name: doubtfire-dev-db
     image: mariadb:10
     restart: always
-    platform: linux/amd64
+    # platform: linux/amd64
     volumes:
       # - ./:/workspace/.devcontainer/
       - formatif_tmp_compose:/var/lib/mysql
