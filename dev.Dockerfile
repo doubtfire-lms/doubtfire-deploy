@@ -133,7 +133,8 @@ ENV HISTFILE /workspace/tmp/.zsh_history
 
 RUN sudo chmod +x /workspace/.devcontainer/*.sh
 
-RUN mkdir /workspace/tmp && \
+RUN rm -rf /workspace/tmp && \
+    mkdir /workspace/tmp && \
     sudo mkdir /student-work && \
     sudo chown vscode:vscode /student-work
 

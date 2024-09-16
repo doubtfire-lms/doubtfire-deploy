@@ -6,7 +6,7 @@ ln -s /workspace/.devcontainer/.p10k.zsh $HOME
 ln -s /workspace/.devcontainer/.irbrc $HOME
 
 
-sudo chown vscode:vscode /var/lib/mysql
+# sudo chown vscode:vscode /var/lib/mysql
 # sudo chmod a+rw /var/lib/mysql
 sudo chmod a+rw /workspace/tmp
 sudo chmod a+rw /workspace/node_modules
