@@ -1,4 +1,9 @@
 version: '3'
+
+networks:
+  backnet:
+    internal: true
+
 services:
   db-formatif-dev-container:
     container_name: db-formatif-dev-container
@@ -13,8 +18,10 @@ services:
       - formatif_student-work_compose:/student-work
       - ws_node_modules:/workspace/node_modules
       - web_node_modules:/workspace/doubtfire-web/node_modules
-      # - formatif_db_compose:/var/lib/mysql
+      - formatif_db_compose:/var/lib/mysql
       - formatif_gems_compose:/home/vscode/.gems
+    networks:
+      - backnet
     ports:
       - "9876:9876"
       - "4200:4200"
@@ -30,14 +37,14 @@ services:
     container_name: doubtfire-dev-db
     image: mariadb:10
     restart: always
-    # platform: linux/amd64
+    platform: linux/amd64
     volumes:
       # - ./:/workspace/.devcontainer/
       - formatif_tmp_compose:/var/lib/mysql
     env_file:
       - ./devcontainer.env
     networks:
-      - default
+      - backnet
 
 
 volumes:
