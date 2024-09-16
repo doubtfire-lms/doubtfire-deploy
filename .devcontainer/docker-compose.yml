@@ -37,10 +37,10 @@ services:
     container_name: doubtfire-dev-db
     image: mariadb:10
     restart: always
-    # platform: linux/amd64
+    # platform: linux/amd64x  x
     volumes:
       # - ./:/workspace/.devcontainer/
-      - formatif_tmp_compose:/var/lib/mysql
+      - formatif_db_compose:/var/lib/mysql
     env_file:
       - ./devcontainer.env
     networks:
