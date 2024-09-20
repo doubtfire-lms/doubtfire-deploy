@@ -41,10 +41,7 @@ services:
       - dev-db
       - ./devcontainer.env
 
-
-  ## docker-compose run
-  ## --rm makes it close
-  ## can do this for latex too
+  # JPlag
   jplag:
     container_name: jplag
     build:
@@ -55,10 +52,6 @@ services:
       - jplag_data:/jplag
       - jplag_results:/jplag/results
       - ../doubtfire-api/tmp/jplag:/tmp/jplag
-    expose:
-      - "1996:1996"
-    ports:
-      - "1996:1996"
     command: /bin/sh -c "sleep infinity"
     env_file:
       - ./devcontainer.env
