@@ -52,7 +52,9 @@ services:
       - jplag_data:/jplag
       - jplag_results:/jplag/results
       - ../doubtfire-api/tmp/jplag:/tmp/jplag
-    command: /bin/sh -c "sleep infinity"
+    command: /bin/sh -c "while sleep 5000; do :; done"
+    depends_on:
+      - formatif-dev-container
     env_file:
       - ./devcontainer.env
 
