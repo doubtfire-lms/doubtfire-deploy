@@ -12,35 +12,16 @@ services:
       - ..:/workspace:cached
       - formatif_tmp_compose:/workspace/tmp
       - student-work:/student-work
-      - jplag_results:/jplag_results
       - ws_node_modules:/workspace/node_modules
       - web_node_modules:/workspace/doubtfire-web/node_modules
       - formatif_db_compose:/var/lib/mysql
       - formatif_gems_compose:/home/vscode/.gems
-      - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "9876:9876"
       - "4200:4200"
       - "3000:3000"
     # Overrides default command so things don't shut down after the process ends.
     command: /bin/sh -c "while sleep 5000; do :; done"
-    env_file:
-      - ./devcontainer.env
-
-  # JPlag
-  jplag:
-    container_name: jplag
-    build:
-      context: ../jplag
-      dockerfile: jplag.Dockerfile
-    volumes:
-      - student-work:/student-work
-      - jplag_data:/jplag
-      - jplag_results:/jplag/results
-      - ../doubtfire-api/tmp/jplag:/tmp/jplag
-    command: /bin/sh -c "while sleep 5000; do :; done"
-    depends_on:
-      - formatif-dev-container
     env_file:
       - ./devcontainer.env
 
@@ -55,8 +36,6 @@ services:
       - 443:443
     volumes:
       - ./reverse-proxy-nginx.conf:/etc/nginx/nginx.conf
-      # - ./localhost.crt:/etc/nginx/cert.crt # replace with real certificate
-      # - ./localhost.key:/etc/nginx/key.key # replace with real key
     restart: on-failure:2
     env_file:
       - ./devcontainer.env
@@ -68,5 +47,3 @@ volumes:
   student-work: {}
   formatif_db_compose:
   formatif_gems_compose:
-  jplag_data:
-  jplag_results:
