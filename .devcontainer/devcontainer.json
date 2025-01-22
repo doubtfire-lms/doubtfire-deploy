@@ -21,21 +21,18 @@
         "EditorConfig.EditorConfig",
         "ms-vsliveshare.vsliveshare",
         "ms-vsliveshare.vsliveshare-pack",
-        "rebornix.ruby",
         "misogi.ruby-rubocop",
         "castwide.solargraph",
-        "wingrunr21.vscode-ruby",
         "vscode-icons-team.vscode-icons",
         "cschlosser.doxdocgen",
         "eamodio.gitlens",
-        "GitHub.vscode-pull-request-github",
-        "GitHub.copilot",
         "Angular.ng-template",
         "ms-azuretools.vscode-docker",
         "esbenp.prettier-vscode",
         "foxundermoon.shell-format",
         "cyrilletuzi.angular-schematics",
-        "bradlc.vscode-tailwindcss"
+        "bradlc.vscode-tailwindcss",
+        "Shopify.ruby-lsp"
       ]
     }
   },
