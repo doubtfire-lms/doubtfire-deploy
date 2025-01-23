@@ -77,6 +77,19 @@
 
   "forwardPorts": [3000, 4200, 9876],
 
+  "portsAttributes": {
+    "3000": {
+      "label": "Application",
+      "onAutoForward": "notify",
+      "visibility": "public"
+    },
+    "4200": {
+      "label": "Angular",
+      "onAutoForward": "notify",
+      "visibility": "public"
+    }
+  },
+
   "postCreateCommand": "/workspace/.devcontainer/post_create.sh",
   "postStartCommand": "/workspace/.devcontainer/post_start.sh",
 
