@@ -13,6 +13,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        submodules: recursive
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Login to DockerHub
@@ -27,7 +28,7 @@ jobs:
         with:
           images: lmsdoubtfire/formatif-devcontainer
           tags: |
-            type=semver,pattern={{major}}.{{minor}}.x-dev
+            type=semver,pattern={{major}}.{{minor}}-dev
       - name: Build and push dev container image
         id: docker_build
         uses: docker/build-push-action@v5

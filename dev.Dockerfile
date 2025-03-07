@@ -88,14 +88,14 @@ USER "${USER}"
 
 WORKDIR /workspace
 
-COPY --chown="${USER}":"${USER}" package.json /workspace
+# COPY --chown="${USER}":"${USER}" package.json /workspace
 RUN mkdir -p "${NPM_CONFIG_PREFIX}/lib" \
   && npm install -g npm@9.6.1 \
   && npm install -g husky --save-dev \
   && npm install -g @angular/cli \
   && npm i -g standard-version
 
-RUN npm install -f
+# RUN npm install -f
 
 # Install oh-my-zsh, powerlevel10k theme, and plugins
 RUN git clone https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k \
