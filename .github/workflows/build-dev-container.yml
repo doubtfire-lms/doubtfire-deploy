@@ -28,10 +28,11 @@ jobs:
           images: lmsdoubtfire/formatif-devcontainer
           tags: |
             type=semver,pattern={{major}}.{{minor}}.x-dev
-      - name: Build and push api server
+      - name: Build and push dev container image
         id: docker_build
         uses: docker/build-push-action@v5
         with:
+          file: dev.Dockerfile
           context: .
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.docker_meta.outputs.tags }}
