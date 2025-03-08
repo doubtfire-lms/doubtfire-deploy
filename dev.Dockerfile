@@ -123,7 +123,7 @@ RUN bundle install
 
 WORKDIR /workspace
 
-RUN sudo ln -s /workspace/doubtfire-api /doubtfire
+# RUN sudo ln -s /workspace/doubtfire-api /doubtfire
 
 EXPOSE 9876
 
