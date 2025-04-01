@@ -8,9 +8,7 @@ RUN apt-get update \
   && install -m 0755 -d /etc/apt/keyrings \
   && curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc \
   && chmod a+r /etc/apt/keyrings/docker.asc \
-  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | tee /etc/apt/sources.list.d/docker.list \
-  && curl -fsSL https://packages.redis.io/gpg | gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg \
-  && echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/redis.list
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | tee /etc/apt/sources.list.d/docker.list
 
 # Get node from nodesource - node 20
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh \
@@ -39,9 +37,7 @@ RUN apt-get update \
     tzdata \
     wget \
     libc6-dev \
-    # mariadb-server \
     gosu \
-    redis \
     inkscape \
     librsvg2-bin \
     docker-ce \
@@ -52,23 +48,17 @@ RUN apt-get update \
   && node --version \
   && npm --version \
   && gem install bundler -v '~> 2.6.6' \
-  # && /workspace/doubtfire-api/.ci-setup/texlive-install.sh \
-  && rm -rf /workspace/doubtfire-api/.ci-setup/texlive-install.sh \
-  && rm -rf /install-tl-* \
-  && mkdir /run/mysqld
+  && rm -rf /workspace/doubtfire-api/.ci-setup/texlive-install.sh
 
 USER "${USER}"
 
 WORKDIR /workspace
 
-# COPY --chown="${USER}":"${USER}" package.json /workspace
 RUN mkdir -p "${NPM_CONFIG_PREFIX}/lib" \
   && npm install -g npm@9.6.1 \
   && npm install -g husky --save-dev \
   && npm install -g @angular/cli \
   && npm i -g standard-version
-
-# RUN npm install -f
 
 # Install oh-my-zsh, powerlevel10k theme, and plugins
 RUN git clone https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k \
