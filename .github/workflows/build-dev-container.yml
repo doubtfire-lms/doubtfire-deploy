@@ -10,6 +10,14 @@ jobs:
     if: github.repository_owner == 'doubtfire-lms'
     environment: deployment-secrets
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dockerfile: dev.Dockerfile
+            image: lmsdoubtfire/formatif-devcontainer
+          - dockerfile: latex.Dockerfile
+            image: lmsdoubtfire/formatif-latex
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -19,9 +27,9 @@ jobs:
         id: docker_meta
         uses: docker/metadata-action@v5
         with:
-          images: lmsdoubtfire/formatif-devcontainer
+          images: ${{ matrix.image }}
           tags: |
-            type=semver,pattern={{major}}.{{minor}}-dev
+            type=semver,pattern={{major}}.{{minor}}
       - name: Login to DockerHub
         uses: docker/login-action@v3
         if: github.event_name != 'pull_request'
@@ -36,7 +44,7 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v6
         with:
-          file: dev.Dockerfile
+          file: ${{ matrix.dockerfile }}
           context: .
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.docker_meta.outputs.tags }}
