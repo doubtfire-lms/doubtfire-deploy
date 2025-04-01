@@ -21,7 +21,7 @@
     {
       "label": "Serve Rails API",
       "type": "shell",
-      "command": "bundle install && rails s",
+      "command": "bundle install && rails s -b 0.0.0.0",
       "group": "build",
       "presentation": {
         "group": "buildGroup",
