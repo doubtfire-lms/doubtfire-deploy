@@ -1,17 +1,18 @@
 //devcontainer.json
 {
   "name": "Formatif Development Container",
-  // "image": "lmsdoubtfire/formatif-devcontainer:8.3-dev",
+  // "image": "lmsdoubtfire/formatif-devcontainer:8.4-dev",
   // "runArgs": ["--env-file", ".devcontainer/devcontainer.env"],
 
   // "dockerFile": "../dev.Dockerfile",
   "dockerComposeFile": "./docker-compose.yml",
-  "service": "db-formatif-dev-container",
+  "service": "formatif-dev-container",
   "shutdownAction": "stopCompose",
+
   // "workspaceFolder": "/workspace",
 
   "workspaceFolder": "/workspace",
-  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  // "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
 
   "customizations": {
     "vscode": {
@@ -24,20 +25,18 @@
         "EditorConfig.EditorConfig",
         "ms-vsliveshare.vsliveshare",
         "ms-vsliveshare.vsliveshare-pack",
-        "rebornix.ruby",
         "misogi.ruby-rubocop",
         "castwide.solargraph",
-        "wingrunr21.vscode-ruby",
         "vscode-icons-team.vscode-icons",
         "cschlosser.doxdocgen",
         "eamodio.gitlens",
-        "GitHub.vscode-pull-request-github",
-        "GitHub.copilot",
         "Angular.ng-template",
         "ms-azuretools.vscode-docker",
         "esbenp.prettier-vscode",
         "foxundermoon.shell-format",
-        "bradlc.vscode-tailwindcss"
+        "cyrilletuzi.angular-schematics",
+        "bradlc.vscode-tailwindcss",
+        "Shopify.ruby-lsp"
       ]
     }
   },
@@ -76,6 +75,19 @@
   // ],
 
   "forwardPorts": [3000, 4200, 9876],
+
+  "portsAttributes": {
+    "3000": {
+      "label": "Application",
+      "onAutoForward": "notify",
+      "visibility": "public"
+    },
+    "4200": {
+      "label": "Angular",
+      "onAutoForward": "notify",
+      "visibility": "public"
+    }
+  },
 
   "postCreateCommand": "/workspace/.devcontainer/post_create.sh",
   "postStartCommand": "/workspace/.devcontainer/post_start.sh",
