@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/devcontainers/ruby:3.1-bullseye
 
 # DEBIAN_FRONTEND=noninteractive is required to install tzdata in non interactive way
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
   && apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common \
@@ -11,8 +11,8 @@ RUN apt-get update \
   && echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/redis.list
 
 ENV USER='vscode'
-ENV NODE_VERSION 18.15.0
-ENV NODE_ENV docker
+ENV NODE_VERSION=18.15.0
+ENV NODE_ENV=docker
 ENV NPM_CONFIG_PREFIX="/home/${USER}/.npm-global"
 ENV BUNDLE_PATH=/home/${USER}/.gems
 
@@ -88,23 +88,23 @@ USER "${USER}"
 
 WORKDIR /workspace
 
-COPY --chown="${USER}":"${USER}" package.json /workspace
+# COPY --chown="${USER}":"${USER}" package.json /workspace
 RUN mkdir -p "${NPM_CONFIG_PREFIX}/lib" \
   && npm install -g npm@9.6.1 \
   && npm install -g husky --save-dev \
   && npm install -g @angular/cli \
   && npm i -g standard-version
 
-RUN npm install -f
+# RUN npm install -f
 
 # Install oh-my-zsh, powerlevel10k theme, and plugins
 RUN git clone https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k \
   && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting \
   && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
-ENV RAILS_ENV development
-ENV PATH /home/$USER/.gems/ruby/3.1.0/bin:$PATH:/tmp/texlive/bin/x86_64-linux:/tmp/texlive/bin/aarch64-linux:$PATH:/home/$USER/.npm-global/bin
-ENV GEM_PATH /home/$USER/.gems/ruby/3.1.0:$GEM_PATH
+ENV RAILS_ENV=development
+ENV PATH=/home/$USER/.gems/ruby/3.1.0/bin:$PATH:/tmp/texlive/bin/x86_64-linux:/tmp/texlive/bin/aarch64-linux:$PATH:/home/$USER/.npm-global/bin
+ENV GEM_PATH=/home/$USER/.gems/ruby/3.1.0:$GEM_PATH
 
 # Install the web ui
 WORKDIR /workspace/doubtfire-web
@@ -123,13 +123,13 @@ RUN bundle install
 
 WORKDIR /workspace
 
-RUN sudo ln -s /workspace/doubtfire-api /doubtfire
+# RUN sudo ln -s /workspace/doubtfire-api /doubtfire
 
 EXPOSE 9876
 
 COPY --chown="${USER}":"${USER}" .devcontainer /workspace/.devcontainer
 
-ENV HISTFILE /workspace/tmp/.zsh_history
+ENV HISTFILE=/workspace/tmp/.zsh_history
 
 RUN sudo chmod +x /workspace/.devcontainer/*.sh
 RUN sudo rm -rf /var/lib/mysql/* && \
