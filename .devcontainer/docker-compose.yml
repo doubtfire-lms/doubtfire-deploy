@@ -5,8 +5,8 @@ networks:
     internal: true
 
 services:
-  db-formatif-dev-container:
-    container_name: db-formatif-dev-container
+  formatif-dev-container:
+    container_name: 1-formatif-dev-container
     build:
       context: ../
       dockerfile: dev.Dockerfile
@@ -20,6 +20,7 @@ services:
       - web_node_modules:/workspace/doubtfire-web/node_modules
       # - formatif_db_compose:/var/lib/mysql
       - formatif_gems_compose:/home/vscode/.gems
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - backnet
     ports:
@@ -30,6 +31,9 @@ services:
     command: /bin/sh -c "while sleep 5000; do :; done"
     env_file:
       - devcontainer.env
+    environment:
+      LATEX_CONTAINER_NAME: 1-formatif-texlive-container
+      LATEX_BUILD_PATH: /texlive/shell/latex_build.sh
     depends_on:
       - dev-db
 
@@ -45,6 +49,19 @@ services:
     networks:
       - backnet
 
+  texlive:
+    container_name: 1-formatif-texlive-container
+    build:
+      context: ../
+      dockerfile: texlive.Dockerfile
+    volumes:
+      - formatif_student-work_compose:/student-work
+      - ../doubtfire-api/tmp/rails-latex:/workdir/texlive-latex
+      - ../doubtfire-api/public/assets/images:/workspace/doubtfire-api/public/assets/images
+      - ../doubtfire-api/test_files:/workspace/doubtfire-api/test_files
+    depends_on:
+      - formatif-dev-container
+    command: /bin/sh -c "while sleep 5000; do :; done"
 
 volumes:
   ws_node_modules:
