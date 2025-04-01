@@ -1,6 +1,7 @@
 version: '3'
 
 networks:
+  frontnet:
   backnet:
     internal: true
 
@@ -18,17 +19,17 @@ services:
       - formatif_student-work_compose:/student-work
       - ws_node_modules:/workspace/node_modules
       - web_node_modules:/workspace/doubtfire-web/node_modules
-      # - formatif_db_compose:/var/lib/mysql
       - formatif_gems_compose:/home/vscode/.gems
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
+      - frontnet
       - backnet
     ports:
       - "9876:9876"
       - "4200:4200"
       - "3000:3000"
     # Overrides default command so things don't shut down after the process ends.
-    command: /bin/sh -c "while sleep 5000; do :; done"
+    # command: /bin/sh -c "while sleep 5000; do :; done"
     env_file:
       - devcontainer.env
     environment:
@@ -45,7 +46,15 @@ services:
       # - ./:/workspace/.devcontainer/
       - formatif_db_compose:/var/lib/mysql
     env_file:
-      - ./devcontainer.env
+      - devcontainer.env
+    networks:
+      - backnet
+
+  redis-sidekiq:
+    container_name: doubtfire-redis-sidekiq
+    image: redis:7.0
+    volumes:
+      - formatif_redis_sidekiq_data:/data
     networks:
       - backnet
 
@@ -70,3 +79,4 @@ volumes:
   formatif_student-work_compose:
   formatif_db_compose:
   formatif_gems_compose:
+  formatif_redis_sidekiq_data:
