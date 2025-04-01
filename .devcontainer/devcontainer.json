@@ -8,10 +8,11 @@
   "dockerComposeFile": "./docker-compose.yml",
   "service": "formatif-dev-container",
   "shutdownAction": "stopCompose",
+
   // "workspaceFolder": "/workspace",
 
   "workspaceFolder": "/workspace",
-  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  // "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
 
   "customizations": {
     "vscode": {
