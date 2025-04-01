@@ -1,4 +1,9 @@
 version: '3'
+
+networks:
+  backnet:
+    internal: true
+
 services:
   formatif-dev-container:
     container_name: 1-formatif-dev-container
@@ -13,9 +18,11 @@ services:
       - formatif_student-work_compose:/student-work
       - ws_node_modules:/workspace/node_modules
       - web_node_modules:/workspace/doubtfire-web/node_modules
-      - formatif_db_compose:/var/lib/mysql
+      # - formatif_db_compose:/var/lib/mysql
       - formatif_gems_compose:/home/vscode/.gems
       - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - backnet
     ports:
       - "9876:9876"
       - "4200:4200"
@@ -27,6 +34,20 @@ services:
     environment:
       LATEX_CONTAINER_NAME: 1-formatif-texlive-container
       LATEX_BUILD_PATH: /texlive/shell/latex_build.sh
+    depends_on:
+      - dev-db
+
+  dev-db:
+    container_name: doubtfire-dev-db
+    image: mariadb:10
+    restart: always
+    volumes:
+      # - ./:/workspace/.devcontainer/
+      - formatif_db_compose:/var/lib/mysql
+    env_file:
+      - ./devcontainer.env
+    networks:
+      - backnet
 
   texlive:
     container_name: 1-formatif-texlive-container
