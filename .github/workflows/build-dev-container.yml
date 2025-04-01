@@ -16,7 +16,7 @@ jobs:
         include:
           - dockerfile: dev.Dockerfile
             image: lmsdoubtfire/formatif-devcontainer
-          - dockerfile: latex.Dockerfile
+          - dockerfile: texlive.Dockerfile
             image: lmsdoubtfire/formatif-latex
     steps:
       - name: Checkout code
