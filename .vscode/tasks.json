@@ -34,8 +34,23 @@
       }
     },
     {
+      "label": "Run Sidekiq",
+      "type": "shell",
+      "command": "bundle exec sidekiq",
+      "group": "build",
+      "presentation": {
+        "group": "buildGroup",
+        "reveal": "always",
+        "panel": "new",
+        "echo": false
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/doubtfire-api/"
+      }
+    },
+    {
       "label": "Serve",
-      "dependsOn": ["Serve web frontend", "Serve Rails API"],
+      "dependsOn": ["Serve web frontend", "Serve Rails API", "Run Sidekiq"],
       "group": "build",
       "runOptions": {
         "runOn": "folderOpen" // This starts both tasks when the container is started
