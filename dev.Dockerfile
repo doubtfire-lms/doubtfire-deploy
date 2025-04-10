@@ -47,8 +47,7 @@ RUN apt-get update \
   # smoke tests
   && node --version \
   && npm --version \
-  && gem install bundler -v '~> 2.6.6' \
-  && rm -rf /workspace/doubtfire-api/.ci-setup/texlive-install.sh
+  && gem install bundler -v '~> 2.6.6'
 
 USER "${USER}"
 
