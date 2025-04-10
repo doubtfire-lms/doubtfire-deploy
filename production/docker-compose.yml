@@ -2,7 +2,6 @@ version: '3.8'
 
 networks:
   backnet:
-    internal: true
   frontnet:
 
 services:
@@ -28,20 +27,22 @@ services:
 
   # Web server hosts the static files
   webserver:
-    image: lmsdoubtfire/doubtfire-web:prod-6
-    ports:
-      - 8080:8080
+    platform: linux/amd64
+    image: lmsdoubtfire/doubtfire-web:10.0.0-2
+    # ports:
+    #   - 8080:8080
     networks:
       - backnet
     restart: on-failure:5
 
   # API server runs the rails project
   apiserver:
-    image: lmsdoubtfire/apiserver:prod-6
+    platform: linux/amd64
+    image: lmsdoubtfire/apiserver:10.0.0-2
     env_file:
       - .env.production
-    ports:
-      - 3000:3000
+    # ports:
+    #   - 3000:3000
     networks:
       - backnet
     depends_on:
@@ -70,7 +71,8 @@ services:
 
   # Automated generation of PDFs using cron
   pdfgen:
-    image: lmsdoubtfire/appserver:prod-6
+    platform: linux/amd64
+    image: lmsdoubtfire/appserver:10.0.0-2
     env_file:
       - .env.production
     networks:
@@ -82,11 +84,54 @@ services:
       - ./shared-files:/shared-files
       - ./shared-files/aliases:/etc/aliases:ro
       - doubtfire_logs:/doubtfire/log
-    command:
-      /bin/bash -c "newaliases; cp /shared-files/msmtprc /etc; /doubtfire/entry_point.sh"
+      - latex_tmp:/doubtfire/tmp/rails-latex
+    command: /doubtfire/lib/shell/pdfgen_entry_point.sh
     restart: on-failure:5
 
+  redis-sidekiq:
+    container_name: redis-sidekiq
+    image: redis:7.0
+    volumes:
+      - redis_data:/data
+    networks:
+      - backnet
+
+  sidekiq:
+    platform: linux/amd64
+    image: lmsdoubtfire/appserver:10.0.0-2
+    env_file:
+      - .env.production
+    environment:
+      DOCKER_HOST: host.docker.internal
+    networks:
+      - backnet
+      - frontnet
+    depends_on:
+      - doubtfire-db
+      - redis-sidekiq
+    volumes:
+      - student_work:/student-work # Update with path to student work
+      - ./shared-files:/shared-files
+      - ./shared-files/aliases:/etc/aliases:ro
+      - doubtfire_logs:/doubtfire/log
+      - latex_tmp:/doubtfire/tmp/rails-latex
+    command: /doubtfire/lib/shell/sidekiq_entry_point.sh
+    restart: on-failure:5
+
+  texlive:
+    container_name: texlive-container
+    image: lmsdoubtfire/formatif-latex:10.0.0-3
+    # build:
+    #   context: ../
+    #   dockerfile: texlive.Dockerfile
+    volumes:
+      - student_work:/student-work
+      - latex_tmp:/workdir/texlive-latex
+    command: /bin/sh -c "sleep infinity"
+
 volumes:
+  latex_tmp: {}
+  redis_data: {}
   doubtfire_logs: {}
   mysql_db: {}
   student_work: {}
