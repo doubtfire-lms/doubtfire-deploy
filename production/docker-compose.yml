@@ -28,7 +28,7 @@ services:
   # Web server hosts the static files
   webserver:
     platform: linux/amd64
-    image: lmsdoubtfire/doubtfire-web:10.0.0-2
+    image: lmsdoubtfire/doubtfire-web:10.0.0-3
     # ports:
     #   - 8080:8080
     networks:
@@ -38,7 +38,7 @@ services:
   # API server runs the rails project
   apiserver:
     platform: linux/amd64
-    image: lmsdoubtfire/apiserver:10.0.0-2
+    image: lmsdoubtfire/apiserver:10.0.0-3
     env_file:
       - .env.production
     # ports:
@@ -72,7 +72,7 @@ services:
   # Automated generation of PDFs using cron
   pdfgen:
     platform: linux/amd64
-    image: lmsdoubtfire/appserver:10.0.0-2
+    image: lmsdoubtfire/appserver:10.0.0-3
     env_file:
       - .env.production
     networks:
@@ -98,14 +98,13 @@ services:
 
   sidekiq:
     platform: linux/amd64
-    image: lmsdoubtfire/appserver:10.0.0-2
+    image: lmsdoubtfire/appserver:10.0.0-3
     env_file:
       - .env.production
     environment:
       DOCKER_HOST: host.docker.internal
     networks:
       - backnet
-      - frontnet
     depends_on:
       - doubtfire-db
       - redis-sidekiq
@@ -120,7 +119,7 @@ services:
 
   texlive:
     container_name: texlive-container
-    image: lmsdoubtfire/formatif-latex:10.0.0-3
+    image: lmsdoubtfire/formatif-latex:10.0.0-4
     # build:
     #   context: ../
     #   dockerfile: texlive.Dockerfile
