@@ -7,6 +7,9 @@ git config --global --add safe.directory /workspace
 
 git config --global submodule.recurse false
 
+echo 'Ensuring /var/run/docker.sock is writable by vscode user'
+sudo chown vscode:vscode /var/run/docker.sock
+
 # if [[ $(pgrep -n mysqld) -ne 0 && $(pgrep -n redis-server) -ne 0 ]]; then
 #   echo 'Database and Redis are running'
 # else
