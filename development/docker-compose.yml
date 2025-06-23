@@ -1,7 +1,7 @@
 version: '3'
 services:
   dev-db:
-    container_name: doubtfire-dev-db
+    container_name: df-compose-dev-db
     image: mariadb
     environment:
       MYSQL_ROOT_PASSWORD: db-root-password
@@ -12,7 +12,7 @@ services:
       - ../data/database:/var/lib/mysql
 
   redis-sidekiq:
-    container_name: doubtfire-redis-sidekiq
+    container_name: df-compose-redis-sidekiq
     image: redis:7.0
     volumes:
       - redis_sidekiq_data:/data
@@ -52,21 +52,21 @@ services:
 
       # Database settings - for development env
       DF_DEV_DB_ADAPTER: mysql2
-      DF_DEV_DB_HOST: doubtfire-dev-db
+      DF_DEV_DB_HOST: df-compose-dev-db
       DF_DEV_DB_DATABASE: doubtfire-dev
       DF_DEV_DB_USERNAME: dfire
       DF_DEV_DB_PASSWORD: pwd
 
       # Database settings - for test env
       DF_TEST_DB_ADAPTER: mysql2
-      DF_TEST_DB_HOST: doubtfire-dev-db
+      DF_TEST_DB_HOST: df-compose-dev-db
       DF_TEST_DB_DATABASE: doubtfire-dev
       DF_TEST_DB_USERNAME: dfire
       DF_TEST_DB_PASSWORD: pwd
 
       # Database settings - for test env
       DF_PRODUCTION_DB_ADAPTER: mysql2
-      DF_PRODUCTION_DB_HOST: doubtfire-dev-db
+      DF_PRODUCTION_DB_HOST: df-compose-dev-db
       DF_PRODUCTION_DB_DATABASE: doubtfire-dev
       DF_PRODUCTION_DB_USERNAME: dfire
       DF_PRODUCTION_DB_PASSWORD: pwd
@@ -81,7 +81,7 @@ services:
       TII_ENABLED: false
 
       # Redis
-      DF_REDIS_SIDEKIQ_URL: redis://doubtfire-redis-sidekiq:6379/0
+      DF_REDIS_SIDEKIQ_URL: redis://df-compose-redis-sidekiq:6379/0
 
   doubtfire-web:
     container_name: doubtfire-web
