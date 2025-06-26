@@ -39,7 +39,6 @@ services:
       LATEX_BUILD_PATH: /texlive/shell/latex_build.sh
     depends_on:
       - dev-db
-      - ./devcontainer.env
 
   dev-db:
     container_name: doubtfire-dev-db
