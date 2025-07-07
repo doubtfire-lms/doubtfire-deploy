@@ -6,7 +6,7 @@ RUN apk update
 RUN apk add --no-cache bash openjdk21
 
 RUN mkdir /jplag
-RUN chmod 777 /jplag # ?
+RUN chmod 777 /jplag
 
 WORKDIR /jplag
 
