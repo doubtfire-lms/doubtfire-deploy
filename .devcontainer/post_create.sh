@@ -5,7 +5,6 @@ ln -sf /workspace/.devcontainer/.zshrc $HOME
 ln -s /workspace/.devcontainer/.p10k.zsh $HOME
 ln -s /workspace/.devcontainer/.irbrc $HOME
 
-
 # sudo chown vscode:vscode /var/lib/mysql
 sudo chown vscode:vscode /var/run/docker.sock
 # sudo chmod a+rw /var/lib/mysql
