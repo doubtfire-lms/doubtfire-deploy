@@ -18,6 +18,8 @@ jobs:
             image: lmsdoubtfire/formatif-devcontainer
           - dockerfile: ./doubtfire-api/texlive.Dockerfile
             image: lmsdoubtfire/formatif-latex
+          - dockerfile: ./doubtfire-api/jplag.Dockerfile
+            image: lmsdoubtfire/doubtfire-jplag
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
