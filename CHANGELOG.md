@@ -19,6 +19,23 @@ All notable changes to this project will be documented in this file. See [standa
 * remove docker host env variable that causes docker sock command in post_create to not work ([602316a](https://github.com/macite/doubtfire-deploy/commit/602316a95bd4168845252f5ea14e8da59b0ba162))
 * typo ([e68abbd](https://github.com/macite/doubtfire-deploy/commit/e68abbd68db04feb275fe383b615e5be2f2335ae))
 
+## [10.0.0-6](https://github.com/macite/doubtfire-deploy/compare/v10.0.0-5...v10.0.0-6) (2025-07-15)
+
+
+### Features
+
+* add groundworks for jplag implementation ([8b9eaa0](https://github.com/macite/doubtfire-deploy/commit/8b9eaa02b11d11ef9c6fac6f4c893190f3f6f4be))
+* add new jplag jar to host webserver without opening browser ([7ba839e](https://github.com/macite/doubtfire-deploy/commit/7ba839e2b156ae9a34210021091cf9f29fa6511b))
+* build jplag image ([f190828](https://github.com/macite/doubtfire-deploy/commit/f190828ba750f92a40393a6e33dd2fdf00c1ac93))
+
+
+### Bug Fixes
+
+* add docker.sock to post_create.sh to remove need for sudo in docker commands ([8f94a5a](https://github.com/macite/doubtfire-deploy/commit/8f94a5a265eb80baa4ec7a580ff20f26b68a3d23))
+* clean files ([cdf8246](https://github.com/macite/doubtfire-deploy/commit/cdf82463831ae5ced5c74148c57d3ba578c91344))
+* remove docker host env variable that causes docker sock command in post_create to not work ([602316a](https://github.com/macite/doubtfire-deploy/commit/602316a95bd4168845252f5ea14e8da59b0ba162))
+* typo ([e68abbd](https://github.com/macite/doubtfire-deploy/commit/e68abbd68db04feb275fe383b615e5be2f2335ae))
+
 ## [10.0.0-5](https://github.com/macite/doubtfire-deploy/compare/v10.0.0-4...v10.0.0-5) (2025-04-11)
 
 ## [10.0.0-4](https://github.com/macite/doubtfire-deploy/compare/v10.0.0-3...v10.0.0-4) (2025-04-10)
