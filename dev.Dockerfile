@@ -102,10 +102,6 @@ RUN sudo chmod +x /workspace/.devcontainer/*.sh
 RUN rm -rf /workspace/tmp && \
   mkdir /workspace/tmp && \
   sudo mkdir /student-work && \
-  sudo chown vscode:vscode /student-work && \
-  mkdir -p /workspace/doubtfire-api/tmp/rails-latex && \
-  chown -R vscode:vscode /workspace/doubtfire-api/tmp/rails-latex && \
-  mkdir -p /workspace/doubtfire-api/tmp/jplag && \
-  chown -R vscode:vscode /workspace/doubtfire-api/tmp/jplag
+  sudo chown vscode:vscode /student-work
 
 ENTRYPOINT [ "/workspace/.devcontainer/docker-entrypoint.sh" ]
