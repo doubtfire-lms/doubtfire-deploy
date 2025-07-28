@@ -16,10 +16,13 @@ jobs:
         include:
           - dockerfile: dev.Dockerfile
             image: lmsdoubtfire/formatif-devcontainer
+            context: .
           - dockerfile: ./doubtfire-api/texlive.Dockerfile
             image: lmsdoubtfire/formatif-latex
+            context: ./doubtfire-api/
           - dockerfile: ./doubtfire-api/jplag.Dockerfile
             image: lmsdoubtfire/doubtfire-jplag
+            context: ./doubtfire-api/
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -55,7 +58,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           file: ${{ matrix.dockerfile }}
-          context: .
+          context: ${{ matrix.context }}
           builder: ${{ steps.buildx.outputs.name }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.docker_meta.outputs.tags }}
