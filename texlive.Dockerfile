@@ -31,7 +31,6 @@ RUN apt-get update && \
 ENV PATH $PATH:/opt/texlive/bin/x86_64-linux:/opt/texlive/bin/aarch64-linux
 
 # Install required TeX Live packages for lualatex compilation
-RUN tlmgr install scheme-basic
 RUN tlmgr install \
   catchfile \
   csvsimple \
