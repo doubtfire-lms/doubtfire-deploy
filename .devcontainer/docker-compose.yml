@@ -92,7 +92,6 @@ services:
       # dockerfile: jplag.Dockerfile
     volumes:
       - formatif_student-work_compose:/student-work
-      - jplag_data:/jplag
       - jplag_results:/jplag/results
       - ../doubtfire-api/tmp/jplag:/tmp/jplag
     command: /bin/sh -c "sleep infinity"
@@ -110,5 +109,4 @@ volumes:
   formatif_db_compose:
   formatif_gems_compose:
   formatif_redis_sidekiq_data:
-  jplag_data:
   jplag_results:
