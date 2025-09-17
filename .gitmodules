@@ -7,3 +7,6 @@
 [submodule "doubtfire-overseer"]
 	path = doubtfire-overseer
 	url = https://github.com/doubtfire-lms/doubtfire-overseer.git
+[submodule "doubtfire-lti"]
+	path = doubtfire-lti
+	url = https://github.com/doubtfire-lms/doubtfire-lti.git
