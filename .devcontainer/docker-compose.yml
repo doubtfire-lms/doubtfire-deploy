@@ -68,6 +68,13 @@ services:
     networks:
       - backnet
 
+  overseer-volumes:
+    container_name: doubtfire-overseer
+    image: alpine
+    command: sleep infinity
+    volumes:
+      - ../doubtfire-api/tmp/overseer:/overseer/work-dir
+
   texlive:
     container_name: 1-formatif-texlive-container
     image: lmsdoubtfire/formatif-latex:10.0.0-11
