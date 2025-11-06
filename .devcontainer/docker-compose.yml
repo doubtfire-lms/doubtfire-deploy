@@ -31,6 +31,7 @@ services:
       - web_node_modules:/workspace/doubtfire-web/node_modules
       - formatif_gems_compose:/home/vscode/.gems
       - /var/run/docker.sock:/var/run/docker.sock
+      - overseer-data:/overseer
     networks:
       - frontnet
       - backnet
@@ -53,7 +54,6 @@ services:
     image: mariadb:10
     restart: always
     volumes:
-      # - ./:/workspace/.devcontainer/
       - formatif_db_compose:/var/lib/mysql
     env_file:
       - devcontainer.env
@@ -117,3 +117,4 @@ volumes:
   formatif_gems_compose:
   formatif_redis_sidekiq_data:
   jplag_results:
+  overseer-data:
