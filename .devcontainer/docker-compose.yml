@@ -16,7 +16,7 @@ networks:
 services:
   formatif-dev-container:
     container_name: 1-formatif-dev-container
-    image: lmsdoubtfire/formatif-devcontainer:10.0.0-10
+    image: lmsdoubtfire/formatif-devcontainer:10.0.0-14
     # build:
       # context: ../
       # dockerfile: dev.Dockerfile
@@ -53,7 +53,6 @@ services:
     image: mariadb:10
     restart: always
     volumes:
-      # - ./:/workspace/.devcontainer/
       - formatif_db_compose:/var/lib/mysql
     env_file:
       - devcontainer.env
@@ -62,15 +61,22 @@ services:
 
   redis-sidekiq:
     container_name: doubtfire-redis-sidekiq
-    image: redis:7.0
+    image: redis:7
     volumes:
       - formatif_redis_sidekiq_data:/data
     networks:
       - backnet
 
+  overseer-volumes:
+    container_name: doubtfire-overseer
+    image: alpine
+    command: sleep infinity
+    volumes:
+      - ../doubtfire-api/tmp/overseer:/overseer/work-dir
+
   texlive:
     container_name: 1-formatif-texlive-container
-    image: lmsdoubtfire/formatif-latex:10.0.0-11
+    image: lmsdoubtfire/formatif-latex:10.0.0-14
     # build:
       # context: ../
       # dockerfile: texlive.Dockerfile
@@ -86,7 +92,7 @@ services:
   # JPlag
   jplag:
     container_name: jplag
-    image: lmsdoubtfire/doubtfire-jplag:10.0.0-11
+    image: lmsdoubtfire/doubtfire-jplag:10.0.0-14
     # build:
       # context: ../
       # dockerfile: jplag.Dockerfile
