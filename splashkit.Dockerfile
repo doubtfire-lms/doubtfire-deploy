@@ -34,7 +34,7 @@ RUN apt-get update && \
   sudo \
   && rm -rf /var/lib/apt/lists/*
 
-# Instal .NET
+# Install .NET
 RUN curl -L https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -o packages-microsoft-prod.deb && \
   dpkg -i packages-microsoft-prod.deb && \
   rm packages-microsoft-prod.deb
