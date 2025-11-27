@@ -58,6 +58,8 @@ RUN dotnet new console -n tmp && \
   rm -rf tmp
 RUN dotnet nuget add source /nuget-local -n splashkit-local
 
+ENV DOTNET_RESTORE_SOURCES="/nuget-local"
+
 # Suppress audio/display warnings for headless SplashKit
 RUN echo "pcm.!default { type hw card 0 }" > /etc/asound.conf
 ENV SDL_AUDIODRIVER=dummy
