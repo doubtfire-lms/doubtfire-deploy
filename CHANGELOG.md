@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-15](https://github.com/b0ink/doubtfire-deploy/compare/v10.0.0-14...v10.0.0-15) (2026-02-11)
+
+
+### Features
+
+* add overseer volume ([a8d8d16](https://github.com/b0ink/doubtfire-deploy/commit/a8d8d164cf4442be6d8491d56035810edf88347a))
+
 ## [10.0.0-14](https://github.com/b0ink/doubtfire-deploy/compare/v10.0.0-13...v10.0.0-14) (2025-09-17)
 
 ## [10.0.0-13](https://github.com/b0ink/doubtfire-deploy/compare/v10.0.0-12...v10.0.0-13) (2025-09-17)
