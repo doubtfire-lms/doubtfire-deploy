@@ -99,6 +99,22 @@ ENV HISTFILE /workspace/tmp/.zsh_history
 
 RUN sudo chmod +x /workspace/.devcontainer/*.sh
 
+USER root
+
+# Support persisted configurations across container rebuilds
+RUN mkdir -p \
+  /home/vscode/.vscode-server \
+  /home/vscode/.codex \
+  /home/vscode/.claude \
+  /home/vscode/.gems \
+  && chown -R vscode:vscode \
+  /home/vscode/.vscode-server \
+  /home/vscode/.codex \
+  /home/vscode/.claude \
+  /home/vscode/.gems
+
+USER vscode
+
 RUN rm -rf /workspace/tmp && \
   mkdir /workspace/tmp && \
   sudo mkdir /student-work && \

@@ -30,6 +30,9 @@ services:
       - ws_node_modules:/workspace/node_modules
       - web_node_modules:/workspace/doubtfire-web/node_modules
       - formatif_gems_compose:/home/vscode/.gems
+      - codex_home:/home/vscode/.codex
+      - claude_home:/home/vscode/.claude
+      - vscode_server_home:/home/vscode/.vscode-server
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - frontnet
@@ -116,3 +119,6 @@ volumes:
   formatif_gems_compose:
   formatif_redis_sidekiq_data:
   jplag_results:
+  codex_home:
+  claude_home:
+  vscode_server_home:
