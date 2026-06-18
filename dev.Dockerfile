@@ -60,7 +60,7 @@ USER "${USER}"
 WORKDIR /workspace
 
 RUN mkdir -p "${NPM_CONFIG_PREFIX}/lib" \
-  && npm install -g npm@9.6.1 \
+  && npm install -g npm@10.9.8 \
   && npm install -g husky --save-dev \
   && npm install -g @angular/cli \
   && npm i -g standard-version
