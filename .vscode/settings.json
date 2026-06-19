@@ -1,6 +1,14 @@
 {
-    "githubPullRequests.ignoredPullRequestBranches": [
-        "development"
-    ],
-    "files.eol": "\n"
+  "githubPullRequests.ignoredPullRequestBranches": ["development"],
+  "files.eol": "\n",
+  "angular.enable-strict-mode-prompt": false,
+  "files.associations": {
+    "*.css": "tailwindcss",
+    "*.scss": "postcss"
+  },
+  "tailwindCSS.experimental.configFile": {
+    "doubtfire-web/src/tailwind-intellisense.css": "doubtfire-web/src/**"
+  },
+  "tailwindCSS.hovers": true,
+  "tailwindCSS.suggestions": true
 }
