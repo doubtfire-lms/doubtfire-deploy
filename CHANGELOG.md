@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [11.0.1](https://github.com/b0ink/doubtfire-deploy/compare/v11.0.0...v11.0.1) (2026-07-06)
+
+
+### Bug Fixes
+
+* ensure tailwind intellisense ([24c4946](https://github.com/b0ink/doubtfire-deploy/commit/24c4946267ca44bc8b6f5ed7f21c61011b8d2c0a))
+
 ## [11.0.0](https://github.com/b0ink/doubtfire-deploy/compare/v11.0.0-0...v11.0.0) (2026-06-18)
 
 ## [11.0.0-0](https://github.com/b0ink/doubtfire-deploy/compare/v10.0.0-15...v11.0.0-0) (2026-06-18)
