@@ -23,6 +23,9 @@ jobs:
           - dockerfile: ./doubtfire-api/jplag.Dockerfile
             image: lmsdoubtfire/doubtfire-jplag
             context: ./doubtfire-api/
+          - dockerfile: ./doubtfire-api/gotenberg.Dockerfile
+            image: lmsdoubtfire/doubtfire-gotenberg
+            context: ./doubtfire-api/
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
