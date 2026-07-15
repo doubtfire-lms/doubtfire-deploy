@@ -1,4 +1,6 @@
-![Doubtfire Logo](http://puu.sh/lyClF/fde5bfbbe7.png)
+<p align="center">
+	<img alt="OnTrack logo" src="./ontrack-logo.png" width="192">
+</p>
 
 # Migrating between Doubtfire Versions
 
@@ -8,12 +10,12 @@ Version 6 includes changes to database encryption that require custom migration 
 
 1. While running Version 5:
 
-  The authentication tokens are encrupted in the database in a way that will not be accessible in version 6. In order to migrate the tokens, you will need to login to the server and save the current authentication tokens using the following script in the rails console. This will get the auth tokens for all logged in users, and export them to a tokens.rb file in the log folder. Alternate locations can be used as required.
+The authentication tokens are encrupted in the database in a way that will not be accessible in version 6. In order to migrate the tokens, you will need to login to the server and save the current authentication tokens using the following script in the rails console. This will get the auth tokens for all logged in users, and export them to a tokens.rb file in the log folder. Alternate locations can be used as required.
 
-  ```ruby
-  lines = User.where("auth_token_expiry > CURRENT_DATE()").map { |user| "AuthToken.create(user_id: #{user.id}, authentication_token: '#{user.auth_token}', auth_token_expiry: DateTime.parse('#{user.auth_token_expiry}'))" }.join("\n")
-  File.write("#{Rails.root}/log/tokens.rb", lines)
-  ```
+```ruby
+lines = User.where("auth_token_expiry > CURRENT_DATE()").map { |user| "AuthToken.create(user_id: #{user.id}, authentication_token: '#{user.auth_token}', auth_token_expiry: DateTime.parse('#{user.auth_token_expiry}'))" }.join("\n")
+File.write("#{Rails.root}/log/tokens.rb", lines)
+```
 
 2. Ensure you have sufficient space to recreate the database - we suggest ensuring you can double the size of the current database during the migration process. This extra size will reduce after migration, once the tables have been re-written.
 3. Backup the database prior to upgrading, as data will be lost in the process and it will be easier to restore from a backup if the migration fails.

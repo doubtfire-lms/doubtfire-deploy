@@ -1,0 +1,9 @@
+production:
+  adapter: mysql2
+  host: <%= Rails.application.credentials.dig(:database, :production, :host) || ENV['DF_PRODUCTION_DB_HOST'] %>
+  database: <%= Rails.application.credentials.dig(:database, :production, :database) || ENV['DF_PRODUCTION_DB_DATABASE'] %>
+  username: <%= Rails.application.credentials.dig(:database, :production, :username) || ENV['DF_PRODUCTION_DB_USERNAME'] %>
+  password: <%= Rails.application.credentials.dig(:database, :production, :password) || ENV['DF_PRODUCTION_DB_PASSWORD'] %>
+  ssl_mode: :required
+  encoding: utf8mb4
+  collation: utf8mb4_general_ci

@@ -1,4 +1,6 @@
-![Doubtfire Logo](http://puu.sh/lyClF/fde5bfbbe7.png)
+<p align="center">
+	<img alt="OnTrack logo" src="./ontrack-logo.png" width="192">
+</p>
 
 # Releasing a new version of Doubtfire
 
