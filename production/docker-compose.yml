@@ -213,7 +213,7 @@ services:
 
   lti:
     image: ${LTI_IMAGE}
-    restart: unless-stopped
+    restart: on-failure:5
     ports:
       - 3001:3001
     networks:
@@ -225,7 +225,7 @@ services:
 
   mongodb:
     image: mongo:7
-    restart: unless-stopped
+    restart: on-failure:5
     container_name: lti-mongodb
     ports:
       - "27017:27017"
