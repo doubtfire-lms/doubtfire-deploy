@@ -77,6 +77,21 @@ docker compose exec -e DISABLE_DATABASE_ENVIRONMENT_CHECK=1 pdfgen rails db:setu
 > **Warning:** This command rebuilds the database and will erase existing data.
 > When prompted to run it in production, enter `Yes` exactly as shown.
 
+> If the `database` authentication method is enabled, you will also be asked to enter and
+> confirm the initial admin password.
+
+After initialisation, open a Rails console in the API container:
+
+```sh
+docker compose exec pdfgen rails console
+```
+
+Then inspect the first user to confirm that the `aadmin` account was created:
+
+```ruby
+User.first
+```
+
 ### Apply database migrations
 
 Run migrations after initialising the database and after every OnTrack update:
