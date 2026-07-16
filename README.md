@@ -72,7 +72,8 @@ docker compose pull
 docker compose up -d
 ```
 
-Use `docker compose logs -f` to follow startup.
+Use `docker compose logs -f` to follow startup. The application can take up to
+30 seconds to start.
 
 ### Initialise a new database
 
