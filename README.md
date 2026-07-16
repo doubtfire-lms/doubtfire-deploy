@@ -29,6 +29,14 @@ Open <http://localhost:4200> when startup is complete.
 
 ## Deployment Quick Start
 
+The deployment commands use Docker Compose v2 (`docker compose`) and require
+`docker-compose-v2`. The legacy Docker Compose v1 command (`docker-compose`) is
+not supported.
+
+```sh
+sudo apt install docker-compose-v2
+```
+
 The [`production/docker-compose.yml`](production/docker-compose.yml) template
 runs the published OnTrack Docker images together with MariaDB, Redis, PDF
 generation, and a Caddy reverse proxy. See [DEPLOYING.md](DEPLOYING.md) for the
