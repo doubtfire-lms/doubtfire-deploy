@@ -50,6 +50,7 @@ services:
       LATEX_BUILD_PATH: /texlive/shell/latex_build.sh
     depends_on:
       - dev-db
+      - gotenberg-volumes
 
   dev-db:
     container_name: doubtfire-dev-db
@@ -108,6 +109,26 @@ services:
       - formatif-dev-container
     env_file:
       - ./devcontainer.env
+    network_mode: none
+
+  gotenberg:
+    # Image definition only. Each conversion starts its own network-isolated
+    # container. If the full Compose stack is started, this service exits
+    # immediately after ensuring that the image has been built.
+    image: doubtfire-gotenberg:local
+    build:
+      context: ../doubtfire-api
+      dockerfile: gotenberg.Dockerfile
+    entrypoint: /bin/true
+    network_mode: none
+
+  gotenberg-volumes:
+    container_name: doubtfire-gotenberg-volumes
+    image: alpine
+    command: sleep infinity
+    restart: unless-stopped
+    volumes:
+      - ../doubtfire-api/tmp/gotenberg:/workdir/gotenberg
     network_mode: none
 
 volumes:
