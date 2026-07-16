@@ -18,8 +18,19 @@ services:
       - webserver
     volumes:
       - ./web/Caddyfile:/etc/caddy/Caddyfile:ro
-      - ./web/certificates/localhost.crt:/etc/caddy/cert.crt:ro # replace with real certificate
-      - ./web/certificates/localhost.key:/etc/caddy/key.key:ro # replace with real key
+
+      # TLS certificates: use one of the two mapping options below.
+      # Keep the container paths unchanged; they match the paths in the Caddyfile.
+
+      # Option 1: a production certificate and private key supplied by your
+      # institution or another trusted certificate authority.
+      # - /etc/ssl/example.com/certificate.crt:/etc/caddy/cert.crt:ro
+      # - /etc/ssl/example.com/private.key:/etc/caddy/key.key:ro
+
+      # Option 2: Let's Encrypt certificate and private key stored on the host.
+      # Replace example.com with the certificate name used under /etc/letsencrypt/live/.
+      - /etc/letsencrypt/live/example.com/fullchain.pem:/etc/caddy/cert.crt:ro
+      - /etc/letsencrypt/live/example.com/privkey.pem:/etc/caddy/key.key:ro
     restart: unless-stopped
 
   # Web server hosts the static files
@@ -27,9 +38,12 @@ services:
     platform: linux/amd64
     image: ${WEB_IMAGE} # Docker will use the images defined in .env
     expose:
-      - 8080:8080
+      - "8080"
     networks:
       - backnet
+    volumes:
+      # Provide an institution logo by mounting a local asset
+      - ../ontrack-logo.png:/usr/share/nginx/html/assets/images/institution-logo.png
     restart: unless-stopped
 
   # API server runs the rails project
@@ -66,7 +80,7 @@ services:
     ports:
       - 3002:3000
     networks:
-      - frontnet
+      - backnet
     depends_on:
       - redis-sidekiq
     volumes:
@@ -89,7 +103,7 @@ services:
     networks:
       - backnet
     environment:
-      MARIADB_RANDOM_ROOT_PASSWORD: true
+      MARIADB_RANDOM_ROOT_PASSWORD: "true"
       MARIADB_USER: dfire # Update with mariadb username
       MARIADB_PASSWORD: pwd # Update with mariadb password
       MARIADB_DATABASE: doubtfire # Update with mariadb database name
@@ -159,7 +173,6 @@ services:
       - ./api/tmp/overseer:/doubtfire/tmp/overseer
       - ./api/secrets:/doubtfire/config/credentials:ro
     environment:
-      DOCKER_HOST: host.docker.internal
       LATEX_CONTAINER_NAME: texlive-container
     command: /doubtfire/lib/shell/sidekiq_entry_point.sh
     restart: on-failure:5
@@ -206,7 +219,7 @@ services:
     networks:
       - frontnet
     env_file:
-      - ./.env.lti.production
+      - ./api/.env.lti.production
     environment:
       HOST: apiserver
 
@@ -230,3 +243,4 @@ volumes:
   mysql_db: {}
   student_work: {}
   jplag_tmp: {}
+  mongo_data: {}
