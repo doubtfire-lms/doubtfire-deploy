@@ -27,36 +27,63 @@ Container**. The container sets up the dependencies and development services,
 then starts the API and web app.
 Open <http://localhost:4200> when startup is complete.
 
-## Deployment
+## Deployment Quick Start
 
 The [`production/docker-compose.yml`](production/docker-compose.yml) template
 runs the published OnTrack Docker images together with MariaDB, Redis, PDF
-generation, and a Caddy reverse proxy.
-
-Before starting it:
-
-1. Set matching API, web, and support-image releases in
-   [`production/.env`](production/.env).
-2. Replace every example password and secret in
-   [`production/api/.env.production`](production/api/.env.production).
-3. Configure your hostname and authentication settings there.
-4. Replace the example files in `production/web/certificates`, then update
-   [`production/web/Caddyfile`](production/web/Caddyfile) for your domain.
-5. Arrange off-host backups for the database and `student_work` volumes.
-
-Then validate and start the stack:
+generation, and a Caddy reverse proxy. See [DEPLOYING.md](DEPLOYING.md) for the
+full deployment guide.
 
 ```sh
-cd production
+git clone --recurse-submodules https://github.com/doubtfire-lms/doubtfire-deploy.git
+cd doubtfire-deploy/production
+```
+
+### Configure the deployment
+
+1. Configure your domain and DNS, then obtain a TLS certificate.
+2. Map the certificate and private key into the `proxy` service in
+   [`docker-compose.yml`](production/docker-compose.yml).
+3. Replace `example.com` in [`web/Caddyfile`](production/web/Caddyfile) with
+   your domain.
+4. Update the institution settings in
+   [`api/.env.production`](production/api/.env.production), including the
+   institution domain.
+
+The example passwords and secrets in `api/.env.production` may be replaced
+after confirming that the stack starts, but replace them before exposing the
+deployment publicly or storing real data.
+
+### Start OnTrack
+
+Validate the configuration, download the images, and start the services:
+
+```sh
 docker compose config
 docker compose pull
 docker compose up -d
-docker compose exec pdfgen rails db:migrate
 ```
 
-Use `docker compose logs -f` to follow startup. Pin specific release tags in
-production and review the Compose template, storage, mail, authentication, TLS,
-and backup settings for your institution before exposing the service publicly.
+Use `docker compose logs -f` to follow startup.
+
+### Initialise a new database
+
+Run this once for a new deployment with an empty database:
+
+```sh
+docker compose exec -e DISABLE_DATABASE_ENVIRONMENT_CHECK=1 pdfgen rails db:setup db:init
+```
+
+> **Warning:** This command rebuilds the database and will erase existing data.
+> When prompted to run it in production, enter `Yes` exactly as shown.
+
+### Apply database migrations
+
+Run migrations after initialising the database and after every OnTrack update:
+
+```sh
+docker compose exec pdfgen rails db:migrate
+```
 
 ## Contributing
 
