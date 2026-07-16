@@ -12,6 +12,7 @@ When setup, launching the application should only require the docker compose to 
 - a webserver, based on nginx, that serves the static html/css/javascript/etc files.
 - an apiserver, based on rails, that serves the restful API used by the application.
 - an application server (pdfgen), based on rails, that uses cron jobs to periodically generate PDFs from student submissions, and send status emails.
+- isolated Gotenberg workers that convert uploaded Word documents to PDF before they are embedded in task submissions.
 - a database server, based on Maria DB or MySql used by the api and application servers to persist data
 - file storage connected to the apiserver and application server for storing student work
 - an external mail server to send emails
@@ -41,6 +42,8 @@ The setups to configure these components include:
      - Remove container if using external database, otherwise configure the MariaDB for your production needs.
    - `pdfgen`
      - Adjust **student-work** to match app server.
+   - `sidekiq`
+     - Set **GOTENBERG_WORKDIR_VOLUME_MOUNT** in **api/.env.production** to the absolute host path for **api/tmp/gotenberg**, and ensure it is writable by the API worker container. This directory contains only temporary Word document conversion files.
    - Add monitoring as needed to ensure ongoing operation
 4. Adjust **api/.env.production**:
    - **DF_PRODUCTION_DB\*\*** settings - adjust database settings for adapter type, host name, database name, and password. The provided setting work with the database setup in the compose file. The password should be updates as a minimum.

@@ -171,6 +171,7 @@ services:
       - ./api/custom_institution_setting.rb:/doubtfire/config/custom_institution_setting.rb:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - ./api/tmp/overseer:/doubtfire/tmp/overseer
+      - ./api/tmp/gotenberg:/doubtfire/tmp/gotenberg
       - ./api/secrets:/doubtfire/config/credentials:ro
     environment:
       LATEX_CONTAINER_NAME: texlive-container
@@ -198,6 +199,12 @@ services:
       - TZ=${TZ}
     command: /bin/sh -c "luaotfload-tool --update --force && sleep infinity"
     restart: unless-stopped
+
+  # Used to pull the image for Word document PDF gen
+  gotenberg:
+    image: ${GOTENBERG_IMAGE}
+    entrypoint: /bin/true
+    network_mode: none
 
   jplag:
     container_name: jplag

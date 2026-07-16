@@ -115,7 +115,7 @@ services:
     # Image definition only. Each conversion starts its own network-isolated
     # container. If the full Compose stack is started, this service exits
     # immediately after ensuring that the image has been built.
-    image: doubtfire-gotenberg:local
+    image: lmsdoubtfire/doubtfire-gotenberg:11.1
     build:
       context: ../doubtfire-api
       dockerfile: gotenberg.Dockerfile

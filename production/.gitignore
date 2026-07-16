@@ -12,3 +12,6 @@ api/tmp/latex-sidekiq/*
 
 api/tmp/overseer/*
 !api/tmp/overseer/.gitkeep
+
+api/tmp/gotenberg/*
+!api/tmp/gotenberg/.gitkeep
