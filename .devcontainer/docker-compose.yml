@@ -50,6 +50,8 @@ services:
       LATEX_BUILD_PATH: /texlive/shell/latex_build.sh
     depends_on:
       - dev-db
+      - gotenberg
+      - gotenberg-volumes
 
   dev-db:
     container_name: doubtfire-dev-db
@@ -108,6 +110,21 @@ services:
       - formatif-dev-container
     env_file:
       - ./devcontainer.env
+    network_mode: none
+
+  gotenberg:
+    container_name: doubtfire-gotenberg
+    build:
+      context: ../
+      dockerfile: gotenberg.Dockerfile
+    network_mode: none
+
+  gotenberg-volumes:
+    container_name: doubtfire-gotenberg-volumes
+    image: alpine
+    command: sleep infinity
+    volumes:
+      - ../doubtfire-api/tmp/gotenberg:/workdir/gotenberg
     network_mode: none
 
 volumes:
