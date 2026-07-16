@@ -67,7 +67,7 @@ services:
       - ./api/custom_institution_setting.rb:/doubtfire/config/custom_institution_setting.rb:ro
       - ./api/secrets:/doubtfire/config/credentials:ro
     environment:
-      - TZ=Australia/Melbourne
+      - TZ=${TZ}
     command: /bin/bash -c "bundle exec rails s -b 0.0.0.0"
     restart: on-failure:5
 
@@ -92,7 +92,7 @@ services:
       - ./api/custom_institution_setting.rb:/doubtfire/config/custom_institution_setting.rb:ro
       - ./api/secrets:/doubtfire/config/credentials:ro
     environment:
-      - TZ=Australia/Melbourne
+      - TZ=${TZ}
     command: /bin/bash -c "bundle exec rails s -b 0.0.0.0"
     restart: unless-stopped
 
@@ -132,7 +132,7 @@ services:
       - jplag_tmp:/doubtfire/tmp/jplag # jplag - api will extract to root/tmp/jplag
       - ./api/secrets:/doubtfire/config/credentials:ro
     environment:
-      - TZ=Australia/Melbourne
+      - TZ=${TZ}
       - LATEX_CONTAINER_NAME=texlive-container-pdfgen
     command: /doubtfire/lib/shell/pdfgen_entry_point.sh
     restart: on-failure:5
@@ -145,7 +145,7 @@ services:
     networks:
       - backnet
     environment:
-      - TZ=Australia/Melbourne
+      - TZ=${TZ}
     expose:
       - 6379
     restart: unless-stopped
@@ -195,7 +195,7 @@ services:
       - student_work:/student-work
       - ./api/tmp/latex-pdfgen:/workdir/texlive-latex
     environment:
-      - TZ=Australia/Melbourne
+      - TZ=${TZ}
     command: /bin/sh -c "luaotfload-tool --update --force && sleep infinity"
     restart: unless-stopped
 
@@ -206,7 +206,7 @@ services:
       - student_work:/student-work # where results are returned
       - jplag_tmp:/tmp/jplag # files shared with api container
     environment:
-      - TZ=Australia/Melbourne
+      - TZ=${TZ}
     command: /bin/sh -c "sleep infinity"
     restart: unless-stopped
     network_mode: none
