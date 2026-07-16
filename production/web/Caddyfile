@@ -1,0 +1,48 @@
+example.com {
+    header {
+        Content-Security-Policy "default-src https: 'unsafe-inline' 'unsafe-eval' blob: data: ws:; worker-src 'self' blob:"
+    }
+
+    tls /etc/caddy/cert.crt /etc/caddy/key.key
+
+    # Optional Sidekiq dashboard. Generate a password hash with:
+    # caddy hash-password --plaintext 'your_password'
+    # Then uncomment both blocks and reload Caddy.
+    # basic_auth /sidekiq/* {
+    #     your-username your-hashed-password
+    # }
+    # reverse_proxy /sidekiq/* apiserver-green:3000 apiserver:3000
+
+    # Prefer the green API during deployments, then fall back to the primary API.
+    # Active health checks fail unavailable upstreams quickly.
+    reverse_proxy /api/* {
+        to apiserver-green:3000 apiserver:3000
+
+        lb_policy first
+        lb_retries 2
+
+        health_uri /health
+        health_timeout 2s
+        health_interval 3s
+    }
+
+    # Expose the Rails health check at /api/health and /health.
+    rewrite /api/health /health
+
+    reverse_proxy /health {
+        to apiserver-green:3000 apiserver:3000
+
+        lb_policy first
+        lb_retries 2
+
+        health_uri /health
+        health_timeout 2s
+        health_interval 3s
+    }
+
+    # Route LTI requests to the LTI service.
+    reverse_proxy /lti/api/* lti:3001
+
+    # Serve the Angular application for all remaining requests.
+    reverse_proxy /* webserver:80
+}

@@ -1,0 +1,14 @@
+api/logs/*
+!api/logs/.gitkeep
+
+api/secrets/*
+!api/secrets/.gitkeep
+
+api/tmp/latex-pdfgen/*
+!api/tmp/latex-pdfgen/.gitkeep
+
+api/tmp/latex-sidekiq/*
+!api/tmp/latex-sidekiq/.gitkeep
+
+api/tmp/overseer/*
+!api/tmp/overseer/.gitkeep

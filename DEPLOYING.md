@@ -1,12 +1,14 @@
-![Doubtfire Logo](http://puu.sh/lyClF/fde5bfbbe7.png)
+<p align="center">
+	<img alt="OnTrack logo" src="./ontrack-logo.png" width="192">
+</p>
 
-# Deploying Doubtfire
+# Deploying OnTrack
 
-Doubtfire is deployed using Docker containers described in a docker compose. This document outlines the main steps in the process for deploying this as an application, which require additional considerations to ensure that the setup is appropriate for your situation. Settings provided, and changes recommended, need to be reviewed by an appropriate security and deployment professional.
+OnTrack is deployed using Docker containers described in a [docker compose](./production/docker-compose.yml). This document outlines the main steps in the process for deploying this as an application, which require additional considerations to ensure that the setup is appropriate for your situation. Settings provided, and changes recommended, need to be reviewed by an appropriate security and deployment professional.
 
 When setup, launching the application should only require the docker compose to be started: e.g. `docker compose up`. When setup, the application involves the following components:
 
-- a proxy, based on nginx, that handles HTTPS and routes traffic to the webserver or apiserver containers.
+- a proxy, based on Caddy, that handles HTTPS and routes traffic to the webserver or apiserver containers.
 - a webserver, based on nginx, that serves the static html/css/javascript/etc files.
 - an apiserver, based on rails, that serves the restful API used by the application.
 - an application server (pdfgen), based on rails, that uses cron jobs to periodically generate PDFs from student submissions, and send status emails.
@@ -26,22 +28,23 @@ The setups to configure these components include:
    - optional: separate database server
 2. Copy the following files from the **production** folder of this project to the host machine.
    - docker-compose.yml - this file contains the configuration of all containers needed.
-   - .env.production - this contains all of the environment variables needed to configure the containers.
-   - shared-files folder - this contains configuration files that need to be mapped into containers for email configurations and proxy nginx settings.
+   - .env - this selects the container images used by Docker Compose.
+   - api folder - this contains the API environment, database, institution, email, secrets, logs, and temporary-file configuration.
+   - web folder - this contains the Caddy configuration and HTTPS certificates.
 3. Adjust settings in **docker-compose.yml**
-    - Proxy
-      - Replace certificate and key files and volume mappings with certificate created for the institution URL.
-    - Apiserver
-      - The **student_work** volume should be mapped to the host, and this location should be backed up.
-      - Consider where to store doubtfire-logs and update volume if needed
-    - Doubtfire-db
-      - Remove container if using external database, otherwise configure the MariaDB for your production needs.
-    - Pdfgen
-      - Adjust **student-work** to match app server.
-    - Add monitoring as needed to ensure ongoing operation
-4. Adjust **.env.production**:
-   - **DF_PRODUCTION_DB_*** settings - adjust database settings for adapter type, host name, database name, and password. The provided setting work with the database setup in the compose file. The password should be updates as a minimum.
-   - **DF_SECRET_KEY_DEVISE** - contains the key used to encrypt the [Devise](https://github.com/heartcombo/devise) user data in the database. Keys can be generated with `bundle exec rake secret` run in the *apiserver* container.
+   - `proxy`
+     - Replace the files in **web/certificates** with a certificate and key created for the institution URL.
+   - `apiserver`
+     - The **student_work** volume should be mapped to the host, and this location should be backed up.
+     - Consider where to store doubtfire-logs and update volume if needed
+   - `ontrack-db`
+     - Remove container if using external database, otherwise configure the MariaDB for your production needs.
+   - `pdfgen`
+     - Adjust **student-work** to match app server.
+   - Add monitoring as needed to ensure ongoing operation
+4. Adjust **api/.env.production**:
+   - **DF_PRODUCTION_DB\*\*** settings - adjust database settings for adapter type, host name, database name, and password. The provided setting work with the database setup in the compose file. The password should be updates as a minimum.
+   - **DF_SECRET_KEY_DEVISE** - contains the key used to encrypt the [Devise](https://github.com/heartcombo/devise) user data in the database. Keys can be generated with `bundle exec rake secret` run in the _apiserver_ container.
    - **DF_SECRET_KEY_BASE** and **DF_SECRET_KEY_ATTR** - these are historic keys used to encrypt data in the database. Generate as with the Devise key.
    - **DF_SECRET_KEY_MOSS** - the key used to connect with the [MOSS](http://moss.stanford.edu) system for checking code similarity.
    - **DF_INSTITUTION_HOST** - change to the URL used for the application
@@ -73,30 +76,29 @@ The setups to configure these components include:
        - DF_LDAP_USE_ADMIN_TO_BIND
        - DF_LDAP_ADMIN_USER
        - DF_LDAP_ADMIN_PWD
-   - **DF_ENCRYPTION_*** - is used in encrypting data in the database. Generate these from within the *apiserver* container using `rails db:encryption:init`. See [Active Record Encryption](https://guides.rubyonrails.org/active_record_encryption.html).
+   - **DF*ENCRYPTION*\*** - is used in encrypting data in the database. Generate these from within the _apiserver_ container using `rails db:encryption:init`. See [Active Record Encryption](https://guides.rubyonrails.org/active_record_encryption.html).
    - Setup email settings, see [Action Mailer](https://guides.rubyonrails.org/action_mailer_basics.html).
      - Set **DF_MAIL_PERFORM_DELIVERIES** to `yes` (lowercase) to enable mail sending
-     - Set **DF_MAIL_DELIVERY_METHOD** to *smtp* or disable by setting to *none*. Set the following variables to configure mail sending.
+     - Set **DF_MAIL_DELIVERY_METHOD** to _smtp_ or disable by setting to _none_. Set the following variables to configure mail sending.
        - DF_SMTP_ADDRESS
        - DF_SMTP_PORT
        - DF_SMTP_DOMAIN
        - DF_SMTP_USERNAME
        - DF_SMTP_PASSWORD
        - DF_SMTP_AUTHENTICATION
-5. Adjust **shared-files/proxy-nginx.conf**. This file configures the proxy nginx container that routes traffic to the webserver and apiserver containers. It needs to be update with the host URLs. The provided file uses localhost as the server URL.
+5. Adjust **web/Caddyfile**. This file configures Caddy to route traffic to the webserver and apiserver containers. Update its site address to the institution URL; the provided file uses localhost.
 6. Configure email settings:
-   - Edit **shared-files/aliases** to map the root user email to the support email address that the application will use.
-   - Edit **shared-files/msmtprc** to include the necessary details used to connect to your mail server.
+   - Edit **api/shared-files/aliases** to map the root user email to the support email address that the application will use.
+   - Edit **api/shared-files/msmtprc** to include the necessary details used to connect to your mail server.
 7. Initialise the database by running:
    - `DISABLE_DATABASE_ENVIRONMENT_CHECK=1 bundle exec rake db:setup db:init`. When prompted about running in production, respond with `Yes` (case sensitive) to allow the database initialisation to proceed.
    - Verify the database setup in the rails console `bundle exec rails c`, and update username and email to match expected admin user:
 
-      ```ruby
-      u = User.first
-      u.email = '...'
-      u.username = '...'
-      u.save!
-      ```
+     ```ruby
+     u = User.first
+     u.email = '...'
+     u.username = '...'
+     u.save!
+     ```
 
-    When successful you should be able to login as the admin user.
-
+   When successful you should be able to login as the admin user.
