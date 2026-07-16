@@ -16,11 +16,13 @@ COMPOSE=(docker compose --project-directory "$PRODUCTION_DIR" -f "$PRODUCTION_DI
 # 3. Run this script
 # 4. Comment out the apiserver-green service so that it doesn't boot on server restart
 
-PDFGEN_DRAIN_TIMEOUT_SECONDS="${PDFGEN_DRAIN_TIMEOUT_SECONDS:-600}"
-SIDEKIQ_DRAIN_TIMEOUT_SECONDS="${SIDEKIQ_DRAIN_TIMEOUT_SECONDS:-600}"
+PDFGEN_DRAIN_TIMEOUT_SECONDS="${PDFGEN_DRAIN_TIMEOUT_SECONDS:-1800}"
+SIDEKIQ_DRAIN_TIMEOUT_SECONDS="${SIDEKIQ_DRAIN_TIMEOUT_SECONDS:-1800}"
 DRAIN_POLL_INTERVAL_SECONDS="${DRAIN_POLL_INTERVAL_SECONDS:-10}"
+APISERVER_HEALTH_TIMEOUT_SECONDS="${APISERVER_HEALTH_TIMEOUT_SECONDS:-120}"
+APISERVER_HEALTH_POLL_INTERVAL_SECONDS="${APISERVER_HEALTH_POLL_INTERVAL_SECONDS:-2}"
 
-if ! "${COMPOSE[@]}" config --services | grep -q "^apiserver-green$"; then
+if ! "${COMPOSE[@]}" config --services | grep -Fx "apiserver-green" > /dev/null; then
   echo "Service 'apiserver-green' does not exist. Did you remember to uncomment it? Exiting."
   exit 1
 fi
@@ -101,6 +103,34 @@ wait_for_sidekiq_workers_to_finish() {
   done
 }
 
+wait_for_apiserver_health() {
+  local name="$1"
+  local timeout="$2"
+  local interval="$3"
+  local start
+  local elapsed
+
+  start=$(date +%s)
+
+  while true; do
+    if "${COMPOSE[@]}" exec -T "$name" \
+      curl --fail --silent --max-time 5 http://127.0.0.1:3000/health \
+      > /dev/null 2>&1; then
+      echo "${name} is healthy."
+      return 0
+    fi
+
+    elapsed=$(( $(date +%s) - start ))
+    if [ "$elapsed" -ge "$timeout" ]; then
+      echo "Timed out waiting for ${name} to become healthy after ${timeout}s."
+      exit 1
+    fi
+
+    echo "Waiting for ${name} to become healthy..."
+    sleep "$interval"
+  done
+}
+
 "${COMPOSE[@]}" pull
 
 "$SCRIPT_DIR/pause-pdfgen.sh"
@@ -118,14 +148,24 @@ sleep 5
 
 sleep 5
 
-"${COMPOSE[@]}" up apiserver-green -d
+"${COMPOSE[@]}" up apiserver-green -d --force-recreate
 
-sleep 30
+wait_for_apiserver_health \
+  "apiserver-green" \
+  "$APISERVER_HEALTH_TIMEOUT_SECONDS" \
+  "$APISERVER_HEALTH_POLL_INTERVAL_SECONDS"
+
+sleep 5
 
 "${COMPOSE[@]}" down apiserver
 "${COMPOSE[@]}" up apiserver -d
 
-sleep 30
+wait_for_apiserver_health \
+  "apiserver" \
+  "$APISERVER_HEALTH_TIMEOUT_SECONDS" \
+  "$APISERVER_HEALTH_POLL_INTERVAL_SECONDS"
+
+sleep 5
 
 "${COMPOSE[@]}" down apiserver-green
 
