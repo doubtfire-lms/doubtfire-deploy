@@ -82,9 +82,11 @@ Run this once for a new deployment with an empty database:
 docker compose exec -e DISABLE_DATABASE_ENVIRONMENT_CHECK=1 pdfgen rails db:setup db:init
 ```
 
-> **Warning:** This command rebuilds the database and will erase existing data.
+> [!WARNING]
+> This command rebuilds the database and will erase existing data.
 > When prompted to run it in production, enter `Yes` exactly as shown.
 
+> [!NOTE]
 > If the `database` authentication method is enabled, you will also be asked to enter and
 > confirm the initial admin password.
 
