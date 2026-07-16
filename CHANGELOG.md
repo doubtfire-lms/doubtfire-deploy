@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [11.1.0](https://github.com/b0ink/doubtfire-deploy/compare/v11.0.1...v11.1.0) (2026-07-16)
+
+
+### Features
+
+* add gotenberg contains to dev container ([3d972d1](https://github.com/b0ink/doubtfire-deploy/commit/3d972d10af952dba6788b4d91ba231c912970575))
+* add gotenberg docker image ([460f2eb](https://github.com/b0ink/doubtfire-deploy/commit/460f2ebeef8d30d2b4109099b26b64ead44b790f))
+
 ### [11.0.1](https://github.com/b0ink/doubtfire-deploy/compare/v11.0.0...v11.0.1) (2026-07-06)
 
 
