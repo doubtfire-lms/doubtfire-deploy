@@ -110,6 +110,11 @@ Run migrations after initialising the database and after every OnTrack update:
 docker compose exec pdfgen rails db:migrate
 ```
 
+That's it! You can now log in and explore OnTrack. Visit the
+[OnTrack Deployment Wiki](https://github.com/doubtfire-lms/doubtfire-deploy/wiki) for more
+guidance, or [create an issue](https://github.com/doubtfire-lms/doubtfire-deploy/issues/new)
+if you run into deployment problems.
+
 ## Contributing
 
 Planning to contribute? Start with [CONTRIBUTING.md](CONTRIBUTING.md) for useful
