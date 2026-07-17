@@ -19,15 +19,15 @@ services:
     volumes:
       - ./web/Caddyfile:/etc/caddy/Caddyfile:ro
 
-      # TLS certificates: use one of the two mapping options below.
+      # TLS certificates: the mappings below are examples; other host setups are supported.
       # Keep the container paths unchanged; they match the paths in the Caddyfile.
 
-      # Option 1: a production certificate and private key supplied by your
+      # Example 1: a production certificate and private key supplied by your
       # institution or another trusted certificate authority.
       # - /etc/ssl/example.com/certificate.crt:/etc/caddy/cert.crt:ro
       # - /etc/ssl/example.com/private.key:/etc/caddy/key.key:ro
 
-      # Option 2: Let's Encrypt certificate and private key stored on the host.
+      # Example 2: Let's Encrypt certificate and private key stored on the host.
       # Replace example.com with the certificate name used under /etc/letsencrypt/live/.
       - /etc/letsencrypt/live/example.com/fullchain.pem:/etc/caddy/cert.crt:ro
       - /etc/letsencrypt/live/example.com/privkey.pem:/etc/caddy/key.key:ro
