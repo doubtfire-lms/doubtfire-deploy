@@ -6,7 +6,16 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-PRODUCTION_DIR="$(dirname "$SCRIPT_DIR")"
+
+if [ -f "$SCRIPT_DIR/docker-compose.yml" ]; then
+  PRODUCTION_DIR="$SCRIPT_DIR"
+elif [ -f "$(dirname "$SCRIPT_DIR")/docker-compose.yml" ]; then
+  PRODUCTION_DIR="$(dirname "$SCRIPT_DIR")"
+else
+  echo "Could not find docker-compose.yml beside this script or in its parent directory. Exiting."
+  exit 1
+fi
+
 COMPOSE=(docker compose --project-directory "$PRODUCTION_DIR" -f "$PRODUCTION_DIR/docker-compose.yml")
 SUPPORT_SERVICES=(texlive texlive-pdfgen jplag gotenberg lti)
 
@@ -23,7 +32,12 @@ DRAIN_POLL_INTERVAL_SECONDS="${DRAIN_POLL_INTERVAL_SECONDS:-10}"
 APISERVER_HEALTH_TIMEOUT_SECONDS="${APISERVER_HEALTH_TIMEOUT_SECONDS:-120}"
 APISERVER_HEALTH_POLL_INTERVAL_SECONDS="${APISERVER_HEALTH_POLL_INTERVAL_SECONDS:-2}"
 
-if ! "${COMPOSE[@]}" config --services | grep -Fx "apiserver-green" > /dev/null; then
+if ! COMPOSE_SERVICES=$("${COMPOSE[@]}" config --services); then
+  echo "Could not load Docker Compose configuration from $PRODUCTION_DIR/docker-compose.yml. Exiting."
+  exit 1
+fi
+
+if ! printf '%s\n' "$COMPOSE_SERVICES" | grep -Fx "apiserver-green" > /dev/null; then
   echo "Service 'apiserver-green' does not exist. Did you remember to uncomment it? Exiting."
   exit 1
 fi
