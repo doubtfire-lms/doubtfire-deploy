@@ -8,6 +8,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 PRODUCTION_DIR="$(dirname "$SCRIPT_DIR")"
 COMPOSE=(docker compose --project-directory "$PRODUCTION_DIR" -f "$PRODUCTION_DIR/docker-compose.yml")
+SUPPORT_SERVICES=(texlive texlive-pdfgen jplag gotenberg lti)
 
 # DO NOT DEPLOY VIA THIS SCRIPT IF NEW VERSION OF ONTRACK'S API REQUIRES MIGRATIONS
 
@@ -154,6 +155,10 @@ wait_for_apiserver_health \
   "apiserver-green" \
   "$APISERVER_HEALTH_TIMEOUT_SECONDS" \
   "$APISERVER_HEALTH_POLL_INTERVAL_SECONDS"
+
+sleep 5
+
+"${COMPOSE[@]}" up -d --force-recreate "${SUPPORT_SERVICES[@]}"
 
 sleep 5
 
