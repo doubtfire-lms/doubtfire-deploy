@@ -16,7 +16,7 @@ networks:
 services:
   formatif-dev-container:
     container_name: 1-formatif-dev-container
-    image: lmsdoubtfire/formatif-devcontainer:11.0
+    image: lmsdoubtfire/formatif-devcontainer:11.1
     # build:
       # context: ../
       # dockerfile: dev.Dockerfile
@@ -80,7 +80,7 @@ services:
 
   texlive:
     container_name: 1-formatif-texlive-container
-    image: lmsdoubtfire/formatif-latex:11.0
+    image: lmsdoubtfire/formatif-latex:11.1
     # build:
       # context: ../
       # dockerfile: texlive.Dockerfile
@@ -96,7 +96,7 @@ services:
   # JPlag
   jplag:
     container_name: jplag
-    image: lmsdoubtfire/doubtfire-jplag:11.0
+    image: lmsdoubtfire/doubtfire-jplag:11.1
     # build:
       # context: ../
       # dockerfile: jplag.Dockerfile
