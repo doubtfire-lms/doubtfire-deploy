@@ -228,7 +228,7 @@ services:
     env_file:
       - ./api/.env.lti.production
     environment:
-      HOST: apiserver
+      API_HOST: apiserver
 
   mongodb:
     image: mongo:7
