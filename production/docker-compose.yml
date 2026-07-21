@@ -224,7 +224,7 @@ services:
     ports:
       - 3001:3001
     networks:
-      - frontnet
+      - backnet
     env_file:
       - ./api/.env.lti.production
     environment:
@@ -235,11 +235,12 @@ services:
     restart: on-failure:5
     container_name: lti-mongodb
     ports:
-      - "27017:27017"
+      - "27017"
     networks:
-      - frontnet
-    env_file:
-      - ./api/.env.production
+      - backnet
+    environment:
+      MONGO_INITDB_ROOT_USERNAME=lti
+      MONGO_INITDB_ROOT_PASSWORD=your-mongodb-root-password
     volumes:
       - mongo_data:/data/db
 
