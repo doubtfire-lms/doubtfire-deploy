@@ -25,7 +25,7 @@ services:
       # mounts are relative to the first file in the list, which is a level up.
       - ..:/workspace:cached
       - formatif_tmp_compose:/workspace/tmp
-      - formatif_student-work_compose:/student-work
+      - ../data/student-work:/student-work
       - jplag_results:/jplag/results
       - ws_node_modules:/workspace/node_modules
       - web_node_modules:/workspace/doubtfire-web/node_modules
@@ -48,9 +48,33 @@ services:
     environment:
       LATEX_CONTAINER_NAME: 1-formatif-texlive-container
       LATEX_BUILD_PATH: /texlive/shell/latex_build.sh
+      DF_INSTITUTION_HOST: https://ontrack.dev
+      DF_COOKIE_DOMAIN: ontrack.dev
+      DF_CADDY_DOWNLOAD_AUTH_SECRET: local-development-only-caddy-download-secret
     depends_on:
       - dev-db
       - gotenberg-volumes
+
+  # Production-like local HTTPS entry point. Student work is mounted read-only
+  # and is only served after Rails authorises the protected content route.
+  caddy:
+    image: caddy:latest
+    container_name: ontrack-caddy
+    restart: unless-stopped
+    environment:
+      DOWNLOAD_AUTH_SECRET: local-development-only-caddy-download-secret
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - frontnet
+    depends_on:
+      - formatif-dev-container
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+      - ../data/student-work:/srv/student-work:ro
 
   dev-db:
     container_name: doubtfire-dev-db
@@ -85,7 +109,7 @@ services:
       # context: ../
       # dockerfile: texlive.Dockerfile
     volumes:
-      - formatif_student-work_compose:/student-work
+      - ../data/student-work:/student-work
       - ../doubtfire-api/tmp/rails-latex:/workdir/texlive-latex
       - ../doubtfire-api/public/assets/images:/workspace/doubtfire-api/public/assets/images
       - ../doubtfire-api/test_files:/workspace/doubtfire-api/test_files
@@ -101,7 +125,7 @@ services:
       # context: ../
       # dockerfile: jplag.Dockerfile
     volumes:
-      - formatif_student-work_compose:/student-work
+      - ../data/student-work:/student-work
       - jplag_results:/jplag/results
       - ../doubtfire-api/tmp/jplag:/tmp/jplag
     command: /bin/sh -c "sleep infinity"
@@ -143,3 +167,5 @@ volumes:
   codex_home:
   claude_home:
   vscode_server_home:
+  caddy_data:
+  caddy_config:
