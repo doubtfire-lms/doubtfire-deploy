@@ -5,6 +5,13 @@ ontrack.dev {
 
 	tls internal
 
+	# Student submission downloads retain their existing record-based URL. Caddy
+	# asks Rails to authenticate and authorise the request, then serves only the
+	# relative path returned by that trusted internal endpoint.
+	@submissionDownload {
+		method GET HEAD
+		path_regexp submissionDownload ^/api/projects/[0-9]+/task_def_id/[0-9]+/(?:submission|submission_files)$
+	}
 	@unitContentFile {
 		method GET HEAD
 		path_regexp unitContentFile ^/api/units/[0-9]+/content/sites/[0-9]+/files(?:/.*)?$
@@ -29,6 +36,27 @@ ontrack.dev {
 				header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
 				header X-Content-Site-Id "{http.request.header.X-OnTrack-Content-Site-Id}"
 				header Cache-Control "private, no-cache"
+				file_server
+			}
+		}
+
+		handle @submissionDownload {
+			route {
+				# Never allow a client to seed the internal routing headers.
+				request_header -X-OnTrack-File
+				request_header -X-OnTrack-Content-Disposition
+				request_header -X-OnTrack-Content-Type
+
+				forward_auth formatif-dev-container:3000 {
+					uri /api/internal/downloads/submission
+					header_up X-OnTrack-Download-Auth {$DOWNLOAD_AUTH_SECRET}
+					copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type
+				}
+
+				rewrite * /{http.request.header.X-OnTrack-File}
+				root * /srv/student-work
+				header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
+				header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
 				file_server
 			}
 		}
