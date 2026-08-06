@@ -12,6 +12,10 @@ ontrack.dev {
 		method GET HEAD
 		path_regexp submissionDownload ^/api/projects/[0-9]+/task_def_id/[0-9]+/(?:submission|submission_files)$
 	}
+	@portfolioDownload {
+		method GET HEAD
+		path_regexp portfolioDownload ^/api/submission/unit/[0-9]+/portfolio$
+	}
 	@unitContentFile {
 		method GET HEAD
 		path_regexp unitContentFile ^/api/units/[0-9]+/content/sites/[0-9]+/files(?:/.*)?$
@@ -57,6 +61,29 @@ ontrack.dev {
 				root * /srv/student-work
 				header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
 				header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
+				file_server
+			}
+		}
+
+		handle @portfolioDownload {
+			route {
+				# The browser cannot select the filesystem path; only Rails can
+				# return these headers after authenticating and authorising the unit.
+				request_header -X-OnTrack-File
+				request_header -X-OnTrack-Content-Disposition
+				request_header -X-OnTrack-Content-Type
+
+				forward_auth formatif-dev-container:3000 {
+					uri /api/internal/downloads/portfolio
+					header_up X-OnTrack-Download-Auth {$DOWNLOAD_AUTH_SECRET}
+					copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type
+				}
+
+				rewrite * /{http.request.header.X-OnTrack-File}
+				root * /srv/student-work
+				header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
+				header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
+				header Cache-Control "private, no-store"
 				file_server
 			}
 		}
