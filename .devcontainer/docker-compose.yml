@@ -56,7 +56,7 @@ services:
       - gotenberg-volumes
 
   # Production-like local HTTPS entry point. Student work is mounted read-only
-  # and is only served after Rails authorises the protected content route.
+  # and is only served after Rails authorises the protected download route.
   caddy:
     image: caddy:latest
     container_name: ontrack-caddy
