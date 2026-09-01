@@ -1,5 +1,7 @@
 example.com {
     header {
+        -Server
+        -Via
         Content-Security-Policy "default-src https: 'unsafe-inline' 'unsafe-eval' blob: data: ws:; worker-src 'self' blob:"
     }
 
