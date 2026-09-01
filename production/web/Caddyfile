@@ -17,9 +17,9 @@ example.com {
 
         # Strict policy for OnTrack, JPlag, LTI, and ordinary API responses.
         csp_standard_core "default-src 'self'; base-uri 'self'; object-src 'self' blob:;"
-        csp_standard_code "script-src 'self'; script-src-attr 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;"
+        csp_standard_code "script-src 'self' 'sha256-bHnTrDi3viqza8ALPPWMpetYE9cKLKmJZ8UAZvrGeec=' https://www.googletagmanager.com; script-src-attr 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;"
         csp_standard_content "font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob:;"
-        csp_standard_network "connect-src 'self' blob: https://api.github.com; worker-src 'self' blob:;"
+        csp_standard_network "connect-src 'self' blob: https://api.github.com https://www.google-analytics.com https://region1.google-analytics.com; worker-src 'self' blob:;"
         csp_standard_frames "child-src 'self' blob:; frame-src 'self' blob:; frame-ancestors 'self' https:;"
         csp_standard_navigation "form-action 'self' https:; manifest-src 'self'; upgrade-insecure-requests"
     }
