@@ -1,0 +1,135 @@
+ontrack.dev {
+	header {
+		Content-Security-Policy "default-src https: 'unsafe-inline' 'unsafe-eval' blob: data: ws:; worker-src 'self' blob:"
+	}
+
+	tls internal
+
+	# Student submission downloads retain their existing record-based URL. Caddy
+	# asks Rails to authenticate and authorise the request, then serves only the
+	# relative path returned by that trusted internal endpoint.
+	@submissionDownload {
+		method GET HEAD
+		path_regexp submissionDownload ^/api/projects/[0-9]+/task_def_id/[0-9]+/(?:submission|submission_files)$
+	}
+	@portfolioDownload {
+		method GET HEAD
+		path_regexp portfolioDownload ^/api/submission/unit/[0-9]+/portfolio$
+	}
+	@pdfFileDownload {
+		method GET HEAD
+		path_regexp pdfFileDownload ^/api/(?:units/[0-9]+/task_definitions/[0-9]+/task_pdf(?:\.json)?|submission/project/[0-9]+/portfolio|tasks/[0-9]+/similarities/[0-9]+/contents/[0-9]+|projects/[0-9]+/task_def_id/[0-9]+/comments/[0-9]+|projects/[0-9]+/engagements/[0-9]+/attachment)$
+	}
+	@unitContentFile {
+		method GET HEAD
+		path_regexp unitContentFile ^/api/units/[0-9]+/content/sites/[0-9]+/files(?:/.*)?$
+	}
+	route {
+		handle @pdfFileDownload {
+			route {
+				# Route parameters identify records only. Rails derives and validates
+				# the file path after applying the original endpoint's permissions.
+				request_header -X-OnTrack-File
+				request_header -X-OnTrack-Content-Disposition
+				request_header -X-OnTrack-Content-Type
+
+				forward_auth formatif-dev-container:3000 {
+					uri /api/internal/downloads/pdf-file
+					header_up X-OnTrack-Download-Auth {$DOWNLOAD_AUTH_SECRET}
+					copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type
+				}
+
+				rewrite * /{http.request.header.X-OnTrack-File}
+				root * /srv/student-work
+				header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
+				header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
+				header Cache-Control "private, no-store"
+				file_server
+			}
+		}
+
+		handle @unitContentFile {
+			route {
+				request_header -X-OnTrack-File
+				request_header -X-OnTrack-Content-Disposition
+				request_header -X-OnTrack-Content-Type
+				request_header -X-OnTrack-Content-Site-Id
+
+				forward_auth formatif-dev-container:3000 {
+					uri /api/internal/downloads/unit-content
+					header_up X-OnTrack-Download-Auth {$DOWNLOAD_AUTH_SECRET}
+					copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type X-OnTrack-Content-Site-Id
+				}
+
+				rewrite * /{http.request.header.X-OnTrack-File}
+				root * /srv/student-work
+				header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
+				header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
+				header X-Content-Site-Id "{http.request.header.X-OnTrack-Content-Site-Id}"
+				header Cache-Control "private, no-cache"
+				file_server
+			}
+		}
+
+		handle @submissionDownload {
+			route {
+				# Never allow a client to seed the internal routing headers.
+				request_header -X-OnTrack-File
+				request_header -X-OnTrack-Content-Disposition
+				request_header -X-OnTrack-Content-Type
+
+				forward_auth formatif-dev-container:3000 {
+					uri /api/internal/downloads/submission
+					header_up X-OnTrack-Download-Auth {$DOWNLOAD_AUTH_SECRET}
+					copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type
+				}
+
+				rewrite * /{http.request.header.X-OnTrack-File}
+				root * /srv/student-work
+				header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
+				header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
+				file_server
+			}
+		}
+
+		handle @portfolioDownload {
+			route {
+				# The browser cannot select the filesystem path; only Rails can
+				# return these headers after authenticating and authorising the unit.
+				request_header -X-OnTrack-File
+				request_header -X-OnTrack-Content-Disposition
+				request_header -X-OnTrack-Content-Type
+
+				forward_auth formatif-dev-container:3000 {
+					uri /api/internal/downloads/portfolio
+					header_up X-OnTrack-Download-Auth {$DOWNLOAD_AUTH_SECRET}
+					copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type
+				}
+
+				rewrite * /{http.request.header.X-OnTrack-File}
+				root * /srv/student-work
+				header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
+				header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
+				header Cache-Control "private, no-store"
+				file_server
+			}
+		}
+
+		# Rails exposes its health check at /health. Keep the public URL aligned
+		# with the production /api namespace.
+		handle /api/health {
+			rewrite * /health
+			reverse_proxy formatif-dev-container:3000
+		}
+
+		# Preserve the /api prefix when forwarding application requests to Rails.
+		handle /api/* {
+			reverse_proxy formatif-dev-container:3000
+		}
+
+		# Angular's development server also uses this proxy for its HMR WebSocket.
+		handle {
+			reverse_proxy formatif-dev-container:4200
+		}
+	}
+}
