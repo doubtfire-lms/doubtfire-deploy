@@ -46,6 +46,13 @@ example.com {
     @jplagContent path /JPlag /JPlag/*
     header @jplagContent +Content-Security-Policy "frame-ancestors 'self';"
 
+    # Authentication responses and APIs may contain access tokens, session
+    # details, or student data. Override upstream cache settings so browsers
+    # and shared proxies do not retain them; static application assets remain
+    # cacheable.
+    @sensitiveContent path /sign_in /sign_in/* /api /api/* /lti/api /lti/api/*
+    header @sensitiveContent >Cache-Control "no-store"
+
     # Uploaded unit sites are trusted course content and can contain inline
     # scripts/styles, nested frames, and remote HTTPS assets. Keep that
     # compatibility exception scoped to the authenticated content endpoint;
