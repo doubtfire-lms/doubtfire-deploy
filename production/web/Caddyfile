@@ -35,6 +35,17 @@ example.com {
         X-XSS-Protection "0"
     }
 
+    # The web image supplies its own build-specific CSP, including hashes for
+    # Angular's inline scripts. Add a second policy instead of replacing it:
+    # browsers enforce both policies, so only the configured Moodle origin can
+    # embed OnTrack without discarding those script hashes. JPlag is a separate
+    # same-origin application which OnTrack embeds itself.
+    @webContent not path /api/* /lti/api/* /health /JPlag /JPlag/*
+    header @webContent +Content-Security-Policy "frame-ancestors {$ONTRACK_MOODLE_ORIGIN:https://moodle.example.com};"
+
+    @jplagContent path /JPlag /JPlag/*
+    header @jplagContent +Content-Security-Policy "frame-ancestors 'self';"
+
     # Uploaded unit sites are trusted course content and can contain inline
     # scripts/styles, nested frames, and remote HTTPS assets. Keep that
     # compatibility exception scoped to the authenticated content endpoint;
