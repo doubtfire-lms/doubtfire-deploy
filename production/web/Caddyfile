@@ -1,7 +1,54 @@
 example.com {
-    header {
-        Content-Security-Policy "default-src https: 'unsafe-inline' 'unsafe-eval' blob: data: ws:; worker-src 'self' blob:"
+    # Compose policies from readable sections while emitting one header value.
+    vars {
+        # Browser capabilities used by OnTrack and explicitly disabled otherwise.
+        permissions_capture "camera=(self), microphone=(self), fullscreen=(self)"
+        permissions_clipboard "clipboard-read=(self), clipboard-write=(self)"
+        permissions_disabled "geolocation=(), payment=(), usb=()"
+
+        # Compatibility policy for trusted uploaded unit sites. It permits
+        # inline code and remote HTTPS assets, but deliberately omits unsafe-eval.
+        csp_unit_core "default-src 'self' https: data: blob:; base-uri 'self'; object-src 'self' https: data: blob:;"
+        csp_unit_code "script-src 'self' https: 'unsafe-inline'; style-src 'self' https: 'unsafe-inline';"
+        csp_unit_content "font-src 'self' https: data:; img-src 'self' https: data: blob:; media-src 'self' https: data: blob:;"
+        csp_unit_network "connect-src 'self' https: blob:; worker-src 'self' blob:;"
+        csp_unit_frames "child-src 'self' https: blob:; frame-src 'self' https: blob:; frame-ancestors 'self';"
+        csp_unit_navigation "form-action 'self' https:; upgrade-insecure-requests"
+
+        # Strict policy for OnTrack, JPlag, LTI, and ordinary API responses.
+        csp_standard_core "default-src 'self'; base-uri 'self'; object-src 'self' blob:;"
+        csp_standard_code "script-src 'self'; script-src-attr 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;"
+        csp_standard_content "font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob:;"
+        csp_standard_network "connect-src 'self' blob: https://api.github.com https://www.gravatar.com; worker-src 'self' blob:;"
+        csp_standard_frames "child-src 'self' blob:; frame-src 'self' blob:; frame-ancestors 'self' https:;"
+        csp_standard_navigation "form-action 'self' https:; manifest-src 'self'; upgrade-insecure-requests"
     }
+
+    header {
+        -Server
+        -Via
+        Strict-Transport-Security "max-age=31536000"
+        Permissions-Policy "{vars.permissions_capture}, {vars.permissions_clipboard}, {vars.permissions_disabled}"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        X-Content-Type-Options "nosniff"
+        X-Permitted-Cross-Domain-Policies "none"
+        X-XSS-Protection "0"
+    }
+
+    # Uploaded unit sites are trusted course content and can contain inline
+    # scripts/styles, nested frames, and remote HTTPS assets. Keep that
+    # compatibility exception scoped to the authenticated content endpoint;
+    # dynamic evaluation remains disabled.
+    @unitContent path_regexp ^/api/units/[0-9]+/content$
+    header @unitContent >Content-Security-Policy "{vars.csp_unit_core} {vars.csp_unit_code} {vars.csp_unit_content} {vars.csp_unit_network} {vars.csp_unit_frames} {vars.csp_unit_navigation}"
+
+    # API, LTI, and health responses carry no policy of their own, so serve the
+    # strict one here.
+    @apiContent {
+        path /api/* /lti/api/* /health
+        not path_regexp ^/api/units/[0-9]+/content$
+    }
+    header @apiContent >Content-Security-Policy "{vars.csp_standard_core} {vars.csp_standard_code} {vars.csp_standard_content} {vars.csp_standard_network} {vars.csp_standard_frames} {vars.csp_standard_navigation}"
 
     tls /etc/caddy/cert.crt /etc/caddy/key.key
 
