@@ -16,8 +16,13 @@ services:
       - backnet
     depends_on:
       - webserver
+      - apiserver
+    env_file:
+      - ./web/caddy.env
     volumes:
       - ./web/Caddyfile:/etc/caddy/Caddyfile:ro
+      - student_work:/srv/student-work:ro
+      - ./tmp/caddy:/var/log/caddy
 
       # TLS certificates: the mappings below are examples; other host setups are supported.
       # Keep the container paths unchanged; they match the paths in the Caddyfile.

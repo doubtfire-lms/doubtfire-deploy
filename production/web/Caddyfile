@@ -76,18 +76,22 @@ example.com {
     # Rails to authenticate and authorise each request, then serves only the
     # student-work-relative path returned by that trusted internal endpoint.
     @submissionDownload {
+        expression `{$SERVE_VIA_CADDY:false} == true`
         method GET HEAD
         path_regexp submissionDownload ^/api/projects/[0-9]+/task_def_id/[0-9]+/(?:submission|submission_files)$
     }
     @portfolioDownload {
+        expression `{$SERVE_VIA_CADDY:false} == true`
         method GET HEAD
         path_regexp portfolioDownload ^/api/submission/unit/[0-9]+/portfolio$
     }
     @pdfFileDownload {
+        expression `{$SERVE_VIA_CADDY:false} == true`
         method GET HEAD
         path_regexp pdfFileDownload ^/api/(?:units/[0-9]+/task_definitions/[0-9]+/task_pdf(?:\.json)?|submission/project/[0-9]+/portfolio|tasks/[0-9]+/similarities/[0-9]+/contents/[0-9]+|projects/[0-9]+/task_def_id/[0-9]+/comments/[0-9]+|projects/[0-9]+/engagements/[0-9]+/attachment)$
     }
     @unitContentFile {
+        expression `{$SERVE_VIA_CADDY:false} == true`
         method GET HEAD
         path_regexp unitContentFile ^/api/units/[0-9]+/content/sites/[0-9]+/files(?:/.*)?$
     }
@@ -106,7 +110,7 @@ example.com {
                 # All original headers such as username and Auth-Token are passed in forward_auth
                 forward_auth {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000} {
                     uri /api/internal/downloads/pdf-file
-                    header_up X-OnTrack-Download-Auth {$DOWNLOAD_AUTH_SECRET}
+                    header_up X-OnTrack-Download-Auth {$CADDY_DOWNLOAD_AUTH_SECRET}
                     copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type
                 }
 
@@ -129,7 +133,7 @@ example.com {
 
                 forward_auth {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000} {
                     uri /api/internal/downloads/unit-content
-                    header_up X-OnTrack-Download-Auth {$DOWNLOAD_AUTH_SECRET}
+                    header_up X-OnTrack-Download-Auth {$CADDY_DOWNLOAD_AUTH_SECRET}
                     copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type X-OnTrack-Content-Site-Id
                 }
 
@@ -152,7 +156,7 @@ example.com {
 
                 forward_auth {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000} {
                     uri /api/internal/downloads/submission
-                    header_up X-OnTrack-Download-Auth {$DOWNLOAD_AUTH_SECRET}
+                    header_up X-OnTrack-Download-Auth {$CADDY_DOWNLOAD_AUTH_SECRET}
                     copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type
                 }
 
@@ -174,7 +178,7 @@ example.com {
 
                 forward_auth {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000} {
                     uri /api/internal/downloads/portfolio
-                    header_up X-OnTrack-Download-Auth {$DOWNLOAD_AUTH_SECRET}
+                    header_up X-OnTrack-Download-Auth {$CADDY_DOWNLOAD_AUTH_SECRET}
                     copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type
                 }
 
