@@ -57,18 +57,133 @@ example.com {
     # scripts/styles, nested frames, and remote HTTPS assets. Keep that
     # compatibility exception scoped to the authenticated content endpoint;
     # dynamic evaluation remains disabled.
-    @unitContent path_regexp ^/api/units/[0-9]+/content$
+    @unitContent path_regexp ^/api/units/[0-9]+/content(?:/sites/[0-9]+/files(?:/.*)?)?$
     header @unitContent >Content-Security-Policy "{vars.csp_unit_core} {vars.csp_unit_code} {vars.csp_unit_content} {vars.csp_unit_network} {vars.csp_unit_frames} {vars.csp_unit_navigation}"
 
     # API, LTI, and health responses carry no policy of their own, so serve the
     # strict one here.
     @apiContent {
         path /api/* /lti/api/* /health
-        not path_regexp ^/api/units/[0-9]+/content$
+        not path_regexp ^/api/units/[0-9]+/content(?:/sites/[0-9]+/files(?:/.*)?)?$
     }
     header @apiContent >Content-Security-Policy "{vars.csp_standard_core} {vars.csp_standard_code} {vars.csp_standard_content} {vars.csp_standard_network} {vars.csp_standard_frames} {vars.csp_standard_navigation}"
 
-    tls /etc/caddy/cert.crt /etc/caddy/key.key
+
+    # Protected file downloads retain their record-based API URLs. Caddy asks
+    # Rails to authenticate and authorise each request, then serves only the
+    # student-work-relative path returned by that trusted internal endpoint.
+    @submissionDownload {
+        method GET HEAD
+        path_regexp submissionDownload ^/api/projects/[0-9]+/task_def_id/[0-9]+/(?:submission|submission_files)$
+    }
+    @portfolioDownload {
+        method GET HEAD
+        path_regexp portfolioDownload ^/api/submission/unit/[0-9]+/portfolio$
+    }
+    @pdfFileDownload {
+        method GET HEAD
+        path_regexp pdfFileDownload ^/api/(?:units/[0-9]+/task_definitions/[0-9]+/task_pdf(?:\.json)?|submission/project/[0-9]+/portfolio|tasks/[0-9]+/similarities/[0-9]+/contents/[0-9]+|projects/[0-9]+/task_def_id/[0-9]+/comments/[0-9]+|projects/[0-9]+/engagements/[0-9]+/attachment)$
+    }
+    @unitContentFile {
+        method GET HEAD
+        path_regexp unitContentFile ^/api/units/[0-9]+/content/sites/[0-9]+/files(?:/.*)?$
+    }
+
+    route {
+        handle @pdfFileDownload {
+            route {
+                # Delete our custom headers from the external request
+                request_header -X-OnTrack-File
+                request_header -X-OnTrack-Content-Disposition
+                request_header -X-OnTrack-Content-Type
+
+                # Route parameters identify records only. Rails derives and
+                # validates the path after applying the endpoint's permissions.
+
+                # All original headers such as username and Auth-Token are passed in forward_auth
+                forward_auth apiserver-green:3000 apiserver:3000 {
+                    uri /api/internal/downloads/pdf-file
+                    header_up X-OnTrack-Download-Auth {$DOWNLOAD_AUTH_SECRET}
+                    copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type
+                }
+
+                # Once authenticated, rails will set the X-OnTrack-File header with the path to the actual life to serve
+                rewrite * /{http.request.header.X-OnTrack-File}
+                root * /srv/student-work
+                header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
+                header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
+                header Cache-Control "private, no-store"
+                file_server
+            }
+        }
+
+        handle @unitContentFile {
+            route {
+                request_header -X-OnTrack-File
+                request_header -X-OnTrack-Content-Disposition
+                request_header -X-OnTrack-Content-Type
+                request_header -X-OnTrack-Content-Site-Id
+
+                forward_auth apiserver-green:3000 apiserver:3000 {
+                    uri /api/internal/downloads/unit-content
+                    header_up X-OnTrack-Download-Auth {$DOWNLOAD_AUTH_SECRET}
+                    copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type X-OnTrack-Content-Site-Id
+                }
+
+                rewrite * /{http.request.header.X-OnTrack-File}
+                root * /srv/student-work
+                header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
+                header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
+                header X-Content-Site-Id "{http.request.header.X-OnTrack-Content-Site-Id}"
+                header Cache-Control "private, no-cache"
+                file_server
+            }
+        }
+
+        handle @submissionDownload {
+            route {
+                # Never allow a client to seed the internal routing headers.
+                request_header -X-OnTrack-File
+                request_header -X-OnTrack-Content-Disposition
+                request_header -X-OnTrack-Content-Type
+
+                forward_auth apiserver-green:3000 apiserver:3000 {
+                    uri /api/internal/downloads/submission
+                    header_up X-OnTrack-Download-Auth {$DOWNLOAD_AUTH_SECRET}
+                    copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type
+                }
+
+                rewrite * /{http.request.header.X-OnTrack-File}
+                root * /srv/student-work
+                header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
+                header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
+                file_server
+            }
+        }
+
+        handle @portfolioDownload {
+            route {
+                # The browser cannot select the filesystem path; only Rails can
+                # return it after authenticating and authorising the unit.
+                request_header -X-OnTrack-File
+                request_header -X-OnTrack-Content-Disposition
+                request_header -X-OnTrack-Content-Type
+
+                forward_auth apiserver-green:3000 apiserver:3000 {
+                    uri /api/internal/downloads/portfolio
+                    header_up X-OnTrack-Download-Auth {$DOWNLOAD_AUTH_SECRET}
+                    copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type
+                }
+
+                rewrite * /{http.request.header.X-OnTrack-File}
+                root * /srv/student-work
+                header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
+                header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
+                header Cache-Control "private, no-store"
+                file_server
+            }
+        }
+    }
 
     # Optional Sidekiq dashboard. Generate a password hash with:
     # caddy hash-password --plaintext 'your_password'
