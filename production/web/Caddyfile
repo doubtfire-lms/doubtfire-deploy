@@ -104,7 +104,7 @@ example.com {
                 # validates the path after applying the endpoint's permissions.
 
                 # All original headers such as username and Auth-Token are passed in forward_auth
-                forward_auth apiserver-green:3000 apiserver:3000 {
+                forward_auth {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000} {
                     uri /api/internal/downloads/pdf-file
                     header_up X-OnTrack-Download-Auth {$DOWNLOAD_AUTH_SECRET}
                     copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type
@@ -127,7 +127,7 @@ example.com {
                 request_header -X-OnTrack-Content-Type
                 request_header -X-OnTrack-Content-Site-Id
 
-                forward_auth apiserver-green:3000 apiserver:3000 {
+                forward_auth {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000} {
                     uri /api/internal/downloads/unit-content
                     header_up X-OnTrack-Download-Auth {$DOWNLOAD_AUTH_SECRET}
                     copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type X-OnTrack-Content-Site-Id
@@ -150,7 +150,7 @@ example.com {
                 request_header -X-OnTrack-Content-Disposition
                 request_header -X-OnTrack-Content-Type
 
-                forward_auth apiserver-green:3000 apiserver:3000 {
+                forward_auth {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000} {
                     uri /api/internal/downloads/submission
                     header_up X-OnTrack-Download-Auth {$DOWNLOAD_AUTH_SECRET}
                     copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type
@@ -172,7 +172,7 @@ example.com {
                 request_header -X-OnTrack-Content-Disposition
                 request_header -X-OnTrack-Content-Type
 
-                forward_auth apiserver-green:3000 apiserver:3000 {
+                forward_auth {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000} {
                     uri /api/internal/downloads/portfolio
                     header_up X-OnTrack-Download-Auth {$DOWNLOAD_AUTH_SECRET}
                     copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type
