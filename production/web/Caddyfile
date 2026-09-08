@@ -50,7 +50,10 @@ example.com {
     # details, or student data. Override upstream cache settings so browsers
     # and shared proxies do not retain them; static application assets remain
     # cacheable.
-    @sensitiveContent path /sign_in /sign_in/* /api /api/* /lti/api /lti/api/*
+    @sensitiveContent {
+        path /sign_in /sign_in/* /api /api/* /lti/api /lti/api/*
+        not path_regexp ^/api/units/[0-9]+/content/sites/[0-9]+/files(?:/.*)?$
+    }
     header @sensitiveContent >Cache-Control "no-store"
 
     # Uploaded unit sites are trusted course content and can contain inline
@@ -135,7 +138,7 @@ example.com {
                 header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
                 header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
                 header X-Content-Site-Id "{http.request.header.X-OnTrack-Content-Site-Id}"
-                header Cache-Control "private, no-cache"
+                header Cache-Control "private, max-age=300"
                 file_server
             }
         }
