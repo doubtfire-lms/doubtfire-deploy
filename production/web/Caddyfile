@@ -88,6 +88,16 @@
         method GET HEAD
         path_regexp portfolioDownload ^/api/submission/unit/[0-9]+/portfolio$
     }
+    @taskSubmissionFilesDownload {
+        expression `{$SERVE_VIA_CADDY:false} == true`
+        method GET HEAD
+        path_regexp taskSubmissionFilesDownload ^/api/submission/unit/[0-9]+/task_definitions/[0-9]+/download_submissions$
+    }
+    @taskSubmissionPdfsDownload {
+        expression `{$SERVE_VIA_CADDY:false} == true`
+        method GET HEAD
+        path_regexp taskSubmissionPdfsDownload ^/api/submission/unit/[0-9]+/task_definitions/[0-9]+/student_pdfs$
+    }
     @pdfFileDownload {
         expression `{$SERVE_VIA_CADDY:false} == true`
         method GET HEAD
@@ -182,6 +192,48 @@
 
                 forward_auth {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000} {
                     uri /api/internal/downloads/portfolio
+                    header_up X-OnTrack-Download-Auth {$CADDY_DOWNLOAD_AUTH_SECRET}
+                    copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type
+                }
+
+                rewrite * /{http.request.header.X-OnTrack-File}
+                root * /student-work
+                header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
+                header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
+                header Cache-Control "private, no-store"
+                file_server
+            }
+        }
+
+        handle @taskSubmissionFilesDownload {
+            route {
+                request_header -X-OnTrack-File
+                request_header -X-OnTrack-Content-Disposition
+                request_header -X-OnTrack-Content-Type
+
+                forward_auth {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000} {
+                    uri /api/internal/downloads/task-submission-files
+                    header_up X-OnTrack-Download-Auth {$CADDY_DOWNLOAD_AUTH_SECRET}
+                    copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type
+                }
+
+                rewrite * /{http.request.header.X-OnTrack-File}
+                root * /student-work
+                header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
+                header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
+                header Cache-Control "private, no-store"
+                file_server
+            }
+        }
+
+        handle @taskSubmissionPdfsDownload {
+            route {
+                request_header -X-OnTrack-File
+                request_header -X-OnTrack-Content-Disposition
+                request_header -X-OnTrack-Content-Type
+
+                forward_auth {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000} {
+                    uri /api/internal/downloads/task-submission-pdfs
                     header_up X-OnTrack-Download-Auth {$CADDY_DOWNLOAD_AUTH_SECRET}
                     copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type
                 }
