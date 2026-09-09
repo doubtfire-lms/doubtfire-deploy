@@ -1,4 +1,4 @@
-example.com {
+{$ONTRACK_SITE_ADDRESS:example.com} {
     # Compose policies from readable sections while emitting one header value.
     vars {
         # Browser capabilities used by OnTrack and explicitly disabled otherwise.
@@ -41,7 +41,7 @@ example.com {
     # embed OnTrack without discarding those script hashes. JPlag is a separate
     # same-origin application which OnTrack embeds itself.
     @webContent not path /api/* /lti/api/* /health /JPlag /JPlag/*
-    header @webContent +Content-Security-Policy "frame-ancestors {$ONTRACK_MOODLE_ORIGIN:https://moodle.example.com};"
+    header @webContent +Content-Security-Policy "frame-ancestors {$ONTRACK_MOODLE_ORIGIN:'self'};"
 
     @jplagContent path /JPlag /JPlag/*
     header @jplagContent +Content-Security-Policy "frame-ancestors 'self';"
@@ -71,6 +71,7 @@ example.com {
     }
     header @apiContent >Content-Security-Policy "{vars.csp_standard_core} {vars.csp_standard_code} {vars.csp_standard_content} {vars.csp_standard_network} {vars.csp_standard_frames} {vars.csp_standard_navigation}"
 
+    tls /etc/caddy/cert.crt /etc/caddy/key.key
 
     # Protected file downloads retain their record-based API URLs. Caddy asks
     # Rails to authenticate and authorise each request, then serves only the
@@ -204,7 +205,7 @@ example.com {
     # Prefer the green API during deployments, then fall back to the primary API.
     # Active health checks fail unavailable upstreams quickly.
     reverse_proxy /api/* {
-        to apiserver-green:3000 apiserver:3000
+        to {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000}
 
         lb_policy first
         lb_retries 2
@@ -212,13 +213,16 @@ example.com {
         health_uri /health
         health_timeout 2s
         health_interval 3s
+        health_headers {
+            Host {$ONTRACK_SITE_ADDRESS:example.com}
+        }
     }
 
     # Expose the Rails health check at /api/health and /health.
     rewrite /api/health /health
 
     reverse_proxy /health {
-        to apiserver-green:3000 apiserver:3000
+        to {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000}
 
         lb_policy first
         lb_retries 2
@@ -226,10 +230,13 @@ example.com {
         health_uri /health
         health_timeout 2s
         health_interval 3s
+        health_headers {
+            Host {$ONTRACK_SITE_ADDRESS:example.com}
+        }
     }
 
     # Route LTI requests to the LTI service.
-    reverse_proxy /lti/api/* lti:3001
+    reverse_proxy /lti/api/* {$ONTRACK_LTI_UPSTREAM:lti:3001}
 
     # Serve the Angular application for all remaining requests.
     reverse_proxy /* webserver:80
