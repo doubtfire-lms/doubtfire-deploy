@@ -52,11 +52,12 @@ cd doubtfire-deploy/production
 1. Configure your domain and DNS, then obtain a TLS certificate.
 2. Map the certificate and private key into the `proxy` service in
    [`docker-compose.yml`](production/docker-compose.yml).
-3. Replace `example.com` in [`web/Caddyfile`](production/web/Caddyfile) with
-   your domain.
+3. Configure the public address, upstream services, TLS paths, and Caddy file
+   serving in [`web/caddy.env`](production/web/caddy.env).
 4. Update the institution settings in
    [`api/.env.production`](production/api/.env.production), including the
-   institution domain.
+   institution domain. Ensure `CADDY_DOWNLOAD_AUTH_SECRET` has the same
+   value in both API and Caddy environment files.
 
 The example passwords and secrets in `api/.env.production` may be replaced
 after confirming that the stack starts, but replace them before exposing the
