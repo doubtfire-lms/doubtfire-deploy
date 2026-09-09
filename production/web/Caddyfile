@@ -71,7 +71,9 @@
     }
     header @apiContent >Content-Security-Policy "{vars.csp_standard_core} {vars.csp_standard_code} {vars.csp_standard_content} {vars.csp_standard_network} {vars.csp_standard_frames} {vars.csp_standard_navigation}"
 
-    tls /etc/caddy/cert.crt /etc/caddy/key.key
+    # Production uses the certificates mounted at these default paths. The
+    # devcontainer overrides this with "internal" so Caddy manages local TLS.
+    tls {$ONTRACK_TLS:/etc/caddy/cert.crt /etc/caddy/key.key}
 
     # Protected file downloads retain their record-based API URLs. Caddy asks
     # Rails to authenticate and authorise each request, then serves only the
