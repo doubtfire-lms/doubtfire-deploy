@@ -21,7 +21,7 @@ services:
       - ./web/caddy.env
     volumes:
       - ./web/Caddyfile:/etc/caddy/Caddyfile:ro
-      - student_work:/srv/student-work:ro
+      - student_work:/student-work:ro
       - ./tmp/caddy:/var/log/caddy
 
       # TLS certificates: the mappings below are examples; other host setups are supported.

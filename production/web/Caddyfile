@@ -116,7 +116,7 @@ example.com {
 
                 # Once authenticated, rails will set the X-OnTrack-File header with the path to the actual life to serve
                 rewrite * /{http.request.header.X-OnTrack-File}
-                root * /srv/student-work
+                root * /student-work
                 header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
                 header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
                 header Cache-Control "private, no-store"
@@ -139,7 +139,7 @@ example.com {
                 }
 
                 rewrite * /{http.request.header.X-OnTrack-File}
-                root * /srv/student-work
+                root * /student-work
                 header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
                 header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
                 header X-Content-Site-Id "{http.request.header.X-OnTrack-Content-Site-Id}"
@@ -162,7 +162,7 @@ example.com {
                 }
 
                 rewrite * /{http.request.header.X-OnTrack-File}
-                root * /srv/student-work
+                root * /student-work
                 header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
                 header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
                 file_server
@@ -184,7 +184,7 @@ example.com {
                 }
 
                 rewrite * /{http.request.header.X-OnTrack-File}
-                root * /srv/student-work
+                root * /student-work
                 header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
                 header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
                 header Cache-Control "private, no-store"
