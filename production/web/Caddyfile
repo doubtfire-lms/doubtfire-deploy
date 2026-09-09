@@ -241,5 +241,5 @@
     reverse_proxy /lti/api/* {$ONTRACK_LTI_UPSTREAM:lti:3001}
 
     # Serve the Angular application for all remaining requests.
-    reverse_proxy /* webserver:80
+    reverse_proxy /* {$ONTRACK_WEB_UPSTREAM:webserver:80}
 }
