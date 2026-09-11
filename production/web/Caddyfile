@@ -248,13 +248,19 @@
         }
     }
 
-    # Optional Sidekiq dashboard. Generate a password hash with:
-    # caddy hash-password --plaintext 'your_password'
-    # Then uncomment both blocks and reload Caddy.
-    # basic_auth /sidekiq/* {
-    #     your-username your-hashed-password
-    # }
-    # reverse_proxy /sidekiq/* apiserver-green:3000 apiserver:3000
+    # The Sidekiq dashboard is exposed only when explicitly enabled and both
+    # authentication values are present. Leave both credentials empty to keep
+    # the dashboard disabled; a partially configured pair fails validation.
+    @sidekiqWeb {
+        path /sidekiq /sidekiq/*
+        expression `{env.ENABLE_SIDEKIQ_WEB} == "true" && {env.SIDEKIQ_WEB_USERNAME} != "" && {env.SIDEKIQ_WEB_PASSWORD_HASH} != ""`
+    }
+    handle @sidekiqWeb {
+        basic_auth {
+            {$SIDEKIQ_WEB_USERNAME} {$SIDEKIQ_WEB_PASSWORD_HASH}
+        }
+        reverse_proxy {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000}
+    }
 
     # Prefer the green API during deployments, then fall back to the primary API.
     # Active health checks fail unavailable upstreams quickly.
