@@ -63,6 +63,7 @@ services:
       - backnet
     depends_on:
       - ontrack-db
+      - redis-sidekiq
     volumes:
       - student_work:/student-work # Adjust path to where student data should be stored
       - ./api/logs:/doubtfire/log
