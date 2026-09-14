@@ -150,20 +150,18 @@
                 request_header -X-OnTrack-File
                 request_header -X-OnTrack-Content-Disposition
                 request_header -X-OnTrack-Content-Type
-                request_header -X-OnTrack-Content-Site-Id
                 request_header -X-OnTrack-Cache-Control
 
                 forward_auth {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000} {
                     uri /api/internal/downloads/unit-content
                     header_up X-OnTrack-Download-Auth {$CADDY_DOWNLOAD_AUTH_SECRET}
-                    copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type X-OnTrack-Content-Site-Id X-OnTrack-Cache-Control
+                    copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type X-OnTrack-Cache-Control
                 }
 
                 rewrite * /{http.request.header.X-OnTrack-File}
                 root * /student-work
                 header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
                 header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
-                header X-Content-Site-Id "{http.request.header.X-OnTrack-Content-Site-Id}"
                 header Cache-Control "{http.request.header.X-OnTrack-Cache-Control}"
                 file_server
             }
