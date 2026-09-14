@@ -29,9 +29,10 @@
     header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
     header Cache-Control "{args[1]}"
 
-    # Says which tier actually streamed the bytes. Rails' own fallback sets
-    # "rails" here, so the header tells you whether this intercept fired.
-    header X-OnTrack-Served-By "caddy/{args[0]}"
+    # Which tier streamed the bytes. Rails' own fallback sets "rails" instead,
+    # so the header says whether this intercept fired. Deliberately generic:
+    # it names the tier, not the proxy behind it.
+    header X-OnTrack-Served-By "file-server"
     file_server
 }
 
