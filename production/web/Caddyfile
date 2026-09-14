@@ -189,20 +189,17 @@
                 request_header -X-OnTrack-File
                 request_header -X-OnTrack-Content-Disposition
                 request_header -X-OnTrack-Content-Type
-                request_header -X-OnTrack-Download-Set-Cookie
 
                 forward_auth {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000} {
                     uri /api/internal/downloads/portfolio
                     header_up X-OnTrack-Download-Auth {$CADDY_DOWNLOAD_AUTH_SECRET}
-                    copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type Set-Cookie>X-OnTrack-Download-Set-Cookie
+                    copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type
                 }
 
                 rewrite * /{http.request.header.X-OnTrack-File}
                 root * /student-work
                 header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
                 header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
-                @clearPortfolioDownloadCookie header X-OnTrack-Download-Set-Cookie *
-                header @clearPortfolioDownloadCookie +Set-Cookie "{http.request.header.X-OnTrack-Download-Set-Cookie}"
                 header Cache-Control "private, no-store"
                 file_server
             }
@@ -213,20 +210,17 @@
                 request_header -X-OnTrack-File
                 request_header -X-OnTrack-Content-Disposition
                 request_header -X-OnTrack-Content-Type
-                request_header -X-OnTrack-Download-Set-Cookie
 
                 forward_auth {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000} {
                     uri /api/internal/downloads/task-submission-files
                     header_up X-OnTrack-Download-Auth {$CADDY_DOWNLOAD_AUTH_SECRET}
-                    copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type Set-Cookie>X-OnTrack-Download-Set-Cookie
+                    copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type
                 }
 
                 rewrite * /{http.request.header.X-OnTrack-File}
                 root * /student-work
                 header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
                 header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
-                @clearTaskSubmissionFilesDownloadCookie header X-OnTrack-Download-Set-Cookie *
-                header @clearTaskSubmissionFilesDownloadCookie +Set-Cookie "{http.request.header.X-OnTrack-Download-Set-Cookie}"
                 header Cache-Control "private, no-store"
                 file_server
             }
@@ -237,20 +231,17 @@
                 request_header -X-OnTrack-File
                 request_header -X-OnTrack-Content-Disposition
                 request_header -X-OnTrack-Content-Type
-                request_header -X-OnTrack-Download-Set-Cookie
 
                 forward_auth {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000} {
                     uri /api/internal/downloads/task-submission-pdfs
                     header_up X-OnTrack-Download-Auth {$CADDY_DOWNLOAD_AUTH_SECRET}
-                    copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type Set-Cookie>X-OnTrack-Download-Set-Cookie
+                    copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type
                 }
 
                 rewrite * /{http.request.header.X-OnTrack-File}
                 root * /student-work
                 header Content-Disposition "{http.request.header.X-OnTrack-Content-Disposition}"
                 header Content-Type "{http.request.header.X-OnTrack-Content-Type}"
-                @clearTaskSubmissionPdfsDownloadCookie header X-OnTrack-Download-Set-Cookie *
-                header @clearTaskSubmissionPdfsDownloadCookie +Set-Cookie "{http.request.header.X-OnTrack-Download-Set-Cookie}"
                 header Cache-Control "private, no-store"
                 file_server
             }
