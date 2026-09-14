@@ -24,6 +24,9 @@
         csp_standard_navigation "form-action 'self' https:; manifest-src 'self'; upgrade-insecure-requests"
     }
 
+    # Only forward_auth below may present this secret.
+    request_header -X-OnTrack-Download-Auth
+
     header {
         -Server
         -Via
@@ -110,6 +113,11 @@
     }
 
     route {
+        # Reachable only via forward_auth below, which bypasses this routing.
+        handle /api/internal/* {
+            respond 404
+        }
+
         handle @pdfFileDownload {
             route {
                 # Delete our custom headers from the external request
