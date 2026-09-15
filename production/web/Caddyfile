@@ -87,6 +87,12 @@
     @jplagContent path /JPlag /JPlag/*
     header @jplagContent +Content-Security-Policy "frame-ancestors 'self';"
 
+    # Serve the report viewer's entry point for its own client-side routes, which
+    # have no file behind them. Listed route by route so that no request for a
+    # real asset is ever rewritten, whatever a submission is named.
+    @jplagAppRoute path /JPlag/overview /JPlag/info /JPlag/comparison/* /JPlag/cluster/* /JPlag/error/* /JPlag/old/*
+    rewrite @jplagAppRoute /JPlag/
+
     # Authentication responses and APIs may contain access tokens, session
     # details, or student data. Override upstream cache settings so browsers
     # and shared proxies do not retain them; static application assets remain
