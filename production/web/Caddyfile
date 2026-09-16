@@ -143,7 +143,7 @@
     }
     @pdfFileDownload {
         import caddyServedDownload
-        path_regexp pdfFileDownload ^/api/(?:units/[0-9]+/task_definitions/[0-9]+/task_pdf(?:\.json)?|submission/project/[0-9]+/portfolio|tasks/[0-9]+/similarities/[0-9]+/contents/[0-9]+|projects/[0-9]+/task_def_id/[0-9]+/comments/[0-9]+|projects/[0-9]+/engagements/[0-9]+/attachment)$
+        path_regexp pdfFileDownload ^/api/(?:units/[0-9]+/task_definitions/[0-9]+/(?:task_pdf(?:\.json)?|jplag_report)|submission/project/[0-9]+/portfolio|tasks/[0-9]+/similarities/[0-9]+/contents/[0-9]+|projects/[0-9]+/task_def_id/[0-9]+/comments/[0-9]+|projects/[0-9]+/engagements/[0-9]+/attachment)$
     }
     @unitContentFile {
         import caddyServedDownload
