@@ -21,6 +21,16 @@
         uri /api/internal/downloads/{args[0]}
         header_up X-OnTrack-Download-Auth {$CADDY_DOWNLOAD_AUTH_SECRET}
         copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type X-OnTrack-Cache-Control
+
+        lb_policy first
+        lb_retries 2
+
+        health_uri /health
+        health_timeout 2s
+        health_interval 3s
+        health_headers {
+            Host {$ONTRACK_SITE_ADDRESS:example.com}
+        }
     }
 
     rewrite * /{http.request.header.X-OnTrack-File}
