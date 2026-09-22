@@ -166,7 +166,7 @@
             respond 404
         }
 
-        # The LTI service serves Rails on a separate internal port; never route these publicly.
+        # The LTI internal API is served on a separate port; never route it publicly.
         handle /lti/api/internal/* {
             respond 404
         }
