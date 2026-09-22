@@ -166,6 +166,11 @@
             respond 404
         }
 
+        # The LTI service serves Rails on a separate internal port; never route these publicly.
+        handle /lti/api/internal/* {
+            respond 404
+        }
+
         handle @pdfFileDownload {
             route {
                 import authorisedFileServer pdf-file "private, no-store"

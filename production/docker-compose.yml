@@ -227,8 +227,10 @@ services:
   lti:
     image: ${LTI_IMAGE}
     restart: on-failure:5
-    ports:
-      - 3001:3001
+    # Reachable only on backnet: Caddy proxies to 3001; the API calls the internal API on 3003.
+    expose:
+      - "3001"
+      - "3003"
     networks:
       - backnet
     env_file:
@@ -240,7 +242,7 @@ services:
     image: mongo:7
     restart: on-failure:5
     container_name: lti-mongodb
-    ports:
+    expose:
       - "27017"
     networks:
       - backnet
