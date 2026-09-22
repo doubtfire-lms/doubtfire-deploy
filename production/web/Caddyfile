@@ -171,6 +171,14 @@
             respond 404
         }
 
+        # Only the LTI service calls these, directly on backnet, so the public
+        # site never accepts a token signed with the LTI shared secret.
+        # Prefix wildcards also cover Grape's format suffixes, e.g. /api/auth/lti.json.
+        @ltiServiceOnly path /api/auth/lti* /api/lti*
+        handle @ltiServiceOnly {
+            respond 404
+        }
+
         handle @pdfFileDownload {
             route {
                 import authorisedFileServer pdf-file "private, no-store"
