@@ -16,7 +16,7 @@ networks:
 services:
   formatif-dev-container:
     container_name: 1-formatif-dev-container
-    image: lmsdoubtfire/formatif-devcontainer:11.1
+    image: lmsdoubtfire/formatif-devcontainer:11.2
     # build:
       # context: ../
       # dockerfile: dev.Dockerfile
@@ -101,7 +101,7 @@ services:
 
   texlive:
     container_name: 1-formatif-texlive-container
-    image: lmsdoubtfire/formatif-latex:11.1
+    image: lmsdoubtfire/formatif-latex:11.2
     # build:
       # context: ../
       # dockerfile: texlive.Dockerfile
@@ -117,7 +117,7 @@ services:
   # JPlag
   jplag:
     container_name: jplag
-    image: lmsdoubtfire/doubtfire-jplag:11.1
+    image: lmsdoubtfire/doubtfire-jplag:11.2
     # build:
       # context: ../
       # dockerfile: jplag.Dockerfile
@@ -136,7 +136,7 @@ services:
     # Image definition only. Each conversion starts its own network-isolated
     # container. If the full Compose stack is started, this service exits
     # immediately after ensuring that the image has been built.
-    image: lmsdoubtfire/doubtfire-gotenberg:11.1
+    image: lmsdoubtfire/doubtfire-gotenberg:11.2
     # build:
     #   context: ../doubtfire-api
     #   dockerfile: gotenberg.Dockerfile
