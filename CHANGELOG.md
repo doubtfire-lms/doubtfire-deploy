@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [11.2.0-0](https://github.com/b0ink/doubtfire-deploy/compare/v11.1.0...v11.2.0-0) (2026-09-23)
+
+
+### Features
+
+* add gotenberg images to production template ([9905206](https://github.com/b0ink/doubtfire-deploy/commit/9905206642a0c364ae5385e4d49460d3b5d215dd))
+* add robust content security policies ([ca20e25](https://github.com/b0ink/doubtfire-deploy/commit/ca20e253c79e0ce595369ad362e68c97905137b5))
+* serve jplag index for report viewer routes ([e87749e](https://github.com/b0ink/doubtfire-deploy/commit/e87749e22fbd506689d76394cfa9a139c6e53953))
+* serve jplag reports from the caddy file server ([6de64e0](https://github.com/b0ink/doubtfire-deploy/commit/6de64e029df58ebfc81bf2243f007d99ead5e4a3))
+* serve the lti internal api on a private port ([8e2551f](https://github.com/b0ink/doubtfire-deploy/commit/8e2551fcb1b60f41a6df61b14f34336c34b8f966))
+
+
+### Bug Fixes
+
+* add missing health checks ([b3e4eec](https://github.com/b0ink/doubtfire-deploy/commit/b3e4eecfc0e9fd933e985b9ed76e6981762113e0))
+* allow latest version of lti to embed as external tool ([c46b147](https://github.com/b0ink/doubtfire-deploy/commit/c46b14737d654339d81f4dbb82d3805e02765128))
+* improve unit content csp ([b41b348](https://github.com/b0ink/doubtfire-deploy/commit/b41b348baa28a895a871ae7def0b05330f2634bf))
+* keep lti server-to-server routes off the public site ([2122bf5](https://github.com/b0ink/doubtfire-deploy/commit/2122bf56ac4403e8ebfac8bb2bf44c55489becd5))
+* whitelist gtag scripts ([e1921b7](https://github.com/b0ink/doubtfire-deploy/commit/e1921b7b4a68e48f3931c0f43be866a6af3cbb1b))
+
 ## [11.1.0](https://github.com/b0ink/doubtfire-deploy/compare/v11.0.1...v11.1.0) (2026-07-16)
 
 
