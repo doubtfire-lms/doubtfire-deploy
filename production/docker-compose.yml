@@ -247,8 +247,8 @@ services:
     networks:
       - backnet
     environment:
-      MONGO_INITDB_ROOT_USERNAME=lti
-      MONGO_INITDB_ROOT_PASSWORD=your-mongodb-root-password
+      MONGO_INITDB_ROOT_USERNAME: lti
+      MONGO_INITDB_ROOT_PASSWORD: your-mongodb-root-password
     volumes:
       - mongo_data:/data/db
 
