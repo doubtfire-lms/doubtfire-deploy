@@ -76,7 +76,7 @@ ENV GEM_PATH /home/$USER/.gems/ruby/3.4.0:$GEM_PATH
 
 # Install the web ui
 WORKDIR /workspace/doubtfire-web
-COPY --chown="${USER}":"${USER}" doubtfire-web/package.json /workspace/doubtfire-web
+COPY --chown="${USER}":"${USER}" doubtfire-web/package.json doubtfire-web/package-lock.json /workspace/doubtfire-web/
 
 # Install web ui packages
 RUN npm install -f
