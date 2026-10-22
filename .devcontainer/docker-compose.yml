@@ -45,6 +45,8 @@ services:
     # command: /bin/sh -c "while sleep 5000; do :; done"
     env_file:
       - devcontainer.env
+      - path: devcontainer.env.local
+        required: false
     environment:
       LATEX_CONTAINER_NAME: 1-formatif-texlive-container
       LATEX_BUILD_PATH: /texlive/shell/latex_build.sh
@@ -60,6 +62,8 @@ services:
     restart: unless-stopped
     env_file:
       - devcontainer.env
+      - path: devcontainer.env.local
+        required: false
     ports:
       - "80:80"
       - "443:443"
@@ -81,6 +85,8 @@ services:
       - formatif_db_compose:/var/lib/mysql
     env_file:
       - devcontainer.env
+      - path: devcontainer.env.local
+        required: false
     networks:
       - backnet
 
@@ -130,6 +136,8 @@ services:
       - formatif-dev-container
     env_file:
       - ./devcontainer.env
+      - path: ./devcontainer.env.local
+        required: false
     network_mode: none
 
   gotenberg:
