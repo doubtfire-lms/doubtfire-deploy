@@ -22,9 +22,9 @@ SUPPORT_SERVICES=(texlive texlive-pdfgen jplag gotenberg lti)
 # DO NOT DEPLOY VIA THIS SCRIPT IF NEW VERSION OF ONTRACK'S API REQUIRES MIGRATIONS
 
 # 1. Set the latest version of the api in .env
-# 2. Uncomment the apiserver-green service
-# 3. Run this script
-# 4. Comment out the apiserver-green service so that it doesn't boot on server restart
+# 2. Run this script. The apiserver-green service is started explicitly during deployment.
+# Its deploy profile excludes it from a general compose up, and its restart policy
+# prevents Docker from starting it after a server reboot.
 
 PDFGEN_DRAIN_TIMEOUT_SECONDS="${PDFGEN_DRAIN_TIMEOUT_SECONDS:-1800}"
 SIDEKIQ_DRAIN_TIMEOUT_SECONDS="${SIDEKIQ_DRAIN_TIMEOUT_SECONDS:-1800}"
@@ -38,7 +38,7 @@ if ! COMPOSE_SERVICES=$("${COMPOSE[@]}" config --services); then
 fi
 
 if ! printf '%s\n' "$COMPOSE_SERVICES" | grep -Fx "apiserver-green" > /dev/null; then
-  echo "Service 'apiserver-green' does not exist. Did you remember to uncomment it? Exiting."
+  echo "Service 'apiserver-green' does not exist in the Compose configuration. Exiting."
   exit 1
 fi
 

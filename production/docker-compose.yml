@@ -85,6 +85,7 @@ services:
 
   # Secondary api image used for zero down-time deployment.
   apiserver-green:
+    profiles: [deploy]
     platform: linux/amd64
     image: ${API_IMAGE_GREEN}
     env_file:
@@ -110,7 +111,7 @@ services:
     environment:
       - TZ=${TZ}
     command: /bin/bash -c "bundle exec rails s -b 0.0.0.0"
-    restart: unless-stopped
+    restart: "no"
 
   # Database server - could be external to docker
   ontrack-db:
