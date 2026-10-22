@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [11.3.0](https://github.com/b0ink/doubtfire-deploy/compare/v11.2.0...v11.3.0) (2026-10-22)
+
+
+### Features
+
+* add batch feedback chunk size env var ([4b3e969](https://github.com/b0ink/doubtfire-deploy/commit/4b3e969489fc91f44da6e092f23e87dbfb287b44))
+* debug mail viewer for local development api mails ([54e23ca](https://github.com/b0ink/doubtfire-deploy/commit/54e23ca928e110b053e4038e1d49269b572f5d7a))
+
+
+### Bug Fixes
+
+* format ([0d19eeb](https://github.com/b0ink/doubtfire-deploy/commit/0d19eebda9cfe3358c8d522233a46e4d2a9dbf30))
+* typo ([4410d32](https://github.com/b0ink/doubtfire-deploy/commit/4410d323f71db1747b598aa0645886ee0ef0fc30))
+
 ## [11.2.0](https://github.com/b0ink/doubtfire-deploy/compare/v11.2.0-1...v11.2.0) (2026-09-23)
 
 ## [11.2.0-1](https://github.com/b0ink/doubtfire-deploy/compare/v11.2.0-0...v11.2.0-1) (2026-09-23)
