@@ -38,4 +38,6 @@ Temporary Items
 
 # End of https://www.toptal.com/developers/gitignore/api/macos
 
-/.devcontainer/devcontainer.env.local
+# Machine-specific environment overrides
+*.env.local
+.env.*.local
