@@ -72,6 +72,8 @@ services:
       - ./api/database.yml:/doubtfire/config/database.yml:ro
       - ./api/custom_institution_setting.rb:/doubtfire/config/custom_institution_setting.rb:ro
       - ./api/secrets:/doubtfire/config/credentials:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./api/tmp/gotenberg:/doubtfire/tmp/gotenberg
     environment:
       - TZ=${TZ}
     command: /bin/bash -c "bundle exec rails s -b 0.0.0.0"
@@ -97,6 +99,8 @@ services:
       - ./api/database.yml:/doubtfire/config/database.yml:ro
       - ./api/custom_institution_setting.rb:/doubtfire/config/custom_institution_setting.rb:ro
       - ./api/secrets:/doubtfire/config/credentials:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./api/tmp/gotenberg:/doubtfire/tmp/gotenberg
     environment:
       - TZ=${TZ}
     command: /bin/bash -c "bundle exec rails s -b 0.0.0.0"
