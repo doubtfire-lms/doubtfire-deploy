@@ -138,6 +138,7 @@ services:
       - backnet
     depends_on:
       - ontrack-db
+      - redis-sidekiq
     volumes:
       - student_work:/student-work # Update with path to student work
       - ./api/shared-files:/shared-files
