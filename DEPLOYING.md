@@ -31,7 +31,10 @@ The setups to configure these components include:
    - docker-compose.yml - this file contains the configuration of all containers needed.
    - .env - this selects the container images used by Docker Compose.
    - api folder - this contains the API environment, database, institution, email, secrets, logs, and temporary-file configuration.
-   - web folder - this contains the Caddy configuration and HTTPS certificates.
+   - web folder - this contains the Caddy configuration, runtime environment, and HTTPS certificates.
+
+   Don't edit the committed env files (**api/.env.production**, **api/.env.lti.production**, **web/caddy.env**). Put your values in a `.local` file beside each one, e.g. **api/.env.production.local**. Docker Compose loads it after the committed file, so its values win. To upgrade, replace the committed files with the new release's and keep your `.local` files; new variables arrive with their defaults.
+
 3. Adjust settings in **docker-compose.yml**
    - `proxy`
      - Replace the files in **web/certificates** with a certificate and key created for the institution URL.
@@ -43,9 +46,9 @@ The setups to configure these components include:
    - `pdfgen`
      - Adjust **student-work** to match app server.
    - `sidekiq`
-     - Set **GOTENBERG_WORKDIR_VOLUME_MOUNT** in **api/.env.production** to the absolute host path for **api/tmp/gotenberg**, and ensure it is writable by the API worker container. This directory contains only temporary Word document conversion files.
+     - Set **GOTENBERG_WORKDIR_VOLUME_MOUNT** in **api/.env.production.local** to the absolute host path for **api/tmp/gotenberg**, and ensure it is writable by the API worker container. This directory contains only temporary Word document conversion files.
    - Add monitoring as needed to ensure ongoing operation
-4. Adjust **api/.env.production**:
+4. Set the following in **api/.env.production.local**:
    - **DF_PRODUCTION_DB\*\*** settings - adjust database settings for adapter type, host name, database name, and password. The provided setting work with the database setup in the compose file. The password should be updates as a minimum.
    - **DF_SECRET_KEY_DEVISE** - contains the key used to encrypt the [Devise](https://github.com/heartcombo/devise) user data in the database. Keys can be generated with `bundle exec rake secret` run in the _apiserver_ container.
    - **DF_SECRET_KEY_BASE** and **DF_SECRET_KEY_ATTR** - these are historic keys used to encrypt data in the database. Generate as with the Devise key.
@@ -89,7 +92,7 @@ The setups to configure these components include:
        - DF_SMTP_USERNAME
        - DF_SMTP_PASSWORD
        - DF_SMTP_AUTHENTICATION
-5. Adjust **web/Caddyfile**. This file configures Caddy to route traffic to the webserver and apiserver containers. Update its site address to the institution URL; the provided file uses localhost.
+5. Adjust **web/caddy.env** settings in **web/caddy.env.local**. This file configures Caddy's public site address, TLS paths, upstream services, optional Moodle framing origin, and protected file-serving mode. To allow Moodle to embed OnTrack, uncomment `ONTRACK_MOODLE_ORIGIN` and set it to Moodle's exact public origin (scheme and host only, with no path); when unset, framing is restricted to OnTrack's own origin. When enabling Caddy file serving, ensure `CADDY_DOWNLOAD_AUTH_SECRET` has the same value in **web/caddy.env** and **api/.env.production**.
 6. Configure email settings:
    - Edit **api/shared-files/aliases** to map the root user email to the support email address that the application will use.
    - Edit **api/shared-files/msmtprc** to include the necessary details used to connect to your mail server.
