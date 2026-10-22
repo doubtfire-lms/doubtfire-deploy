@@ -65,7 +65,12 @@
     },
     {
       "label": "Serve",
-      "dependsOn": ["Serve web frontend", "Serve Rails API", "Run Sidekiq", "Serve mail viewer"],
+      "dependsOn": [
+        "Serve web frontend",
+        "Serve Rails API",
+        "Run Sidekiq",
+        "Serve mail viewer"
+      ],
       "group": "build",
       "runOptions": {
         "runOn": "folderOpen" // This starts both tasks when the container is started
