@@ -1,4 +1,15 @@
+FROM node:22.23.4-bookworm AS node
+
 FROM mcr.microsoft.com/devcontainers/ruby:3.4-bookworm
+
+COPY --from=node /usr/local/bin/node /usr/local/bin/node
+COPY --from=node /usr/local/lib/node_modules/ /usr/local/lib/node_modules/
+
+RUN ln -sf /usr/local/bin/node /usr/local/bin/nodejs \
+  && ln -sf ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
+  && ln -sf ../lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx \
+  && node --version \
+  && npm --version
 
 # DEBIAN_FRONTEND=noninteractive is required to install tzdata in non interactive way
 ENV DEBIAN_FRONTEND=noninteractive
@@ -15,11 +26,6 @@ RUN apt-get update \
   && chmod a+r /etc/apt/keyrings/docker.asc \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | tee /etc/apt/sources.list.d/docker.list
 
-# Get node from nodesource - node 22
-RUN curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh \
-  && sudo -E bash nodesource_setup.sh \
-  && rm nodesource_setup.sh
-
 ENV USER 'vscode'
 ENV NODE_ENV docker
 ENV NPM_CONFIG_PREFIX "/home/${USER}/.npm-global"
@@ -30,7 +36,6 @@ COPY --chown="${USER}":"${USER}" doubtfire-api/.ci-setup/ /workspace/doubtfire-a
 RUN apt-get update \
   && apt-get install -y  --no-install-recommends \
   lsb-release \
-  nodejs \
   ffmpeg \
   ghostscript \
   qpdf \
