@@ -48,19 +48,25 @@ wait_for_pdfgen_to_drain() {
   local start
   local elapsed
   local remaining
+  local status
 
   start=$(date +%s)
 
   while true; do
-    remaining=$(
-      "${COMPOSE[@]}" exec -T apiserver bundle exec rails runner '
-        queued = Project.where(compile_portfolio: true).count
-        active = Project.where.not(portfolio_generation_pid: nil).count
-        puts queued + active
-      '
-    )
+    # Cron has been paused, so queued projects cannot drain until pdfgen restarts.
+    # Watch the running task itself: it also processes evidence PDFs before
+    # assigning portfolio_generation_pid to any projects.
+    if remaining=$("${COMPOSE[@]}" exec -T pdfgen pgrep -fc 'rails submission:generate_pdfs'); then
+      :
+    else
+      status=$?
+      if [ "$status" -ne 1 ]; then
+        echo "Could not check active PDF generation processes."
+        return "$status"
+      fi
+    fi
 
-    echo "PDF generation work remaining: ${remaining}"
+    echo "Active PDF generation processes remaining: ${remaining}"
 
     if [ "${remaining}" = "0" ]; then
       return 0
