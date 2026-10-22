@@ -56,7 +56,7 @@ wait_for_pdfgen_to_drain() {
     # Cron has been paused, so queued projects cannot drain until pdfgen restarts.
     # Watch the running task itself: it also processes evidence PDFs before
     # assigning portfolio_generation_pid to any projects.
-    if remaining=$("${COMPOSE[@]}" exec -T pdfgen pgrep -fc 'rails submission:generate_pdfs'); then
+    if remaining=$("${COMPOSE[@]}" exec -T pdfgen pgrep -fc 'rails submission:generate_pdfs' 2>/dev/null); then
       :
     else
       status=$?
