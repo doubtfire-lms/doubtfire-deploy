@@ -74,7 +74,7 @@
   //   }
   // ],
 
-  "forwardPorts": [3000, 4200, 9876],
+  "forwardPorts": [3000, 4200, 8025, 9876],
 
   "portsAttributes": {
     "3000": {
@@ -86,6 +86,10 @@
       "label": "Angular",
       "onAutoForward": "notify",
       "visibility": "public"
+    },
+    "8025": {
+      "label": "Mail Viewer",
+      "onAutoForward": "notify"
     }
   },
 

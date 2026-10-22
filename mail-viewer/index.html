@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mail Viewer</title>
+  <style>
+    :root { color-scheme: light; font-family: Arial, Helvetica, sans-serif; color: #202124; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f6f8fc; overflow: hidden; }
+    button, input { font: inherit; }
+    button { border: 0; background: none; color: inherit; cursor: pointer; }
+    .icon-button { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; }
+    .icon-button:hover { background: #e8eaed; }
+    svg { width: 20px; height: 20px; fill: currentColor; }
+
+    header { height: 64px; display: flex; align-items: center; gap: 14px; padding: 8px 18px; }
+    .brand { width: 205px; display: flex; align-items: center; gap: 10px; font-size: 21px; color: #3c4043; white-space: nowrap; }
+    .brand svg { width: 30px; height: 30px; color: #ea4335; }
+    .search { height: 48px; width: min(720px, calc(100vw - 390px)); border-radius: 24px; background: #eaf1fb; display: flex; align-items: center; padding: 0 18px; gap: 13px; transition: .15s; }
+    .search:focus-within { background: white; box-shadow: 0 1px 3px #3c40434d; }
+    .search input { width: 100%; border: 0; outline: 0; background: transparent; font-size: 16px; color: #202124; }
+    .recipient-select { max-width: 240px; height: 40px; padding: 0 34px 0 14px; border: 0; border-radius: 20px; outline: 0; background: #eaf1fb; color: #3c4043; }
+    .header-spacer { flex: 1; }
+
+    main { height: calc(100vh - 64px); display: flex; }
+    aside { width: 240px; flex: 0 0 240px; padding: 14px 12px; }
+    .compose { height: 56px; padding: 0 24px; border-radius: 16px; background: #c2e7ff; box-shadow: 0 1px 2px #0002; display: flex; align-items: center; gap: 12px; font-weight: 600; margin-bottom: 18px; }
+    .nav-item { height: 32px; border-radius: 0 16px 16px 0; display: flex; align-items: center; gap: 18px; padding: 0 14px 0 26px; font-size: 14px; }
+    .nav-item.active { background: #d3e3fd; font-weight: 700; }
+    .nav-item .count { margin-left: auto; }
+
+    .mailbox { flex: 1; min-width: 0; margin: 0 16px 16px 0; background: white; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
+    .toolbar { height: 48px; flex: 0 0 48px; display: flex; align-items: center; padding: 0 12px; border-bottom: 1px solid #f1f3f4; color: #5f6368; }
+    .toolbar .range { margin-left: auto; padding-right: 12px; font-size: 12px; }
+    .list { overflow: auto; }
+    .row { height: 46px; border-bottom: 1px solid #e7e8e9; display: grid; grid-template-columns: minmax(160px, 210px) minmax(250px, 1fr) 105px; align-items: center; padding: 0 16px; gap: 14px; cursor: pointer; background: #f2f6fc; box-shadow: inset 0 -1px 0 #fff; font-size: 14px; }
+    .row:hover { position: relative; z-index: 1; box-shadow: 0 1px 3px #3c404359; }
+    .sender, .subject-line, .date { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .sender, .subject { font-weight: 700; }
+    .snippet { color: #5f6368; }
+    .date { text-align: right; font-size: 12px; font-weight: 700; }
+    .empty { height: 220px; display: grid; place-items: center; color: #5f6368; }
+
+    .message { min-height: 0; flex: 1; display: flex; flex-direction: column; }
+    .message-header { padding: 20px 34px 14px 54px; }
+    .message h1 { margin: 0 0 22px; font-size: 22px; font-weight: 400; }
+    .sender-line { display: flex; gap: 12px; align-items: flex-start; }
+    .avatar { width: 40px; height: 40px; flex: 0 0 40px; border-radius: 50%; display: grid; place-items: center; background: #5f6368; color: white; font-size: 18px; }
+    .addresses { min-width: 0; line-height: 19px; font-size: 13px; }
+    .addresses strong { font-size: 14px; }
+    .to { color: #5f6368; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: min(700px, 60vw); }
+    .message-date { margin-left: auto; color: #5f6368; font-size: 12px; white-space: nowrap; }
+    iframe { flex: 1; width: 100%; min-height: 0; border: 0; background: white; }
+    .hidden { display: none !important; }
+
+    @media (max-width: 760px) {
+      header { padding-left: 8px; }
+      .brand { width: auto; }
+      .brand span, aside { display: none; }
+      .search { width: auto; flex: 1; }
+      .recipient-select { max-width: 130px; }
+      .mailbox { margin-left: 8px; }
+      .row { grid-template-columns: 115px 1fr 66px; padding: 0 10px; gap: 8px; }
+      .message-header { padding-left: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <button class="icon-button" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+    <div class="brand"><svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h16a2 2 0 0 0 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg><span>Mail Viewer</span></div>
+    <label class="search"><svg viewBox="0 0 24 24"><path d="M9.5 3a6.5 6.5 0 1 0 3.98 11.64L19.85 21 21 19.85l-6.36-6.37A6.5 6.5 0 0 0 9.5 3zm0 2a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9z"/></svg><input id="search" type="search" placeholder="Search mail" autocomplete="off"></label>
+    <select id="recipient" class="recipient-select" aria-label="Recipient"><option value="">All recipients</option></select>
+    <div class="header-spacer"></div>
+    <button id="refreshTop" class="icon-button" title="Refresh"><svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.96 7.96 0 0 0 12 4a8 8 0 1 0 7.75 10h-2.1A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h8V3l-3.35 3.35z"/></svg></button>
+  </header>
+  <main>
+    <aside>
+      <button class="compose"><svg viewBox="0 0 24 24"><path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"/></svg>Compose</button>
+      <div class="nav-item active"><svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h16a2 2 0 0 0 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>Inbox <span id="count" class="count"></span></div>
+    </aside>
+    <section class="mailbox">
+      <div class="toolbar">
+        <button id="back" class="icon-button hidden" title="Back"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+        <button id="refresh" class="icon-button" title="Refresh"><svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.96 7.96 0 0 0 12 4a8 8 0 1 0 7.75 10h-2.1A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h8V3l-3.35 3.35z"/></svg></button>
+        <span id="range" class="range"></span>
+      </div>
+      <div id="list" class="list"></div>
+      <article id="message" class="message hidden">
+        <div class="message-header">
+          <h1 id="messageSubject"></h1>
+          <div class="sender-line">
+            <div id="avatar" class="avatar"></div>
+            <div class="addresses"><strong id="messageFrom"></strong><div id="messageTo" class="to"></div></div>
+            <time id="messageDate" class="message-date"></time>
+          </div>
+        </div>
+        <iframe id="body" title="Email body" sandbox="allow-popups allow-popups-to-escape-sandbox"></iframe>
+      </article>
+    </section>
+  </main>
+  <script>
+    const $ = id => document.getElementById(id);
+    let messages = [];
+
+    const escapeHtml = value => String(value).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+    const nameFrom = value => value.replace(/\s*<.*?>\s*$/, '').replace(/^"|"$/g, '') || value;
+    const shortDate = value => {
+      const date = new Date(value);
+      if (Number.isNaN(date.valueOf())) return '';
+      const today = new Date();
+      return date.toDateString() === today.toDateString()
+        ? date.toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'})
+        : date.toLocaleDateString([], {month: 'short', day: 'numeric'});
+    };
+
+    async function load() {
+      $('refresh').disabled = $('refreshTop').disabled = true;
+      try {
+        messages = await fetch('/api/messages', {cache: 'no-store'}).then(response => response.json());
+        const selected = $('recipient').value;
+        const recipients = [...new Set(messages.map(mail => mail.to))].sort();
+        $('recipient').innerHTML = '<option value="">All recipients</option>' + recipients.map(recipient => `<option value="${escapeHtml(recipient)}">${escapeHtml(nameFrom(recipient))}</option>`).join('');
+        $('recipient').value = recipients.includes(selected) ? selected : '';
+        $('count').textContent = messages.length;
+        renderList();
+      } finally {
+        $('refresh').disabled = $('refreshTop').disabled = false;
+      }
+    }
+
+    function renderList() {
+      const query = $('search').value.trim().toLowerCase();
+      const recipient = $('recipient').value;
+      const filtered = messages.filter(mail => (!recipient || mail.to === recipient) && [mail.subject, mail.from, mail.to, mail.snippet].join(' ').toLowerCase().includes(query));
+      $('count').textContent = filtered.length;
+      $('range').textContent = filtered.length ? `1–${filtered.length} of ${filtered.length}` : '0 messages';
+      $('list').innerHTML = filtered.length ? filtered.map(mail => `
+        <div class="row" data-id="${mail.id}">
+          <div class="sender">${escapeHtml(nameFrom(mail.from))}</div>
+          <div class="subject-line"><span class="subject">${escapeHtml(mail.subject)}</span> <span class="snippet">– ${escapeHtml(mail.snippet)}</span></div>
+          <time class="date">${escapeHtml(shortDate(mail.timestamp))}</time>
+        </div>`).join('') : '<div class="empty">No messages found</div>';
+      document.querySelectorAll('.row').forEach(row => row.addEventListener('click', () => openMessage(row.dataset.id)));
+    }
+
+    async function openMessage(id) {
+      const mail = await fetch(`/api/messages/${encodeURIComponent(id)}`, {cache: 'no-store'}).then(response => response.json());
+      $('messageSubject').textContent = mail.subject;
+      $('messageFrom').textContent = mail.from;
+      $('messageTo').textContent = `to ${mail.to}`;
+      $('messageDate').textContent = new Date(mail.timestamp).toLocaleString();
+      $('avatar').textContent = nameFrom(mail.from).charAt(0).toUpperCase();
+      $('body').srcdoc = mail.html;
+      $('list').classList.add('hidden');
+      $('message').classList.remove('hidden');
+      $('back').classList.remove('hidden');
+      $('refresh').classList.add('hidden');
+      $('range').textContent = '';
+      history.replaceState(null, '', `#${id}`);
+    }
+
+    function closeMessage() {
+      $('message').classList.add('hidden');
+      $('list').classList.remove('hidden');
+      $('back').classList.add('hidden');
+      $('refresh').classList.remove('hidden');
+      $('body').srcdoc = '';
+      history.replaceState(null, '', location.pathname);
+      renderList();
+    }
+
+    $('search').addEventListener('input', () => { if (!$('message').classList.contains('hidden')) closeMessage(); renderList(); });
+    $('recipient').addEventListener('change', () => { if (!$('message').classList.contains('hidden')) closeMessage(); renderList(); });
+    $('back').addEventListener('click', closeMessage);
+    $('refresh').addEventListener('click', load);
+    $('refreshTop').addEventListener('click', load);
+    document.addEventListener('keydown', event => { if (event.key === '/' && document.activeElement !== $('search')) { event.preventDefault(); $('search').focus(); } });
+    load().then(() => { if (location.hash.length > 1) openMessage(location.hash.slice(1)); });
+  </script>
+</body>
+</html>

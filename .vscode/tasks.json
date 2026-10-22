@@ -49,8 +49,23 @@
       }
     },
     {
+      "label": "Serve mail viewer",
+      "type": "shell",
+      "command": "python3 server.py",
+      "group": "build",
+      "presentation": {
+        "group": "buildGroup",
+        "reveal": "always",
+        "panel": "new",
+        "echo": false
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/mail-viewer/"
+      }
+    },
+    {
       "label": "Serve",
-      "dependsOn": ["Serve web frontend", "Serve Rails API", "Run Sidekiq"],
+      "dependsOn": ["Serve web frontend", "Serve Rails API", "Run Sidekiq", "Serve mail viewer"],
       "group": "build",
       "runOptions": {
         "runOn": "folderOpen" // This starts both tasks when the container is started
