@@ -153,7 +153,7 @@ wait_for_apiserver_health() {
 # Wait for any in-flight LaTeX/portfolio work to finish before stopping pdfgen.
 wait_for_pdfgen_to_drain "$PDFGEN_DRAIN_TIMEOUT_SECONDS" "$DRAIN_POLL_INTERVAL_SECONDS"
 
-# Wait for Sidekiq jobs such as portfolio zip compression to finish before stopping sidekiq.
+# Wait for in-flight jobs from both Sidekiq capsules to finish before stopping the process.
 wait_for_sidekiq_workers_to_finish "$SIDEKIQ_DRAIN_TIMEOUT_SECONDS" "$DRAIN_POLL_INTERVAL_SECONDS"
 
 sleep 5
