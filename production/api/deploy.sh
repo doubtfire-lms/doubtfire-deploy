@@ -16,7 +16,7 @@ else
   exit 1
 fi
 
-COMPOSE=(docker compose --project-directory "$PRODUCTION_DIR" -f "$PRODUCTION_DIR/docker-compose.yml")
+COMPOSE=(docker compose --project-directory "$PRODUCTION_DIR" -f "$PRODUCTION_DIR/docker-compose.yml" --profile deploy)
 SUPPORT_SERVICES=(texlive texlive-pdfgen jplag gotenberg lti)
 
 # DO NOT DEPLOY VIA THIS SCRIPT IF NEW VERSION OF ONTRACK'S API REQUIRES MIGRATIONS
