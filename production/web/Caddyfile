@@ -23,11 +23,12 @@
         copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type X-OnTrack-Cache-Control
 
         lb_policy first
-        lb_retries 2
+        lb_try_duration 10s
 
         health_uri /health
-        health_timeout 2s
-        health_interval 3s
+        health_timeout 10s
+        health_interval 10s
+        health_fails 2
         health_headers {
             Host {$ONTRACK_SITE_ADDRESS:example.com}
         }
@@ -227,20 +228,33 @@
         basic_auth {
             {$SIDEKIQ_WEB_USERNAME} {$SIDEKIQ_WEB_PASSWORD_HASH}
         }
-        reverse_proxy {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000}
+        reverse_proxy {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000} {
+            lb_policy first
+            lb_try_duration 10s
+
+            health_uri /health
+            health_timeout 8s
+            health_interval 10s
+            health_fails 2
+            health_headers {
+                Host {$ONTRACK_SITE_ADDRESS:example.com}
+            }
+        }
     }
 
     # Prefer the green API during deployments, then fall back to the primary API.
-    # Active health checks fail unavailable upstreams quickly.
-    reverse_proxy /api/* {
+    # API requests and health checks share one upstream health decision.
+    @apiOrHealth path /api/* /health
+    reverse_proxy @apiOrHealth {
         to {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000}
 
         lb_policy first
-        lb_retries 2
+        lb_try_duration 10s
 
         health_uri /health
-        health_timeout 2s
-        health_interval 3s
+        health_timeout 8s
+        health_interval 10s
+        health_fails 2
         health_headers {
             Host {$ONTRACK_SITE_ADDRESS:example.com}
         }
@@ -248,20 +262,6 @@
 
     # Expose the Rails health check at /api/health and /health.
     rewrite /api/health /health
-
-    reverse_proxy /health {
-        to {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000}
-
-        lb_policy first
-        lb_retries 2
-
-        health_uri /health
-        health_timeout 2s
-        health_interval 3s
-        health_headers {
-            Host {$ONTRACK_SITE_ADDRESS:example.com}
-        }
-    }
 
     # Route LTI requests to the LTI service.
     reverse_proxy /lti/api/* {$ONTRACK_LTI_UPSTREAM:lti:3001}
