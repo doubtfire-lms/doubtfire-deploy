@@ -42,6 +42,15 @@ if ! printf '%s\n' "$COMPOSE_SERVICES" | grep -Fx "apiserver-green" > /dev/null;
   exit 1
 fi
 
+if printf '%s\n' "$COMPOSE_SERVICES" | grep -Fx "api-gateway" > /dev/null; then
+  CADDY_SERVICE="api-gateway"
+elif printf '%s\n' "$COMPOSE_SERVICES" | grep -Fx "proxy" > /dev/null; then
+  CADDY_SERVICE="proxy"
+else
+  echo "Could not find an API Caddy service in the Compose configuration. Exiting."
+  exit 1
+fi
+
 wait_for_pdfgen_to_drain() {
   local timeout="$1"
   local interval="$2"
@@ -152,6 +161,14 @@ wait_for_apiserver_health() {
   done
 }
 
+select_api_upstream() {
+  local upstream="$1"
+
+  echo "Routing API requests to ${upstream}."
+  "${COMPOSE[@]}" exec -T -e "ONTRACK_API_UPSTREAMS=${upstream}" "$CADDY_SERVICE" \
+    caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
+}
+
 "${COMPOSE[@]}" pull
 
 "$SCRIPT_DIR/pause-pdfgen.sh"
@@ -176,6 +193,8 @@ wait_for_apiserver_health \
   "$APISERVER_HEALTH_TIMEOUT_SECONDS" \
   "$APISERVER_HEALTH_POLL_INTERVAL_SECONDS"
 
+select_api_upstream "apiserver-green:3000"
+
 sleep 5
 
 "${COMPOSE[@]}" up -d --force-recreate "${SUPPORT_SERVICES[@]}"
@@ -189,6 +208,8 @@ wait_for_apiserver_health \
   "apiserver" \
   "$APISERVER_HEALTH_TIMEOUT_SECONDS" \
   "$APISERVER_HEALTH_POLL_INTERVAL_SECONDS"
+
+select_api_upstream "apiserver:3000"
 
 sleep 5
 
