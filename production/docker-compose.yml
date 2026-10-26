@@ -80,6 +80,7 @@ services:
       - ./api/tmp/gotenberg:/doubtfire/tmp/gotenberg
     environment:
       - TZ=${TZ}
+      - GOTENBERG_IMAGE=${GOTENBERG_IMAGE}
     command: /bin/bash -c "bundle exec rails s -b 0.0.0.0"
     restart: on-failure:5
 
@@ -110,6 +111,7 @@ services:
       - ./api/tmp/gotenberg:/doubtfire/tmp/gotenberg
     environment:
       - TZ=${TZ}
+      - GOTENBERG_IMAGE=${GOTENBERG_IMAGE}
     command: /bin/bash -c "bundle exec rails s -b 0.0.0.0"
     restart: "no"
 
@@ -154,6 +156,7 @@ services:
     environment:
       - TZ=${TZ}
       - LATEX_CONTAINER_NAME=texlive-container-pdfgen
+      - GOTENBERG_IMAGE=${GOTENBERG_IMAGE}
     command: /doubtfire/lib/shell/pdfgen_entry_point.sh
     restart: on-failure:5
 
@@ -197,6 +200,7 @@ services:
       - ./api/secrets:/doubtfire/config/credentials:ro
     environment:
       LATEX_CONTAINER_NAME: texlive-container
+      GOTENBERG_IMAGE: ${GOTENBERG_IMAGE}
     command: /doubtfire/lib/shell/sidekiq_entry_point.sh
     restart: on-failure:5
 
