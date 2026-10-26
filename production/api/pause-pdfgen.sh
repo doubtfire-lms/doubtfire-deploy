@@ -3,7 +3,7 @@
 set -euo pipefail
 
 # Pause new Sidekiq and portfolio-generation work before restarting API services.
-# In-progress jobs continue, and both queues resume when Sidekiq restarts.
+# In-progress jobs continue, and both queues resume when their services restart.
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
 if [ -f "$SCRIPT_DIR/docker-compose.yml" ]; then
@@ -22,7 +22,11 @@ echo "Pausing both Sidekiq queues..."
 echo "Sidekiq queues have been paused. Restart sidekiq to continue"
 
 echo "Pausing Pdfgen cron jobs..."
-"${COMPOSE[@]}" exec pdfgen bash -c "crontab -r"
-echo "Pdfgen cron jobs have been paused"
+if "${COMPOSE[@]}" exec pdfgen bash -c "crontab -l >/dev/null 2>&1"; then
+  "${COMPOSE[@]}" exec pdfgen bash -c "crontab -r"
+  echo "Pdfgen cron jobs have been paused"
+else
+  echo "Pdfgen cron jobs are already paused"
+fi
 
 # Monitor api/tmp/latex-pdfgen for remaining work before restarting services.
