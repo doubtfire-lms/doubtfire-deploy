@@ -61,8 +61,8 @@ services:
       - ./api/.env.production
       - path: ./api/.env.production.local
         required: false
-    ports:
-      - 3000:3000
+    expose:
+      - "3000"
     networks:
       - backnet
     depends_on:
@@ -92,8 +92,8 @@ services:
       - ./api/.env.production
       - path: ./api/.env.production.local
         required: false
-    ports:
-      - 3002:3000
+    expose:
+      - "3000"
     networks:
       - backnet
     depends_on:
