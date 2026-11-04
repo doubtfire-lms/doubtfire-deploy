@@ -51,6 +51,8 @@
     .addresses strong { font-size: 14px; }
     .to { color: #5f6368; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: min(700px, 60vw); }
     .message-date { margin-left: auto; color: #5f6368; font-size: 12px; white-space: nowrap; }
+    .message-body { flex: 1; min-height: 0; display: flex; position: relative; }
+    .message-status { position: absolute; inset: 0; z-index: 1; display: grid; place-items: center; padding: 24px; background: white; color: #5f6368; text-align: center; }
     iframe { flex: 1; width: 100%; min-height: 0; border: 0; background: white; }
     .hidden { display: none !important; }
 
@@ -96,13 +98,17 @@
             <time id="messageDate" class="message-date"></time>
           </div>
         </div>
-        <iframe id="body" title="Email body" sandbox="allow-popups allow-popups-to-escape-sandbox"></iframe>
+        <div id="messageBody" class="message-body">
+          <div id="messageStatus" class="message-status hidden" role="status"></div>
+        </div>
       </article>
     </section>
   </main>
   <script>
     const $ = id => document.getElementById(id);
     let messages = [];
+    let messageController = null;
+    let messageGeneration = 0;
 
     const escapeHtml = value => String(value).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
     const nameFrom = value => value.replace(/\s*<.*?>\s*$/, '').replace(/^"|"$/g, '') || value;
@@ -146,33 +152,68 @@
     }
 
     async function openMessage(id) {
-      const mail = await fetch(`/api/messages/${encodeURIComponent(id)}`, {cache: 'no-store'}).then(response => response.json());
-      $('messageSubject').textContent = mail.subject;
-      $('messageFrom').textContent = mail.from;
-      $('messageTo').textContent = `to ${mail.to}`;
-      $('messageDate').textContent = new Date(mail.timestamp).toLocaleString();
-      $('avatar').textContent = nameFrom(mail.from).charAt(0).toUpperCase();
-      $('body').srcdoc = mail.html;
+      messageController?.abort();
+      const controller = new AbortController();
+      const generation = ++messageGeneration;
+      messageController = controller;
+      $('messageBody').replaceChildren($('messageStatus'));
+      $('messageSubject').textContent = '';
+      $('messageFrom').textContent = '';
+      $('messageTo').textContent = '';
+      $('messageDate').textContent = '';
+      $('avatar').textContent = '';
+      $('messageStatus').textContent = 'Loading message…';
+      $('messageStatus').classList.remove('hidden');
       $('list').classList.add('hidden');
       $('message').classList.remove('hidden');
       $('back').classList.remove('hidden');
       $('refresh').classList.add('hidden');
       $('range').textContent = '';
       history.replaceState(null, '', `#${id}`);
+
+      try {
+        const response = await fetch(`/api/messages/${encodeURIComponent(id)}`, {cache: 'no-store', signal: controller.signal});
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const mail = await response.json();
+        if (controller.signal.aborted) return;
+        $('messageSubject').textContent = mail.subject;
+        $('messageFrom').textContent = mail.from;
+        $('messageTo').textContent = `to ${mail.to}`;
+        $('messageDate').textContent = new Date(mail.timestamp).toLocaleString();
+        $('avatar').textContent = nameFrom(mail.from).charAt(0).toUpperCase();
+        const frame = document.createElement('iframe');
+        frame.title = 'Email body';
+        frame.setAttribute('sandbox', 'allow-popups allow-popups-to-escape-sandbox');
+        frame.addEventListener('load', () => {
+          if (generation === messageGeneration) $('messageStatus').classList.add('hidden');
+        }, {once: true});
+        frame.srcdoc = mail.html;
+        $('messageBody').append(frame);
+      } catch (error) {
+        if (controller.signal.aborted) return;
+        console.error('Could not load message:', error);
+        $('messageSubject').textContent = 'Could not load message';
+        $('messageStatus').textContent = 'Return to the inbox and try again.';
+      } finally {
+        if (messageController === controller) messageController = null;
+      }
     }
 
     function closeMessage() {
+      messageController?.abort();
+      messageController = null;
+      ++messageGeneration;
+      $('messageBody').replaceChildren($('messageStatus'));
       $('message').classList.add('hidden');
       $('list').classList.remove('hidden');
       $('back').classList.add('hidden');
       $('refresh').classList.remove('hidden');
-      $('body').srcdoc = '';
-      history.replaceState(null, '', location.pathname);
+      history.replaceState(null, '', location.pathname + location.search);
       renderList();
     }
 
-    $('search').addEventListener('input', () => { if (!$('message').classList.contains('hidden')) closeMessage(); renderList(); });
-    $('recipient').addEventListener('change', () => { if (!$('message').classList.contains('hidden')) closeMessage(); renderList(); });
+    $('search').addEventListener('input', closeMessage);
+    $('recipient').addEventListener('change', closeMessage);
     $('back').addEventListener('click', closeMessage);
     $('refresh').addEventListener('click', load);
     $('refreshTop').addEventListener('click', load);
