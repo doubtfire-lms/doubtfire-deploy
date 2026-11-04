@@ -3,7 +3,7 @@
 set -euo pipefail
 
 # Pause new Sidekiq and portfolio-generation work before restarting API services.
-# In-progress jobs continue, and both queues resume when their services restart.
+# In-progress jobs continue, and all queues resume when their services restart.
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
 if [ -f "$SCRIPT_DIR/docker-compose.yml" ]; then
@@ -17,7 +17,7 @@ fi
 
 COMPOSE=(docker compose --project-directory "$PRODUCTION_DIR" -f "$PRODUCTION_DIR/docker-compose.yml")
 
-echo "Pausing both Sidekiq queues..."
+echo "Pausing Sidekiq queues..."
 "${COMPOSE[@]}" exec apiserver bash -c "cd /doubtfire && rails runner 'Sidekiq::ProcessSet.new.each(&:quiet!)'"
 echo "Sidekiq queues have been paused. Restart sidekiq to continue"
 
