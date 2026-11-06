@@ -151,7 +151,7 @@ services:
       - ./api/database.yml:/doubtfire/config/database.yml:ro
       - ./api/custom_institution_setting.rb:/doubtfire/config/custom_institution_setting.rb:ro
       - /var/run/docker.sock:/var/run/docker.sock
-      - jplag_tmp:/doubtfire/tmp/jplag # jplag - api will extract to root/tmp/jplag
+      - ./tmp/jplag:/doubtfire/tmp/jplag # jplag - api will extract to root/tmp/jplag
       - ./api/secrets:/doubtfire/config/credentials:ro
     environment:
       - TZ=${TZ}
@@ -236,8 +236,7 @@ services:
     container_name: jplag
     image: ${JPLAG_IMAGE}
     volumes:
-      - student_work:/student-work # where results are returned
-      - jplag_tmp:/tmp/jplag # files shared with api container
+      - ./tmp/jplag:/tmp/jplag # input and reports shared with pdfgen
     environment:
       - TZ=${TZ}
     command: /bin/sh -c "sleep infinity"
