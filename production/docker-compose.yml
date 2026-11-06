@@ -209,7 +209,7 @@ services:
     container_name: texlive-container
     image: ${TEXLIVE_IMAGE}
     volumes:
-      - student_work:/student-work
+      # Sidekiq stages each PDF job's required files here.
       - ./api/tmp/latex-sidekiq:/workdir/texlive-latex
     command: /bin/sh -c "luaotfload-tool --update --force && sleep infinity"
     restart: unless-stopped
@@ -219,7 +219,7 @@ services:
     container_name: texlive-container-pdfgen
     image: ${TEXLIVE_IMAGE}
     volumes:
-      - student_work:/student-work
+      # Pdfgen stages each portfolio job's required files here.
       - ./api/tmp/latex-pdfgen:/workdir/texlive-latex
     environment:
       - TZ=${TZ}
