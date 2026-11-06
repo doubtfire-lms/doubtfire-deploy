@@ -26,7 +26,6 @@ services:
       - ..:/workspace:cached
       - formatif_tmp_compose:/workspace/tmp
       - ../data/student-work:/student-work
-      - jplag_results:/jplag/results
       - ws_node_modules:/workspace/node_modules
       - web_node_modules:/workspace/doubtfire-web/node_modules
       - formatif_gems_compose:/home/vscode/.gems
@@ -112,10 +111,7 @@ services:
       # context: ../
       # dockerfile: texlive.Dockerfile
     volumes:
-      - ../data/student-work:/student-work
       - ../doubtfire-api/tmp/rails-latex:/workdir/texlive-latex
-      - ../doubtfire-api/public/assets/images:/workspace/doubtfire-api/public/assets/images
-      - ../doubtfire-api/test_files:/workspace/doubtfire-api/test_files
     depends_on:
       - formatif-dev-container
     command: /bin/sh -c "sleep infinity"
@@ -128,8 +124,6 @@ services:
       # context: ../
       # dockerfile: jplag.Dockerfile
     volumes:
-      - ../data/student-work:/student-work
-      - jplag_results:/jplag/results
       - ../doubtfire-api/tmp/jplag:/tmp/jplag
     command: /bin/sh -c "sleep infinity"
     depends_on:
@@ -168,7 +162,6 @@ volumes:
   formatif_db_compose:
   formatif_gems_compose:
   formatif_redis_sidekiq_data:
-  jplag_results:
   codex_home:
   claude_home:
   vscode_server_home:
