@@ -38,4 +38,3 @@ function setup_remote {
 setup_remote 'doubtfire-deploy' "${APP_PATH}"
 setup_remote 'doubtfire-api' "${APP_PATH}/doubtfire-api"
 setup_remote 'doubtfire-web' "${APP_PATH}/doubtfire-web"
-setup_remote 'doubtfire-overseer' "${APP_PATH}/doubtfire-overseer"
