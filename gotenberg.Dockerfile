@@ -1,4 +1,4 @@
-FROM gotenberg/gotenberg:8-libreoffice
+FROM gotenberg/gotenberg:9-libreoffice
 
 USER root
 
