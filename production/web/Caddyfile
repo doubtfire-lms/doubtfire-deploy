@@ -23,12 +23,15 @@
         copy_headers X-OnTrack-File X-OnTrack-Content-Disposition X-OnTrack-Content-Type X-OnTrack-Cache-Control
 
         lb_policy first
-        lb_try_duration 10s
+        lb_try_duration 5s
+        # A refused connection drops the upstream immediately, so retries move to the next one.
+        fail_duration 5s
+        max_fails 1
 
         health_uri /health
         health_timeout 10s
-        health_interval 10s
-        health_fails 2
+        health_interval 5s
+        health_fails 4
         health_headers {
             Host {$ONTRACK_SITE_ADDRESS:example.com}
         }
@@ -230,12 +233,14 @@
         }
         reverse_proxy {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000} {
             lb_policy first
-            lb_try_duration 10s
+            lb_try_duration 5s
+            fail_duration 5s
+            max_fails 1
 
             health_uri /health
             health_timeout 8s
-            health_interval 10s
-            health_fails 2
+            health_interval 5s
+            health_fails 4
             health_headers {
                 Host {$ONTRACK_SITE_ADDRESS:example.com}
             }
@@ -249,12 +254,14 @@
         to {$ONTRACK_API_UPSTREAMS:apiserver-green:3000 apiserver:3000}
 
         lb_policy first
-        lb_try_duration 10s
+        lb_try_duration 5s
+        fail_duration 5s
+        max_fails 1
 
         health_uri /health
         health_timeout 8s
-        health_interval 10s
-        health_fails 2
+        health_interval 5s
+        health_fails 4
         health_headers {
             Host {$ONTRACK_SITE_ADDRESS:example.com}
         }
