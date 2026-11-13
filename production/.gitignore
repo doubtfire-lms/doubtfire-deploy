@@ -16,5 +16,8 @@ api/tmp/overseer/*
 api/tmp/gotenberg/*
 !api/tmp/gotenberg/.gitkeep
 
+api/tmp/mails/*
+!api/tmp/mails/.gitkeep
+
 # Per-deployment overrides of the committed env files
 *.local
