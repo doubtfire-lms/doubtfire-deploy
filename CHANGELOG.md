@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [11.4.0](https://github.com/b0ink/doubtfire-deploy/compare/v11.3.0...v11.4.0) (2026-11-22)
+
+
+### Features
+
+* add guide for v11 migration ([7b7ef00](https://github.com/b0ink/doubtfire-deploy/commit/7b7ef00400da70d18e585ae9348c6b93e473ccb6))
+
+
+### Bug Fixes
+
+* add gotenberg tmp folder to pdfgen service ([98a0830](https://github.com/b0ink/doubtfire-deploy/commit/98a08307fe453a429d550ad0a7d68b3fe464f519))
+* deploy patch versions ([474b998](https://github.com/b0ink/doubtfire-deploy/commit/474b9986fc148fe4fef39bf3762ce833f6f2a772))
+* dont publish apiserver ports in production template ([9cef6a2](https://github.com/b0ink/doubtfire-deploy/commit/9cef6a288dec46cd1797466be6ff2c211d5fbca1))
+* ensure paused crontab doesnt return error ([e98edd1](https://github.com/b0ink/doubtfire-deploy/commit/e98edd104b7152b9083e61aa6ba829ded3ac0182))
+* explicitly switch API upstream during blue-green deployment ([00a8f74](https://github.com/b0ink/doubtfire-deploy/commit/00a8f744fb4306afe6b1070d95233c177e8e0b2f))
+* ignore portfolio jobs queued but not active ([f3784a0](https://github.com/b0ink/doubtfire-deploy/commit/f3784a05f89ed4a3e618d16f9a01441d61038a89))
+* include green api profile in deployment script ([3a9ce80](https://github.com/b0ink/doubtfire-deploy/commit/3a9ce8051e55a4c48876f6f9b82f126663386de7))
+* mail viewer loading ([ed1f6d6](https://github.com/b0ink/doubtfire-deploy/commit/ed1f6d6e3707b1cfd0fb3bf0e5ea6693333babd0))
+* make API and protected download health checks more resilient ([6d82090](https://github.com/b0ink/doubtfire-deploy/commit/6d82090483263d55319dbee0a0736fcb6213d019))
+* prevent apiserver green starting by default ([492f371](https://github.com/b0ink/doubtfire-deploy/commit/492f371f2b298b8091d61243f0b8ba1bebe13d3f))
+* suppress expected pdf generation process check exit message ([a7cb3b2](https://github.com/b0ink/doubtfire-deploy/commit/a7cb3b266b4fbcb58d657bcf963458ab994b7b5a))
+
 ## [11.3.0](https://github.com/b0ink/doubtfire-deploy/compare/v11.2.0...v11.3.0) (2026-10-22)
 
 
