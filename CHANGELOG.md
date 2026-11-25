@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [11.5.0](https://github.com/b0ink/doubtfire-deploy/compare/v11.4.0...v11.5.0) (2026-11-25)
+
+
+### Features
+
+* add livjemalloc to dev container ([74d35d4](https://github.com/b0ink/doubtfire-deploy/commit/74d35d4fb5b51656f0c3ae2f2cfa6cc908cffebc))
+
+
+### Bug Fixes
+
+* pin texlive to compatible version ([91c4ad7](https://github.com/b0ink/doubtfire-deploy/commit/91c4ad78ce769fd5bdf2ba566c8176da43e2809a))
+
 ## [11.4.0](https://github.com/b0ink/doubtfire-deploy/compare/v11.3.0...v11.4.0) (2026-11-22)
 
 
