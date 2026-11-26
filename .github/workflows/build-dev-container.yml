@@ -23,9 +23,9 @@ jobs:
           - dockerfile: ./doubtfire-api/jplag.Dockerfile
             image: lmsdoubtfire/doubtfire-jplag
             context: ./doubtfire-api/
-          - dockerfile: ./doubtfire-api/jplag-notebook-converter.Dockerfile
+          - dockerfile: ./jplag-notebook-converter.Dockerfile
             image: lmsdoubtfire/doubtfire-jplag-notebook-converter
-            context: ./doubtfire-api/
+            context: .
           - dockerfile: ./doubtfire-api/gotenberg.Dockerfile
             image: lmsdoubtfire/doubtfire-gotenberg
             context: ./doubtfire-api/
